@@ -1,0 +1,3625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#294C60">
+<title>La Maison d'Ava — Hub Immobilier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ====================================================================
+   CHARTE MAISON D'AVA — Variables
+==================================================================== */
+:root {
+  --ava-marine: #294C60;
+  --ava-marine-deep: #1a3340;
+  --ava-marine-soft: #3d6378;
+  --ava-orange: #F76E17;
+  --ava-orange-clair: #FF9450;
+  --ava-orange-pale: #FFD4B0;
+  --ava-fond: #EEF3F6;
+  --ava-creme: #FAF6F0;
+  --ava-blanc: #FFFFFF;
+  --ava-texte: #294C60;
+  --ava-texte-sec: #5A6B7A;
+  --ava-texte-mute: #8B97A2;
+  --ava-bord: #E1E8ED;
+  --ava-bord-soft: #EEF2F5;
+  --ava-success: #059669;
+  --ava-warn: #D97706;
+  --ava-danger: #DC2626;
+  /* Couleurs par département (palette désaturée, harmonie marine+orange) */
+  --dept-33: #8B2D3A;       /* Bordeaux/Gironde — rouge bordeaux */
+  --dept-33-clair: #B85968;
+  --dept-75: #5B7C99;       /* Paris — bleu acier */
+  --dept-75-clair: #7E9CB4;
+  --dept-92: #5D8A6E;       /* Hauts-de-Seine — vert mousse */
+  --dept-92-clair: #82AC91;
+  --dept-94: #7B4D6B;       /* Val-de-Marne — prune */
+  --dept-94-clair: #9F7290;
+  --shadow-sm: 0 1px 3px rgba(41, 76, 96, 0.06);
+  --shadow-md: 0 4px 12px rgba(41, 76, 96, 0.08);
+  --shadow-lg: 0 12px 32px rgba(41, 76, 96, 0.12);
+  --shadow-orange: 0 8px 24px rgba(247, 110, 23, 0.25);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
+/* ====================================================================
+   RESET & BASE
+==================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ava-texte);
+  background: var(--ava-fond);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--ava-marine);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
+button { cursor: pointer; }
+a { color: var(--ava-orange); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ====================================================================
+   COMPOSANTS GÉNÉRIQUES
+==================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--ava-orange);
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--ava-orange-clair);
+  box-shadow: var(--shadow-orange);
+}
+.btn-marine {
+  background: var(--ava-marine);
+  color: white;
+}
+.btn-marine:hover {
+  background: var(--ava-marine-deep);
+  box-shadow: var(--shadow-md);
+  color: white;
+}
+.btn-secondary {
+  background: white;
+  color: var(--ava-marine);
+  border-color: var(--ava-bord);
+}
+.btn-secondary:hover {
+  background: var(--ava-creme);
+  border-color: var(--ava-orange-pale);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ava-texte-sec);
+}
+.btn-ghost:hover {
+  background: var(--ava-bord-soft);
+  color: var(--ava-marine);
+}
+.btn-danger {
+  background: white;
+  color: var(--ava-danger);
+  border-color: var(--ava-bord);
+}
+.btn-danger:hover {
+  background: #FEF2F2;
+  border-color: var(--ava-danger);
+}
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+.btn-lg { padding: 14px 22px; font-size: 15px; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.badge-orange { background: var(--ava-orange-pale); color: #B54400; }
+.badge-marine { background: rgba(41, 76, 96, 0.1); color: var(--ava-marine); }
+/* Badges colorés par département */
+.badge-dept {
+  font-weight: 700;
+  color: white !important;
+}
+.badge-dept-33 { background: var(--dept-33); }
+.badge-dept-75 { background: var(--dept-75); }
+.badge-dept-92 { background: var(--dept-92); }
+.badge-dept-94 { background: var(--dept-94); }
+.badge-dept-soft {
+  font-weight: 700;
+  border: 1px solid currentColor;
+}
+.badge-dept-soft-33 { color: var(--dept-33); background: rgba(139, 45, 58, 0.08); }
+.badge-dept-soft-75 { color: var(--dept-75); background: rgba(91, 124, 153, 0.08); }
+.badge-dept-soft-92 { color: var(--dept-92); background: rgba(93, 138, 110, 0.08); }
+.badge-dept-soft-94 { color: var(--dept-94); background: rgba(123, 77, 107, 0.08); }
+.badge-success { background: #D1FAE5; color: var(--ava-success); }
+.badge-warn { background: #FEF3C7; color: var(--ava-warn); }
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-sm);
+  background: white;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--ava-orange);
+  box-shadow: 0 0 0 3px rgba(247, 110, 23, 0.1);
+}
+label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--ava-marine); font-size: 13px; }
+.form-group { margin-bottom: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ====================================================================
+   LOGIN
+==================================================================== */
+#loginScreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--ava-marine) 0%, var(--ava-marine-deep) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+#loginScreen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(247, 110, 23, 0.15), transparent 40%),
+              radial-gradient(circle at 20% 80%, rgba(247, 110, 23, 0.1), transparent 40%);
+  pointer-events: none;
+}
+.login-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 48px 40px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1;
+}
+.login-logo {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 24px;
+  border: 3px solid var(--ava-orange);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.login-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ava-orange);
+  letter-spacing: -0.02em;
+}
+.ava-monogram {
+  width: 80%;
+  height: 80%;
+  color: var(--ava-orange);
+}
+.header-logo .ava-monogram { width: 90%; height: 90%; }
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  padding: 4px;
+}
+.header-logo .logo-img {
+  padding: 2px;
+}
+
+.logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(45deg, rgba(247, 110, 23, 0.08), rgba(247, 110, 23, 0.08) 4px, transparent 4px, transparent 8px);
+  border-radius: 50%;
+  color: var(--ava-orange);
+  text-align: center;
+}
+.logo-placeholder span {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.logo-placeholder small {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+.logo-placeholder.small {
+  background: rgba(247, 110, 23, 0.08);
+}
+.logo-placeholder.small span {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.logo-placeholder.small small { display: none; }
+.login-brand {
+  text-align: center;
+  margin-bottom: 8px;
+}
+.login-brand h1 {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+.login-brand .subtitle {
+  font-size: 12px;
+  color: var(--ava-orange);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.login-form {
+  margin-top: 32px;
+}
+.login-form input {
+  text-align: center;
+  font-size: 16px;
+  padding: 14px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.login-form .btn {
+  width: 100%;
+  margin-top: 14px;
+  justify-content: center;
+  padding: 14px;
+}
+.login-help {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ava-bord);
+  font-size: 12px;
+  color: var(--ava-texte-mute);
+  line-height: 1.7;
+}
+.login-help code {
+  background: var(--ava-creme);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--ava-marine);
+  font-weight: 600;
+  font-size: 11px;
+}
+.login-error {
+  background: #FEF2F2;
+  color: var(--ava-danger);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ====================================================================
+   APP LAYOUT
+==================================================================== */
+#app { display: none; }
+.header {
+  background: white;
+  border-bottom: 1px solid var(--ava-bord);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.header-logo {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--ava-orange);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ava-orange);
+}
+.header-title h1 {
+  font-size: 18px;
+  margin-bottom: 0;
+  line-height: 1;
+}
+.header-title .subtitle {
+  font-size: 10px;
+  color: var(--ava-orange);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 2px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  background: var(--ava-creme);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ava-marine);
+  border: 1px solid var(--ava-bord);
+}
+.header-welcome {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  color: var(--ava-texte-sec);
+}
+.header-welcome strong {
+  color: var(--ava-marine);
+  font-weight: 700;
+}
+.header-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ava-orange), var(--ava-orange-clair));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+.admin-toggle {
+  padding: 6px 12px;
+  background: var(--ava-marine);
+  color: white;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+}
+.admin-toggle.active {
+  background: var(--ava-orange);
+}
+
+.admin-banner {
+  background: linear-gradient(90deg, var(--ava-orange), var(--ava-orange-clair));
+  color: white;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(247, 110, 23, 0.25);
+  position: sticky;
+  top: 73px;
+  z-index: 45;
+  flex-wrap: wrap;
+}
+.admin-banner .btn-secondary {
+  background: white;
+  border-color: white;
+  color: var(--ava-orange);
+}
+.admin-banner .btn-secondary:hover {
+  background: var(--ava-creme);
+}
+@media (max-width: 768px) {
+  .admin-banner { padding: 8px 16px; font-size: 12px; top: auto; position: static; }
+}
+
+.nav {
+  background: white;
+  border-bottom: 1px solid var(--ava-bord);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 73px;
+  z-index: 40;
+  transition: top 0.2s;
+}
+body.admin-mode .nav { top: 113px; }
+.nav::-webkit-scrollbar { display: none; }
+.tab {
+  background: none;
+  border: none;
+  padding: 14px 18px;
+  color: var(--ava-texte-sec);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.tab:hover { color: var(--ava-marine); }
+.tab.active {
+  color: var(--ava-orange);
+  border-bottom-color: var(--ava-orange);
+}
+
+.tab-profil {
+  color: var(--ava-orange) !important;
+  font-weight: 700;
+  position: relative;
+}
+.tab-profil::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--ava-orange);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  display: none;
+}
+.tab-profil.needs-completion::before {
+  display: block;
+  animation: pulse 2s infinite;
+}
+.tab-profil.needs-completion {
+  padding-left: 22px;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+  50% { opacity: 0.6; transform: translateY(-50%) scale(1.3); }
+}
+
+main {
+  padding: 28px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.view { display: none; animation: fadeIn 0.3s ease; }
+.view.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.section-title {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+.section-subtitle {
+  color: var(--ava-texte-sec);
+  font-size: 14px;
+}
+
+/* ====================================================================
+   PAGE PROFIL
+==================================================================== */
+.profil-card {
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 720px;
+  margin: 0 auto 20px;
+  box-shadow: var(--shadow-sm);
+}
+.profil-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--ava-bord-soft);
+  margin-bottom: 24px;
+}
+.profil-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 38px;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 8px 24px rgba(41, 76, 96, 0.18);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.profil-avatar .avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profil-identity {
+  flex: 1;
+  min-width: 0;
+}
+.profil-identity .profil-id {
+  font-size: 12px;
+  color: var(--ava-orange);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.profil-identity h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ava-marine);
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+.profil-identity .profil-job {
+  color: var(--ava-texte-sec);
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.profil-section {
+  margin-bottom: 24px;
+}
+.profil-section h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ava-texte-mute);
+  margin-bottom: 10px;
+}
+.profil-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.profil-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--ava-creme);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+.profil-info-item .info-icone {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.profil-info-item .info-content {
+  flex: 1;
+  min-width: 0;
+}
+.profil-info-item .info-content small {
+  display: block;
+  font-size: 10px;
+  color: var(--ava-texte-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+.profil-info-item .info-content strong {
+  font-weight: 600;
+  color: var(--ava-marine);
+  word-break: break-word;
+  font-size: 13px;
+}
+.profil-info-item.empty {
+  background: transparent;
+  border: 1px dashed var(--ava-bord);
+}
+.profil-info-item.empty strong {
+  color: var(--ava-texte-mute);
+  font-style: italic;
+  font-weight: 500;
+}
+.profil-cta {
+  background: linear-gradient(135deg, var(--ava-marine), var(--ava-marine-deep));
+  color: white;
+  padding: 18px 24px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(41, 76, 96, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+.profil-cta::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 140px;
+  height: 140px;
+  background: var(--ava-orange);
+  opacity: 0.2;
+  border-radius: 50%;
+}
+.profil-cta-content {
+  flex: 1;
+  min-width: 220px;
+  position: relative;
+  z-index: 1;
+}
+.profil-cta-content strong {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 4px;
+}
+.profil-cta-content small {
+  opacity: 0.9;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.profil-cta .btn {
+  background: var(--ava-orange);
+  color: white;
+  font-weight: 700;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+.profil-cta .btn:hover {
+  background: var(--ava-orange-clair);
+  color: white;
+}
+@media (max-width: 600px) {
+  .profil-card { padding: 20px; }
+  .profil-header { flex-direction: column; text-align: center; gap: 14px; }
+  .profil-avatar { width: 90px; height: 90px; font-size: 30px; }
+  .profil-identity h3 { font-size: 22px; }
+}
+
+/* ====================================================================
+   PARAMÈTRES
+==================================================================== */
+.params-card {
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.params-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.params-card table th {
+  font-weight: 600;
+  color: var(--ava-marine);
+}
+.params-card code {
+  background: var(--ava-creme);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ava-marine);
+  font-weight: 600;
+}
+
+/* ====================================================================
+   PARTAGE
+==================================================================== */
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--ava-marine);
+  font-weight: 600;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.15s;
+  text-align: left;
+}
+.share-btn:hover {
+  border-color: var(--ava-orange);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.share-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ====================================================================
+   CTA Dashboard licencié (bleu marine)
+==================================================================== */
+.cta-banner {
+  background: linear-gradient(135deg, var(--ava-marine), var(--ava-marine-deep));
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 18px 24px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+}
+.cta-banner::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 140px;
+  height: 140px;
+  background: var(--ava-orange);
+  opacity: 0.2;
+  border-radius: 50%;
+}
+.cta-banner-content {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+  z-index: 1;
+}
+.cta-banner-content strong {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+.cta-banner-content small {
+  opacity: 0.9;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.cta-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.btn-cta-primary {
+  background: var(--ava-orange);
+  color: white;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.btn-cta-primary:hover {
+  background: var(--ava-orange-clair);
+  box-shadow: 0 4px 12px rgba(247, 110, 23, 0.35);
+}
+.btn-cta-secondary {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.3);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+.btn-cta-secondary:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  color: white;
+}
+.cta-dismiss {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cta-dismiss:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.5);
+}
+
+/* ====================================================================
+   KPI ADMIN
+==================================================================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--ava-orange);
+}
+.kpi-grid::before {
+  content: none;
+}
+.kpi-header {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ava-orange);
+  margin-bottom: -4px;
+}
+.kpi-card {
+  text-align: left;
+}
+.kpi-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ava-marine);
+  line-height: 1;
+}
+.kpi-label {
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.kpi-card.warn .kpi-value { color: var(--ava-warn); }
+.kpi-card.danger .kpi-value { color: var(--ava-danger); }
+
+/* ====================================================================
+   DASHBOARD
+==================================================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.hero-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--ava-bord);
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: var(--ava-orange-pale);
+  opacity: 0.4;
+  border-radius: 50%;
+  transform: translate(40%, -40%);
+}
+.hero-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ava-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  position: relative;
+}
+.hero-card h3 {
+  font-size: 22px;
+  margin-bottom: 6px;
+  position: relative;
+}
+.hero-card .meta {
+  color: var(--ava-texte-sec);
+  font-size: 13px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.hero-card .actions {
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+.hero-card.empty {
+  background: var(--ava-creme);
+  border-style: dashed;
+  text-align: center;
+  color: var(--ava-texte-mute);
+}
+.hero-card.empty::before { display: none; }
+
+.recent-section h3 {
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+.mini-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+  border: 1px solid var(--ava-bord);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mini-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--ava-orange-pale);
+}
+.mini-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  overflow: hidden;
+}
+.mini-avatar .avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mini-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ava-marine);
+  margin-bottom: 2px;
+}
+.mini-job {
+  font-size: 11px;
+  color: var(--ava-texte-mute);
+}
+
+/* ====================================================================
+   ANNUAIRE
+==================================================================== */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.search-box input {
+  padding-left: 38px;
+}
+.search-box::before {
+  content: '🔍';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.5;
+}
+.filter-group {
+  display: flex;
+  gap: 4px;
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-md);
+  padding: 4px;
+}
+.filter-chip {
+  padding: 7px 14px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ava-texte-sec);
+  transition: all 0.15s;
+}
+.filter-chip.active {
+  background: var(--ava-marine);
+  color: white;
+}
+.filter-chip-dept {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-chip-dept.active {
+  background: var(--dept-c, var(--ava-marine));
+  color: white;
+}
+.filter-chip-dept.active .dept-dot {
+  background: white !important;
+}
+.dept-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.annuaire-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.licencie-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  border: 1px solid var(--ava-bord);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  text-align: center;
+}
+.licencie-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--ava-orange-pale);
+}
+.licencie-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 26px;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 4px 12px rgba(41, 76, 96, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+.licencie-avatar .avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.licencie-avatar .initials-fallback {
+  position: relative;
+  z-index: 0;
+}
+
+.verifie-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ava-success);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.row-avatar .verifie-badge {
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+  bottom: -1px;
+  right: -1px;
+  border-width: 1.5px;
+}
+.mini-avatar .verifie-badge {
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+}
+.licencie-id {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ava-orange);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.licencie-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ava-marine);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.licencie-job {
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+  min-height: 16px;
+}
+.licencie-antenne {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ava-marine);
+  font-weight: 600;
+}
+.licencie-card .admin-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: none;
+  gap: 4px;
+}
+body.admin-mode .licencie-card .admin-actions { display: flex; }
+
+/* ====================================================================
+   ANNUAIRE LISTE
+==================================================================== */
+.annuaire-list {
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.licencie-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 1.5fr 1fr 1fr auto;
+  gap: 14px;
+  padding: 12px 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--ava-bord-soft);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.licencie-row:last-child { border-bottom: none; }
+.licencie-row:hover { background: var(--ava-creme); }
+.licencie-row .row-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.licencie-row .row-avatar .avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.licencie-row .row-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ava-orange);
+  letter-spacing: 0.05em;
+}
+.licencie-row .row-name {
+  font-weight: 600;
+  color: var(--ava-marine);
+  font-size: 14px;
+}
+.licencie-row .row-metier {
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+}
+.licencie-row .row-antenne {
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+}
+.licencie-row .row-actions {
+  display: flex;
+  gap: 4px;
+}
+.licencie-row .admin-actions {
+  display: none;
+  gap: 4px;
+}
+body.admin-mode .licencie-row .admin-actions { display: flex; }
+@media (max-width: 768px) {
+  .licencie-row {
+    grid-template-columns: 44px 1fr auto;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .licencie-row .row-id, .licencie-row .row-metier, .licencie-row .row-antenne {
+    grid-column: 2;
+    font-size: 11px;
+  }
+}
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--ava-bord);
+  background: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+}
+.icon-btn:hover { background: var(--ava-creme); color: var(--ava-marine); }
+.icon-btn.danger:hover { background: #FEF2F2; color: var(--ava-danger); border-color: var(--ava-danger); }
+
+/* ====================================================================
+   EVENEMENTS & MASTERCLASS
+==================================================================== */
+.event-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.event-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ava-bord);
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 20px;
+  padding: 20px;
+  align-items: center;
+  transition: all 0.15s;
+  cursor: pointer;
+  position: relative;
+}
+.event-card:hover {
+  border-color: var(--ava-orange-pale);
+  box-shadow: var(--shadow-md);
+}
+.event-card.past { opacity: 0.65; }
+.event-date {
+  text-align: center;
+  background: var(--ava-creme);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  border: 1px solid var(--ava-bord-soft);
+}
+.event-date .day {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ava-orange);
+  line-height: 1;
+}
+.event-date .month {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ava-marine);
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+.event-date .year {
+  font-size: 10px;
+  color: var(--ava-texte-mute);
+  margin-top: 2px;
+}
+.event-info h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.event-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.event-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.event-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+.event-badges {
+  margin-bottom: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.inscrits-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+.inscrit-mini {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ava-orange), var(--ava-orange-clair));
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
+  margin-left: -8px;
+}
+.inscrit-mini:first-child { margin-left: 0; }
+.inscrit-mini-more {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ava-texte-sec);
+  margin-left: 4px;
+}
+.admin-actions-evt {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.dept-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--dept-c, var(--ava-marine));
+  color: white;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.dept-row {
+  display: grid;
+  grid-template-columns: 20px 60px 1fr 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--ava-creme);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+}
+.dept-color-chip {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px var(--ava-bord);
+}
+.dept-row strong {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--ava-orange);
+}
+.places-counter {
+  font-size: 11px;
+  color: var(--ava-texte-mute);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.places-counter.full { color: var(--ava-danger); }
+.places-counter.warn { color: var(--ava-warn); }
+
+/* ====================================================================
+   LIENS
+==================================================================== */
+.liens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.lien-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ava-bord);
+  padding: 20px;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+.lien-card:hover {
+  border-color: var(--ava-orange);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+.lien-card .badge {
+  align-self: flex-start;
+}
+.lien-card h4 {
+  font-size: 15px;
+}
+.lien-card p {
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+}
+.lien-card .arrow {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: var(--ava-orange);
+  font-size: 16px;
+}
+.lien-icone {
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.lien-card-wrap {
+  position: relative;
+}
+.lien-admin-actions {
+  position: absolute;
+  top: 8px;
+  right: 50px;
+  display: flex;
+  gap: 4px;
+  z-index: 5;
+}
+
+.liens-categorie {
+  margin-bottom: 28px;
+}
+.liens-categorie h3 {
+  font-size: 18px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ava-orange-pale);
+  display: inline-block;
+}
+
+/* ====================================================================
+   MODALS
+==================================================================== */
+dialog {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  max-width: 540px;
+  width: 90vw;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+  background: white;
+}
+dialog::backdrop {
+  background: rgba(41, 76, 96, 0.6);
+  backdrop-filter: blur(4px);
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--ava-bord);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 {
+  font-size: 20px;
+  margin: 0;
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--ava-texte-mute);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-close:hover { background: var(--ava-bord-soft); color: var(--ava-marine); }
+.modal-body { padding: 24px; }
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--ava-bord);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--ava-creme);
+}
+
+/* Fiche licencié */
+.fiche-licencie {
+  text-align: center;
+}
+.fiche-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 42px;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 8px 24px rgba(41, 76, 96, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+.fiche-avatar .avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fiche-id {
+  font-size: 12px;
+  color: var(--ava-orange);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.fiche-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ava-marine);
+  margin-bottom: 6px;
+}
+.fiche-job {
+  color: var(--ava-texte-sec);
+  margin-bottom: 14px;
+}
+.fiche-contact {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.social-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--ava-bord);
+}
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ava-marine);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.social-btn:hover {
+  border-color: var(--ava-orange);
+  background: var(--ava-creme);
+  text-decoration: none;
+  color: var(--ava-marine);
+}
+.social-btn span:first-child {
+  font-size: 14px;
+  line-height: 1;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+}
+.contact-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--ava-bord);
+  background: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--ava-marine);
+  text-decoration: none;
+}
+.contact-btn:hover {
+  background: var(--ava-orange);
+  color: white;
+  border-color: var(--ava-orange);
+  text-decoration: none;
+}
+.contact-btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.fiche-bio {
+  text-align: left;
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: var(--ava-creme);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ava-texte-sec);
+  line-height: 1.6;
+}
+.fiche-bio.empty {
+  font-style: italic;
+  color: var(--ava-texte-mute);
+}
+
+/* Event modal */
+.event-modal-cover {
+  height: 140px;
+  background: linear-gradient(135deg, var(--ava-marine), var(--ava-marine-deep));
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.event-modal-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 50%, rgba(247, 110, 23, 0.4), transparent 60%);
+}
+.event-modal-cover .event-date {
+  position: relative;
+  background: white;
+  min-width: 100px;
+}
+.event-modal-body { padding: 20px 24px; }
+.event-modal-body h3 { margin-bottom: 8px; font-size: 22px; }
+.inscrits-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.inscrit-pill {
+  background: var(--ava-creme);
+  border: 1px solid var(--ava-bord);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ava-marine);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ava-texte-mute);
+}
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .header { padding: 10px 16px; flex-wrap: wrap; gap: 10px; }
+  .header-title h1 { font-size: 16px; }
+  .header-user { display: none; }
+  .nav { padding: 0 16px; top: auto; position: static; }
+  .tab { padding: 12px 14px; font-size: 13px; }
+  main { padding: 18px 16px; }
+  .section-title { font-size: 22px; }
+  .dashboard-grid { grid-template-columns: 1fr; gap: 14px; }
+  .event-card { grid-template-columns: 80px 1fr; gap: 14px; padding: 14px; }
+  .event-card .event-actions { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; }
+  .form-row { grid-template-columns: 1fr; }
+  dialog { max-width: 100vw; width: 100vw; max-height: 100vh; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     LOGIN SCREEN
+===================================================================== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <!-- LOGO MAISON D'AVA — place ton fichier logo.png à la racine du repo GitHub -->
+    <div class="login-logo">
+      <img src="./logo.png" alt="Maison d'Ava" class="logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="logo-placeholder" style="display:none;">
+        <span>LOGO</span>
+        <small>Maison d'Ava</small>
+      </div>
+    </div>
+    <div class="login-brand">
+      <h1>La Maison d'Ava</h1>
+      <div class="subtitle">Hub Immobilier</div>
+    </div>
+    <div class="login-form">
+      <input type="text" id="loginCode" placeholder="Votre code d'accès" autocomplete="off" autocapitalize="characters">
+      <button class="btn btn-primary" onclick="login()">Entrer</button>
+      <div id="loginError" style="display:none;" class="login-error"></div>
+    </div>
+    <div class="login-help">
+      <strong>Codes d'accès :</strong><br>
+      Super-admin : <code>LINDAVA</code> · <code>LAUAVA</code><br>
+      Admin territorial : <code>ADMIN94</code> (Renato — 94)<br>
+      Licencié : votre ID Maison d'Ava (ex : <code>AVA-00013</code>)
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     APP
+===================================================================== -->
+<div id="app">
+
+  <header class="header">
+    <div class="header-brand">
+      <!-- LOGO MAISON D'AVA — place ton fichier logo.png à la racine du repo GitHub -->
+      <div class="header-logo">
+        <img src="./logo.png" alt="Maison d'Ava" class="logo-img"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-placeholder small" style="display:none;">
+          <span>LOGO</span>
+        </div>
+      </div>
+      <div class="header-title">
+        <h1>La Maison d'Ava</h1>
+        <div class="subtitle">Hub Immobilier</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="admin-toggle" id="adminToggle" onclick="toggleAdminMode()" style="display:none;">Mode Admin</button>
+      <div class="header-user">
+        <span class="header-user-avatar" id="userAvatar">?</span>
+        <span class="header-welcome">Bienvenue <strong id="userName">Visiteur</strong></span>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">⏻</button>
+    </div>
+  </header>
+
+  <div id="adminBanner" style="display:none;" class="admin-banner">
+    <span>🔒 <strong>Mode administration actif</strong> — modifications enregistrées immédiatement. <span style="opacity:0.85;">Onglet <strong>⚙ Paramètres</strong> dispo en haut.</span></span>
+    <button class="btn btn-sm btn-secondary" onclick="toggleAdminMode()">Quitter le mode admin</button>
+  </div>
+
+  <nav class="nav">
+    <button class="tab active" data-view="dashboard" onclick="setView('dashboard')">Accueil</button>
+    <button class="tab" data-view="annuaire" onclick="setView('annuaire')">Annuaire</button>
+    <button class="tab" data-view="evenements" onclick="setView('evenements')">Événements</button>
+    <button class="tab" data-view="masterclass" onclick="setView('masterclass')">Masterclass</button>
+    <button class="tab" data-view="liens" onclick="setView('liens')">Liens utiles</button>
+    <button class="tab tab-profil" data-view="profil" onclick="setView('profil')" id="tabProfil" style="display:none;">👤 Mon profil</button>
+    <button class="tab admin-only-tab" data-view="parametres" onclick="setView('parametres')" style="display:none;">⚙ Paramètres</button>
+  </nav>
+
+  <main>
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Bonjour <span id="dashHello">!</span></h2>
+          <div class="section-subtitle">Le point sur votre réseau Maison d'Ava</div>
+        </div>
+      </div>
+
+      <div id="dashCompleteFiche" class="cta-banner" style="display:none;"></div>
+
+      <div id="dashKPI" class="kpi-grid" style="display:none;"></div>
+
+      <div class="dashboard-grid">
+        <div id="dashNextEvent" class="hero-card"></div>
+        <div id="dashNextMc" class="hero-card"></div>
+      </div>
+      <div class="recent-section">
+        <h3>Derniers licenciés du réseau</h3>
+        <div class="recent-grid" id="dashRecent"></div>
+      </div>
+    </section>
+
+    <!-- ANNUAIRE -->
+    <section id="view-annuaire" class="view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Annuaire</h2>
+          <div class="section-subtitle"><span id="countLicencies">0</span> licenciés du réseau</div>
+        </div>
+        <button class="btn btn-primary admin-only" onclick="openLicencieEdit()" style="display:none;">+ Ajouter un licencié</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="text" id="searchLic" placeholder="Rechercher un licencié, un métier…" oninput="renderAnnuaire()">
+        </div>
+        <div class="filter-group" id="filterDept">
+          <!-- Rempli dynamiquement par renderDeptFilter('annuaire') -->
+        </div>
+        <div class="filter-group" id="filterView">
+          <button class="filter-chip active" data-view="grid" onclick="setAnnuaireView('grid')" title="Affichage grille">▦</button>
+          <button class="filter-chip" data-view="list" onclick="setAnnuaireView('list')" title="Affichage liste">☰</button>
+        </div>
+      </div>
+      <div class="annuaire-grid" id="annuaireGrid"></div>
+      <div class="annuaire-list" id="annuaireList" style="display:none;"></div>
+    </section>
+
+    <!-- ÉVÉNEMENTS -->
+    <section id="view-evenements" class="view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Événements</h2>
+          <div class="section-subtitle">Rendez-vous du réseau</div>
+        </div>
+        <button class="btn btn-primary admin-only" onclick="openEventEdit()" style="display:none;">+ Nouvel événement</button>
+      </div>
+      <div class="toolbar">
+        <div class="filter-group" id="filterEventStatus">
+          <button class="filter-chip active" data-status="upcoming" onclick="setEventFilter('upcoming')">À venir</button>
+          <button class="filter-chip" data-status="past" onclick="setEventFilter('past')">Passés</button>
+        </div>
+        <div class="filter-group" id="filterEventDept">
+          <!-- Rempli dynamiquement par renderDeptFilter('events') -->
+        </div>
+        <div class="search-box">
+          <input type="text" id="searchLieu" placeholder="Rechercher un lieu, un titre…" oninput="renderEvents()">
+        </div>
+      </div>
+      <div class="event-list" id="eventList"></div>
+    </section>
+
+    <!-- MASTERCLASS -->
+    <section id="view-masterclass" class="view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Masterclass</h2>
+          <div class="section-subtitle">Formations et apprentissages</div>
+        </div>
+        <button class="btn btn-primary admin-only admin-only-superadmin" onclick="openMcEdit()" style="display:none;">+ Nouvelle masterclass</button>
+      </div>
+      <div class="toolbar">
+        <div class="filter-group" id="filterMcStatus">
+          <button class="filter-chip active" data-status="upcoming" onclick="setMcFilter('upcoming')">À venir</button>
+          <button class="filter-chip" data-status="past" onclick="setMcFilter('past')">Passées</button>
+        </div>
+      </div>
+      <div class="event-list" id="mcList"></div>
+    </section>
+
+    <!-- PROFIL (licencié connecté uniquement) -->
+    <section id="view-profil" class="view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Mon profil</h2>
+          <div class="section-subtitle" id="profilSubtitle">Votre fiche dans l'annuaire Maison d'Ava</div>
+        </div>
+      </div>
+      <div id="profilContent"></div>
+    </section>
+
+    <!-- LIENS -->
+    <section id="view-liens" class="view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Liens utiles</h2>
+          <div class="section-subtitle">Ressources et outils du réseau</div>
+        </div>
+        <button class="btn btn-primary admin-only admin-only-lien" onclick="openLienEdit()" style="display:none;">+ Nouveau lien</button>
+      </div>
+      <div id="liensContainer"></div>
+    </section>
+
+    <!-- PARAMÈTRES (admin uniquement) -->
+    <section id="view-parametres" class="view">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">⚙ Paramètres</h2>
+          <div class="section-subtitle">Configuration globale de l'application — accès super-admin uniquement</div>
+        </div>
+      </div>
+
+      <div class="params-card">
+        <h3>🗺️ Départements actifs</h3>
+        <p style="color:var(--ava-texte-sec); font-size:13px; margin-bottom:14px;">
+          Liste des territoires où la Maison d'Ava est déployée. Pour ouvrir un nouveau département,
+          ajoutez-le ici puis créez son URL Tally d'inscription événements ci-dessous.
+        </p>
+        <div id="deptList" style="margin-bottom:14px;"></div>
+        <div class="form-row" style="grid-template-columns: 110px 1fr 1fr auto;">
+          <div class="form-group" style="margin-bottom:0;"><input id="new_dept_code" placeholder="Code (ex: 13)" maxlength="3"></div>
+          <div class="form-group" style="margin-bottom:0;"><input id="new_dept_nom" placeholder="Nom (ex: Bouches-du-Rhône)"></div>
+          <div class="form-group" style="margin-bottom:0;"><input id="new_dept_ville" placeholder="Ville principale"></div>
+          <button class="btn btn-primary" onclick="addDept()">+ Ajouter</button>
+        </div>
+      </div>
+
+      <div class="params-card" style="margin-top:20px;">
+        <h3>🔗 Formulaires d'inscription Tally</h3>
+        <p style="color:var(--ava-texte-sec); font-size:13px; margin-bottom:18px;">
+          1 URL Tally par département pour les événements (Apér'Immo / Pause Café),
+          1 URL Tally globale pour les masterclass (toutes antennes).
+          Les boutons "S'inscrire" transmettent les paramètres pour que Make sache quel event/licencié relier.
+        </p>
+
+        <div id="tallyEventsParams"></div>
+
+        <div class="form-group">
+          <label>Tally — Masterclass <small style="color:var(--ava-texte-mute);">Toutes territoires</small></label>
+          <input type="url" id="param_tally_mc" placeholder="https://tally.so/r/zzzzz" value="">
+        </div>
+
+        <div class="form-group" style="margin-top:24px; padding-top:18px; border-top:1px dashed var(--ava-bord);">
+          <label>Google Forms — Compléter sa carte numérique <small style="color:var(--ava-texte-mute);">Saisie/MAJ des infos par chaque licencié</small></label>
+          <input type="url" id="param_form_carte" placeholder="https://forms.gle/xxxxx" value="">
+        </div>
+
+        <button class="btn btn-primary" onclick="saveParams()">Enregistrer les paramètres</button>
+        <span id="paramsSaved" style="display:none; margin-left:14px; color:var(--ava-success); font-weight:600;">✓ Enregistré</span>
+      </div>
+
+      <div class="params-card" style="margin-top:20px;">
+        <h3>📋 Champs à transmettre dans Tally</h3>
+        <p style="color:var(--ava-texte-sec); font-size:13px; margin-bottom:14px;">
+          Pour que Make sache à quel événement et quel licencié relier l'inscription, configurez
+          ces "Hidden fields" dans chacun de vos formulaires Tally. L'app transmet ces valeurs en query string.
+        </p>
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <thead>
+            <tr style="background:var(--ava-creme);">
+              <th style="padding:8px 12px; text-align:left; border-bottom:1px solid var(--ava-bord);">Param URL</th>
+              <th style="padding:8px 12px; text-align:left; border-bottom:1px solid var(--ava-bord);">Valeur transmise</th>
+              <th style="padding:8px 12px; text-align:left; border-bottom:1px solid var(--ava-bord);">À récupérer dans Make</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px 12px;"><code>event_id</code> ou <code>masterclass_id</code></td><td>ID de l'event (ex: E001)</td><td>Pour identifier l'event</td></tr>
+            <tr><td style="padding:8px 12px;"><code>titre</code></td><td>Titre de l'event</td><td>Pour le mail confirmation</td></tr>
+            <tr><td style="padding:8px 12px;"><code>date</code></td><td>Date ISO (YYYY-MM-DD)</td><td>Pour les rappels</td></tr>
+            <tr><td style="padding:8px 12px;"><code>departement</code></td><td>Code département (ex: 94)</td><td>Pour le routage admin</td></tr>
+            <tr><td style="padding:8px 12px;"><code>licencie_id</code></td><td>ID du licencié (ex: AVA-00013)</td><td>Pour relier au profil</td></tr>
+            <tr><td style="padding:8px 12px;"><code>licencie_nom</code></td><td>Prénom + Nom</td><td>Pour pré-remplir Tally</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="params-card" style="margin-top:20px;">
+        <h3>🛡️ Administrateurs</h3>
+        <p style="color:var(--ava-texte-sec); font-size:13px;">
+          Linda (super-admin) et Laurence (super-admin) peuvent tout administrer.
+          Pour un admin territorial (ex: Renato sur le 94), créer le code admin lié à son ID licencié.
+          Cette gestion sera disponible une fois l'app reliée au Sheet (V1 fonctionnelle).
+        </p>
+        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;">
+          <thead>
+            <tr style="background:var(--ava-creme);">
+              <th style="padding:8px 12px; text-align:left;">Code</th>
+              <th style="padding:8px 12px; text-align:left;">Licencié</th>
+              <th style="padding:8px 12px; text-align:left;">Scope</th>
+            </tr>
+          </thead>
+          <tbody id="adminList"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- =====================================================================
+     MODALS
+===================================================================== -->
+<dialog id="modalLicencie">
+  <div class="modal-header">
+    <h3>Fiche licencié</h3>
+    <button class="modal-close" onclick="document.getElementById('modalLicencie').close()">×</button>
+  </div>
+  <div class="modal-body" id="modalLicencieBody"></div>
+</dialog>
+
+<dialog id="modalEvent">
+  <div class="modal-header">
+    <h3 id="modalEventTitle">Événement</h3>
+    <button class="modal-close" onclick="document.getElementById('modalEvent').close()">×</button>
+  </div>
+  <div class="modal-body" id="modalEventBody"></div>
+</dialog>
+
+<dialog id="modalEdit">
+  <div class="modal-header">
+    <h3 id="modalEditTitle">Édition</h3>
+    <button class="modal-close" onclick="document.getElementById('modalEdit').close()">×</button>
+  </div>
+  <div class="modal-body" id="modalEditBody"></div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" onclick="document.getElementById('modalEdit').close()">Annuler</button>
+    <button class="btn btn-primary" id="modalEditSave">Enregistrer</button>
+  </div>
+</dialog>
+
+<dialog id="modalShare">
+  <div class="modal-header">
+    <h3>Inviter un contact</h3>
+    <button class="modal-close" onclick="document.getElementById('modalShare').close()">×</button>
+  </div>
+  <div class="modal-body" id="modalShareBody"></div>
+</dialog>
+
+<script>
+/* =====================================================================
+   DONNÉES — Maquette
+===================================================================== */
+
+const LICENCIES = [
+  { id:'AVA-00001', prenom:'LINDA', nom:'CRESPELLIER', metier:"FONDATRICE MAISON D'AVA", departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00001', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00001', photo:'./photos/AVA-00001.jpg', verifie:false },
+  { id:'AVA-00002', prenom:'ANNE-CECILE', nom:'PERROMAT', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00002', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00002', photo:'./photos/AVA-00002.jpg', verifie:false },
+  { id:'AVA-00003', prenom:'ROMAIN', nom:'DROUILLARD', metier:'Agent immobilier / Mandataire', departement:'33', tel:'0612565174', email:'imaxia.immo@gmail.com', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00003', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00003', photo:'./photos/AVA-00003.jpg', linkedin:'https://www.linkedin.com/in/romain-drouillard-804940101', verifie:true },
+  { id:'AVA-00004', prenom:'JONATHAN', nom:'POTIER', metier:'Expert (notaire, courtier, diagnostiqueur, etc.)', departement:'33', tel:'0679746026', email:'Jpotier@inficredits.fr', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00004', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00004', photo:'./photos/AVA-00004.jpg', site:'https://www.inandfi-credits.fr/courtier/gradignan', linkedin:'https://www.linkedin.com/in/jonathan-potier-9811a882?utm_source=share_via&utm_content=profile&utm_medium=member_ios', verifie:true },
+  { id:'AVA-00005', prenom:'STEPHANIE', nom:'CHOLET', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00005', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00005', photo:'./photos/AVA-00005.jpg', verifie:false },
+  { id:'AVA-00006', prenom:'CAROLINE', nom:'LEFEVRE', metier:'Agent immobilier / Mandataire immobilier', departement:'33', tel:'0540121913', email:'contact@esprit-viager.fr', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00006', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00006', photo:'./photos/AVA-00006.jpg', site:'https://www.esprit-viager.fr/', linkedin:'https://www.esprit-viager.fr/linkedin.com/company/79396587/', instagram:'https://www.instagram.com/espritviager/', facebook:'https://www.facebook.com/people/Esprit-Viager/100083391846609/', tiktok:'https://www.tiktok.com/@espritviager', verifie:true },
+  { id:'AVA-00007', prenom:'ERIC', nom:'HARDY', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00007', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00007', photo:'./photos/AVA-00007.jpg', verifie:false },
+  { id:'AVA-00008', prenom:'CLAUDE', nom:'RICHOUX', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00008', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00008', photo:'./photos/AVA-00008.jpg', verifie:false },
+  { id:'AVA-00009', prenom:'CATHERINE', nom:'DELABARRE', metier:'Chasseur immobilier', departement:'33', tel:'0612690125', email:'catherine@takemehome-immo.fr', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00009', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00009', photo:'./photos/AVA-00009.jpg', site:'https://www.takemehome-immo.fr', linkedin:'https://www.linkedin.com/in/catherine-delabarre-459a2a112?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app', instagram:'https://www.instagram.com/catherine.delabarre?igsh=MTYwYXBsNmowZHdveQ==', verifie:true },
+  { id:'AVA-00010', prenom:'NICOLAS', nom:'LOUET', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00010', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00010', photo:'./photos/AVA-00010.jpg', verifie:false },
+  { id:'AVA-00011', prenom:'AURELIE', nom:'MONNEREAU', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00011', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00011', photo:'./photos/AVA-00011.jpg', verifie:false },
+  { id:'AVA-00012', prenom:'AGNES', nom:'MINET', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00012', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00012', photo:'./photos/AVA-00012.jpg', verifie:false },
+  { id:'AVA-00013', prenom:'LAURENCE', nom:'BORRAS', metier:'Formatrice — IA Métier', departement:'75', tel:'', email:'', bio:'Fondatrice de L\'Rénov IA Studio. Accompagne les agents immo dans le déploiement d\'outils IA métier.', carte_url:'https://maison-ava.github.io/cartes/AVA-00013', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00013', photo:'./photos/AVA-00013.jpg', verifie:false },
+  { id:'AVA-00014', prenom:'LAURENT', nom:'CHARON', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00014', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00014', photo:'./photos/AVA-00014.jpg', verifie:false },
+  { id:'AVA-00015', prenom:'PHILIPPE', nom:'SŒUR', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00015', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00015', photo:'./photos/AVA-00015.jpg', verifie:false },
+  { id:'AVA-00016', prenom:'RENATO', nom:'PONZIO', metier:'Expert (notaire, courtier, diagnostiqueur, etc.)', departement:'94', tel:'0661558750', email:'renato.ponzio@neos-immo.com', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00016', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00016', photo:'./photos/AVA-00016.jpg', site:'https://www.neos-immo.com', linkedin:'https://www.linkedin.com/in/renatoponzio/', instagram:'https://www.instagram.com/renato.ponzio/', facebook:'https://www.facebook.com/RENATOPONZIO2', verifie:true },
+  { id:'AVA-00017', prenom:'SIXTE', nom:'BERTHIER', metier:'Expert (notaire, courtier, diagnostiqueur, etc.)', departement:'94', tel:'0386871833', email:'sixte.berthier@notaires.fr', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00017', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00017', photo:'./photos/AVA-00017.jpg', site:'http://berthierlabeassocies.notaires.fr', verifie:true },
+  { id:'AVA-00018', prenom:'AYMERIC', nom:'CHATROUSSE', metier:'Expert (notaire, courtier, diagnostiqueur, etc.)', departement:'94', tel:'0620873729', email:'aymeric.chatrousse@gmail.com', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00018', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00018', photo:'./photos/AVA-00018.jpg', instagram:'https://www.instagram.com/aymeric_chatrousse', verifie:true },
+  { id:'AVA-00019', prenom:'THIERRY', nom:'MORALDO', metier:'', departement:'92', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00019', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00019', photo:'./photos/AVA-00019.jpg', verifie:false },
+  { id:'AVA-00020', prenom:'PAULINE', nom:'KERVEGAN', metier:'Expert (notaire, courtier, diagnostiqueur, etc.)', departement:'94', tel:'0788922518', email:'pauline.kervegan@bypretto.fr', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00020', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00020', photo:'./photos/AVA-00020.jpg', verifie:true },
+  { id:'AVA-00021', prenom:'EDDY', nom:'HARDEL', metier:'', departement:'75', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00021', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00021', photo:'./photos/AVA-00021.jpg', verifie:false },
+  { id:'AVA-00022', prenom:'DELPHINE', nom:'TCHILIGUIRIAN', metier:'', departement:'92', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00022', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00022', photo:'./photos/AVA-00022.jpg', verifie:false },
+  { id:'AVA-00023', prenom:'DIDIER', nom:'MICKAELIAN', metier:'', departement:'92', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00023', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00023', photo:'./photos/AVA-00023.jpg', verifie:false },
+];
+
+const EVENEMENTS = [
+  { id:'E001', titre:'Cocktail des fondateurs', type:'Apér\'Immo', date:'2026-06-12', heure:'19:00', lieu:'Bordeaux — Place Pey-Berland', description:'Rencontre annuelle des fondateurs et premiers licenciés Maison d\'Ava. Cocktail dînatoire pour échanger sur l\'année écoulée.', departement:'33', max:50, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013'] },
+  { id:'E002', titre:'Petit-déjeuner réseau — Tendances marché 2026', type:'Pause Café', date:'2026-05-28', heure:'08:30', lieu:'Bordeaux — Coffee Place', description:'Décryptage des tendances immo Q2 2026 avec un économiste invité. Petit-déjeuner offert.', departement:'33', max:25, inscrits:['AVA-00003','AVA-00009','AVA-00013','AVA-00021'] },
+  { id:'E003', titre:'Lancement antenne Paris', type:'Autre', date:'2026-09-15', heure:'18:00', lieu:'Paris — 8e arrondissement', description:'Soirée de lancement officiel de l\'antenne parisienne Maison d\'Ava. Invités VIP et presse.', departement:'75', max:80, inscrits:['AVA-00001','AVA-00013'] },
+  { id:'E005', titre:'Apér\'Immo Créteil — Networking 94', type:'Apér\'Immo', date:'2026-07-08', heure:'18:30', lieu:'Créteil — Brasserie de l\'Hôtel de Ville', departement:'94', description:'Premier Apér\'Immo organisé par l\'antenne 94. Networking entre licenciés du Val-de-Marne et partenaires locaux.', max:25, inscrits:['AVA-00016','AVA-00017','AVA-00018','AVA-00020'] },
+  { id:'E004', titre:'Afterwork Q1', type:'Apér\'Immo', date:'2026-03-20', heure:'18:30', lieu:'Bordeaux — Quais', description:'Premier afterwork de l\'année 2026.', departement:'33', max:30, inscrits:['AVA-00001','AVA-00003','AVA-00009'] },
+];
+
+const MASTERCLASS = [
+  { id:'M001', titre:'IA pour mandataires : 5 outils à intégrer dès demain', date:'2026-06-05', heure:'10:00', thematique:'IA Métier', description:'Tour d\'horizon pratique des 5 outils IA les plus rentables pour un mandataire immo en 2026. Démos live + replay.', lien_visio:'https://zoom.us/j/123456', max:30, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00010','AVA-00021'] },
+  { id:'M002', titre:'Storytelling immobilier — Vendre par l\'émotion', date:'2026-06-22', heure:'14:00', thematique:'Vente', description:'Comment raconter un bien pour déclencher le coup de cœur. Atelier pratique avec mises en situation.', lien_visio:'https://zoom.us/j/789012', max:20, inscrits:['AVA-00003','AVA-00006','AVA-00009','AVA-00011','AVA-00013','AVA-00021'] },
+  { id:'M003', titre:'Mandat exclusif : argumentaire qui convertit', date:'2026-05-15', heure:'10:00', thematique:'Vente', description:'Replay disponible.', lien_visio:'https://zoom.us/j/345678', max:25, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013','AVA-00021'] },
+];
+
+const LIENS = [
+  // ===== Outils licencié =====
+  { id:'L1', titre:'Compléter ma carte numérique', url:'https://forms.gle/ncWbV96fDQmcnaoq8', description:'Formulaire pour transmettre ou mettre à jour tes infos (photo, bio, coordonnées) qui apparaîtront sur ta carte digitale Maison d\'Ava.', categorie:'Outils licencié', icone:'📝' },
+
+  // ===== Pour vos clients (à partager) =====
+  { id:'L2', titre:'Confier sa recherche immobilière', url:'https://tally.so/r/XxePDY', description:'Lien à partager à vos prospects : formulaire de prise de mandat de recherche. Récupération du brief et coordonnées du client.', categorie:'Pour vos clients', icone:'🎯' },
+  { id:'L3', titre:'Prise de RDV — Dépôt mandat de recherche', url:'https://calendly.com/linda-lamaisondava/new-meeting', description:'Lien Calendly de Linda pour caler un RDV de dépôt de mandat de recherche.', categorie:'Pour vos clients', icone:'📅' },
+
+  // ===== Formations =====
+  { id:'L4', titre:'AVA Formation', url:'https://ava-formation.lovable.app/', description:'Plateforme de formations Maison d\'Ava. Accès au catalogue et inscriptions.', categorie:'Formations', icone:'🎓' },
+  { id:'L5', titre:'Catalogue Formation Immo / IA', url:'https://catalogueavaformationimmobilier.netlify.app/', description:'Catalogue complet des formations immobilier et IA proposées par AVA Formation.', categorie:'Formations', icone:'🤖' },
+
+  // ===== Plateforme Hub =====
+  { id:'L6', titre:'La Maison d\'Ava — Hub Immobilier', url:'https://lamaisondava-hubimmobilier.fr/', description:'Site officiel du Hub Immobilier Maison d\'Ava. Présentation publique du réseau.', categorie:'Plateforme Hub', icone:'🏠' },
+];
+
+const ADMIN_CODES = {
+  'LINDAVA':  { id: 'AVA-00001', scope: 'all' },   // Linda Crespellier - super-admin
+  'LAUAVA':   { id: 'AVA-00013', scope: 'all' },   // Laurence Borras - super-admin
+  'ADMIN94':  { id: 'AVA-00016', scope: '94' },    // Renato Ponzio - admin territorial 94
+};
+
+// Départements actifs (Linda gère depuis Paramètres)
+const DEPARTEMENTS = {
+  '33': { nom: 'Gironde', ville: 'Bordeaux', couleur: '#8B2D3A', couleurClair: '#B85968' },
+  '75': { nom: 'Paris', ville: 'Paris', couleur: '#5B7C99', couleurClair: '#7E9CB4' },
+  '92': { nom: 'Hauts-de-Seine', ville: 'Nanterre', couleur: '#5D8A6E', couleurClair: '#82AC91' },
+  '94': { nom: 'Val-de-Marne', ville: 'Créteil', couleur: '#7B4D6B', couleurClair: '#9F7290' },
+};
+
+function deptColor(code) {
+  return DEPARTEMENTS[code]?.couleur || '#F76E17';
+}
+function deptColorClair(code) {
+  return DEPARTEMENTS[code]?.couleurClair || '#FF9450';
+}
+function badgeDept(code, soft = true) {
+  // Badge coloré avec la couleur du département (par défaut : version douce)
+  if (!code || !DEPARTEMENTS[code]) return `<span class="badge badge-marine">📍 ${escapeHtml(code || '?')}</span>`;
+  const cls = soft ? `badge-dept-soft badge-dept-soft-${code}` : `badge-dept badge-dept-${code}`;
+  return `<span class="badge ${cls}">📍 ${escapeHtml(code)}</span>`;
+}
+
+// Paramètres globaux modifiables depuis l'onglet Paramètres (mode admin)
+// Dans la V1, ces valeurs seront stockées dans l'onglet CONFIG du Sheet
+const CONFIG = {
+  tally_events_33: 'https://tally.so/r/vGyO2g',   // Apér'Immo/Pause Café Gironde
+  tally_events_94: 'https://tally.so/r/jax0eY',   // Apér'Immo/Pause Café Val-de-Marne
+  tally_events_75: '',                            // Paris (à configurer)
+  tally_events_92: '',                            // Hauts-de-Seine (à configurer)
+  tally_masterclass: 'https://tally.so/r/D4dJ7p', // Masterclass (toutes territoires)
+  form_carte_numerique: 'https://forms.gle/ncWbV96fDQmcnaoq8', // Google Forms compléter sa carte
+};
+
+/* =====================================================================
+   STATE
+===================================================================== */
+
+let currentUser = null;
+let isAdmin = false;
+let adminScope = null;       // 'all' (super-admin) | département (admin territorial) | null
+let adminModeActive = false;
+let currentDept = 'all';
+let currentAnnuaireView = 'grid';
+let currentEventFilter = 'upcoming';
+let currentMcFilter = 'upcoming';
+let currentLieuSearch = '';
+
+/* Helpers permissions */
+function canEditEvent(evt) {
+  if (!isAdmin || !adminModeActive) return false;
+  if (adminScope === 'all') return true;
+  return evt.departement === adminScope;
+}
+function canEditLicencie(lic) {
+  if (!isAdmin || !adminModeActive) return false;
+  if (adminScope === 'all') return true;
+  return lic.departement === adminScope;
+}
+function canEditMasterclass() {
+  // Seul super-admin peut toucher aux masterclass
+  if (!isAdmin || !adminModeActive) return false;
+  return adminScope === 'all';
+}
+function canEditLien() {
+  // Liens utiles = global, seul super-admin
+  if (!isAdmin || !adminModeActive) return false;
+  return adminScope === 'all';
+}
+function canEditParams() {
+  if (!isAdmin || !adminModeActive) return false;
+  return adminScope === 'all';
+}
+function deptLabel(code) {
+  return code || '?';
+}
+
+/* =====================================================================
+   AUTH
+===================================================================== */
+
+function login() {
+  const code = document.getElementById('loginCode').value.trim().toUpperCase();
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  if (!code) { showLoginError('Saisissez un code'); return; }
+
+  // Code admin → on connecte le vrai licencié + flag admin + scope
+  if (ADMIN_CODES[code]) {
+    const admin = ADMIN_CODES[code];
+    const licencie = LICENCIES.find(l => l.id === admin.id);
+    if (licencie) {
+      currentUser = licencie;
+      isAdmin = true;
+      adminScope = admin.scope;  // 'all' ou département ('94', '33', etc.)
+      enterApp();
+      return;
+    }
+  }
+
+  // Code individuel (ID AVA-000XX)
+  const licencie = LICENCIES.find(l => l.id === code);
+  if (licencie) {
+    currentUser = licencie;
+    isAdmin = false;
+    adminScope = null;
+    enterApp();
+    return;
+  }
+
+  showLoginError('Code inconnu — vérifiez votre saisie');
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function enterApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  // Header user
+  const name = currentUser.prenom ? `${capitalize(currentUser.prenom)}` : 'Visiteur';
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userAvatar').textContent = (currentUser.prenom?.[0] || '?').toUpperCase();
+  document.getElementById('dashHello').textContent = currentUser.prenom ? capitalize(currentUser.prenom) + ' !' : '!';
+
+  // Admin toggle
+  if (isAdmin) {
+    document.getElementById('adminToggle').style.display = 'inline-flex';
+    // Si admin territorial : préfiltrer son département
+    if (adminScope && adminScope !== 'all') {
+      currentDept = adminScope;
+    }
+  }
+
+  // Onglet Profil (visible pour tout licencié connecté)
+  if (currentUser?.id) {
+    const tabProfil = document.getElementById('tabProfil');
+    tabProfil.style.display = 'inline-flex';
+    // Pulsation orange si fiche non vérifiée
+    tabProfil.classList.toggle('needs-completion', !currentUser.verifie);
+  }
+
+  renderDeptFilter();
+  renderAll();
+}
+
+function logout() {
+  currentUser = null;
+  isAdmin = false;
+  adminScope = null;
+  adminModeActive = false;
+  currentDept = 'all';
+  document.body.classList.remove('admin-mode');
+  document.getElementById('adminToggle').classList.remove('active');
+  document.getElementById('adminBanner').style.display = 'none';
+  // Masquer onglet Profil
+  const tp = document.getElementById('tabProfil');
+  if (tp) { tp.style.display = 'none'; tp.classList.remove('needs-completion'); }
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginCode').value = '';
+}
+
+function toggleAdminMode() {
+  adminModeActive = !adminModeActive;
+  document.body.classList.toggle('admin-mode', adminModeActive);
+  document.getElementById('adminToggle').classList.toggle('active', adminModeActive);
+  document.getElementById('adminBanner').style.display = adminModeActive ? 'flex' : 'none';
+  // Afficher les boutons "+ Ajouter"
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = adminModeActive ? '' : 'none';
+  });
+  // Bouton + masterclass : super-admin only
+  const addMcBtn = document.querySelector('.admin-only-superadmin');
+  if (addMcBtn) addMcBtn.style.display = (adminModeActive && adminScope === 'all') ? '' : 'none';
+  // Bouton + lien : super-admin only
+  const addLienBtn = document.querySelector('.admin-only-lien');
+  if (addLienBtn) addLienBtn.style.display = (adminModeActive && adminScope === 'all') ? '' : 'none';
+  // Onglet Paramètres : super-admin only
+  document.querySelectorAll('.admin-only-tab').forEach(el => {
+    el.style.display = (adminModeActive && adminScope === 'all') ? '' : 'none';
+  });
+  // BUG FIX : si on quitte le mode admin alors qu'on est sur l'onglet Paramètres,
+  // basculer vers Dashboard (sinon la vue Paramètres reste affichée alors que son onglet est caché)
+  if (!adminModeActive) {
+    const currentView = document.querySelector('.view.active')?.id;
+    if (currentView === 'view-parametres') {
+      setView('dashboard');
+    }
+  }
+  // Pré-remplir les paramètres dans la page admin
+  if (adminModeActive && adminScope === 'all') {
+    renderParametres();
+  }
+  renderAll();
+}
+
+function renderParametres() {
+  // Liste des départements actifs (avec puce couleur)
+  const deptList = document.getElementById('deptList');
+  if (deptList) {
+    deptList.innerHTML = Object.entries(DEPARTEMENTS).map(([code, info]) => `
+      <div class="dept-row">
+        <span class="dept-color-chip" style="background:${info.couleur};" title="Couleur attribuée"></span>
+        <strong>${code}</strong>
+        <span>${escapeHtml(info.nom)}</span>
+        <span style="color:var(--ava-texte-sec);">${escapeHtml(info.ville)}</span>
+        <button class="icon-btn danger" onclick="delDept('${code}')" title="Supprimer">×</button>
+      </div>`).join('');
+  }
+
+  // URLs Tally par département (dynamique)
+  const tallyContainer = document.getElementById('tallyEventsParams');
+  if (tallyContainer) {
+    tallyContainer.innerHTML = Object.entries(DEPARTEMENTS).map(([code, info]) => `
+      <div class="form-group">
+        <label>Tally — Événements ${code} <small style="color:var(--ava-texte-mute);">${escapeHtml(info.ville)} · Apér'Immo / Pause Café</small></label>
+        <input type="url" id="param_tally_${code}" placeholder="https://tally.so/r/xxxxx" value="${escapeHtml(CONFIG['tally_events_' + code] || '')}">
+      </div>`).join('');
+  }
+
+  // Tally masterclass
+  const imc = document.getElementById('param_tally_mc');
+  if (imc) imc.value = CONFIG.tally_masterclass;
+
+  // Form Google Compléter carte
+  const ifc = document.getElementById('param_form_carte');
+  if (ifc) ifc.value = CONFIG.form_carte_numerique || '';
+
+  // Liste admins
+  const adminList = document.getElementById('adminList');
+  if (adminList) {
+    adminList.innerHTML = Object.entries(ADMIN_CODES).map(([code, info]) => {
+      const lic = LICENCIES.find(l => l.id === info.id);
+      return `<tr>
+        <td style="padding:8px 12px;"><code>${code}</code></td>
+        <td style="padding:8px 12px;">${lic ? capitalize(lic.prenom) + ' ' + capitalize(lic.nom) : info.id}</td>
+        <td style="padding:8px 12px;">${info.scope === 'all' ? '<span class="badge badge-orange">SUPER-ADMIN</span>' : '<span class="badge badge-marine">Territoire ' + info.scope + '</span>'}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+function addDept() {
+  const code = document.getElementById('new_dept_code').value.trim();
+  const nom = document.getElementById('new_dept_nom').value.trim();
+  const ville = document.getElementById('new_dept_ville').value.trim();
+  if (!code || !nom || !ville) { alert('Renseignez les 3 champs.'); return; }
+  if (DEPARTEMENTS[code]) { alert('Ce département existe déjà.'); return; }
+  DEPARTEMENTS[code] = { nom, ville };
+  // Reset inputs
+  document.getElementById('new_dept_code').value = '';
+  document.getElementById('new_dept_nom').value = '';
+  document.getElementById('new_dept_ville').value = '';
+  renderParametres();
+  renderDeptFilter();
+}
+
+function delDept(code) {
+  // Vérifier qu'aucun licencié/event n'utilise ce code
+  const usedByLic = LICENCIES.some(l => l.departement === code);
+  const usedByEvt = EVENEMENTS.some(e => e.departement === code);
+  if (usedByLic || usedByEvt) {
+    alert(`Impossible de supprimer : ce département est utilisé par ${usedByLic ? 'des licenciés' : ''}${usedByLic && usedByEvt ? ' et ' : ''}${usedByEvt ? 'des événements' : ''}.`);
+    return;
+  }
+  if (!confirm(`Supprimer le département ${code} ?`)) return;
+  delete DEPARTEMENTS[code];
+  delete CONFIG['tally_events_' + code];
+  renderParametres();
+  renderDeptFilter();
+}
+
+function saveParams() {
+  // Récupérer toutes les URLs Tally events (dynamique selon DEPARTEMENTS)
+  Object.keys(DEPARTEMENTS).forEach(code => {
+    const inp = document.getElementById('param_tally_' + code);
+    if (inp) CONFIG['tally_events_' + code] = inp.value.trim();
+  });
+  CONFIG.tally_masterclass = document.getElementById('param_tally_mc').value.trim();
+  const fc = document.getElementById('param_form_carte');
+  if (fc) CONFIG.form_carte_numerique = fc.value.trim();
+  const flag = document.getElementById('paramsSaved');
+  flag.style.display = 'inline';
+  setTimeout(() => flag.style.display = 'none', 2000);
+  renderAll();
+}
+
+document.getElementById('loginCode').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+
+/* =====================================================================
+   NAVIGATION
+===================================================================== */
+
+function setView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  window.scrollTo(0, 0);
+}
+
+/* =====================================================================
+   UTILS
+===================================================================== */
+
+function capitalize(s) {
+  if (!s) return '';
+  return s.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ').replace(/[-'].$/, c => c.toUpperCase());
+}
+
+function initialsOf(l) {
+  return ((l.prenom?.[0] || '') + (l.nom?.[0] || '')).toUpperCase();
+}
+
+function avatarHTML(l, sizeClass = '') {
+  // Retourne <img> avec fallback initiales si photo absente ou échec chargement
+  if (l.photo) {
+    return `<img class="avatar-img" src="${escapeHtml(l.photo)}" alt="${escapeHtml(capitalize(l.prenom))}" referrerpolicy="no-referrer" onerror="this.style.display='none'; this.parentElement.dataset.fallback='1';">`;
+  }
+  return '';
+}
+
+function avatarStyle(l, size = 'large') {
+  // Style adaptatif :
+  // - Avec photo : fond plein dpt (fallback si la photo échoue) + bordure blanche
+  // - Sans photo : fond blanc + bordure ÉPAISSE couleur dpt + initiales en couleur dpt
+  const c = deptColor(l.departement);
+  const borderWidth = size === 'small' ? '2px' : '3px';
+  if (l.photo) {
+    const cc = deptColorClair(l.departement);
+    return `background: linear-gradient(135deg, ${c}, ${cc}); border: ${borderWidth} solid white;`;
+  }
+  return `background: white; color: ${c}; border: ${borderWidth} solid ${c};`;
+}
+
+function avatarBadge(l) {
+  return l.verifie ? '<span class="verifie-badge" title="Fiche complétée">✓</span>' : '';
+}
+
+function fullName(l) {
+  return `${capitalize(l.prenom)} ${capitalize(l.nom)}`;
+}
+
+function fmtDate(iso, opts = {}) {
+  const d = new Date(iso);
+  const day = d.getDate();
+  const months = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
+  if (opts.short) return { day, month: months[d.getMonth()], year: d.getFullYear() };
+  return d.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+
+function isPast(iso) {
+  return new Date(iso) < new Date(new Date().toDateString());
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+/* =====================================================================
+   RENDER — DASHBOARD
+===================================================================== */
+
+function renderDashboard() {
+  // CTA Dashboard pour licencié connecté (pas en mode admin)
+  // Bleu marine, 2 boutons : Voir mon profil + Demander carte digitale
+  const ctaEl = document.getElementById('dashCompleteFiche');
+  const dismissed = window._ctaProfilDismissed;
+  if (currentUser?.id && !adminModeActive && !dismissed) {
+    const l = currentUser;
+    const isVerifie = l.verifie;
+    const titre = isVerifie ? 'Votre espace Maison d\'Ava' : 'Bienvenue dans votre espace';
+    const sous = isVerifie
+      ? 'Retrouvez vos coordonnées, réseaux sociaux et carte digitale dans votre profil.'
+      : 'Personnalisez votre profil et commandez votre carte digitale pour gagner en visibilité auprès de vos clients.';
+
+    const formUrl = CONFIG.form_carte_numerique || '';
+    const carteBtn = formUrl
+      ? `<a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener" class="btn btn-cta-secondary">🪪 Demander ma carte digitale ↗</a>`
+      : '';
+
+    ctaEl.innerHTML = `
+      <div class="cta-banner-content">
+        <strong>👋 ${escapeHtml(titre)}</strong>
+        <small>${escapeHtml(sous)}</small>
+      </div>
+      <div class="cta-banner-actions">
+        <button class="btn btn-cta-primary" onclick="setView('profil')">👤 Voir mon profil</button>
+        ${carteBtn}
+        <button class="cta-dismiss" onclick="dismissCTA()" title="Masquer">×</button>
+      </div>`;
+    ctaEl.style.display = 'flex';
+  } else {
+    ctaEl.style.display = 'none';
+  }
+
+  // KPI admin
+  const kpiEl = document.getElementById('dashKPI');
+  if (adminModeActive) {
+    // Filtre par scope si admin territorial
+    const scopeFilter = (item) => adminScope === 'all' || item.departement === adminScope;
+    const myLic = LICENCIES.filter(scopeFilter);
+    const myEvt = EVENEMENTS.filter(scopeFilter);
+    const myMc = MASTERCLASS; // masterclass = transversales, pas de filtre
+
+    const totalLic = myLic.length;
+    const verifiees = myLic.filter(l => l.verifie).length;
+    const ficheVide = totalLic - verifiees;
+    const tauxCompletion = totalLic > 0 ? Math.round((verifiees / totalLic) * 100) : 0;
+    const nextEvt = myEvt.filter(e => !isPast(e.date)).sort((a,b) => a.date.localeCompare(b.date))[0];
+    const inscritsNextEvent = nextEvt?.inscrits.length || 0;
+    const totalEventsAvenir = myEvt.filter(e => !isPast(e.date)).length;
+    const totalMcAvenir = myMc.filter(e => !isPast(e.date)).length;
+
+    const scopeLabel = adminScope === 'all'
+      ? '🎯 PILOTAGE — Tout le réseau'
+      : `🎯 PILOTAGE — Territoire ${adminScope}`;
+
+    kpiEl.innerHTML = `
+      <div class="kpi-header">${scopeLabel}</div>
+      <div class="kpi-card"><div class="kpi-value">${totalLic}</div><div class="kpi-label">Licenciés ${adminScope === 'all' ? 'actifs' : 'sur ' + adminScope}</div></div>
+      <div class="kpi-card ${tauxCompletion < 50 ? 'warn' : ''}"><div class="kpi-value">${tauxCompletion}%</div><div class="kpi-label">Fiches vérifiées</div></div>
+      <div class="kpi-card ${ficheVide > 5 ? 'warn' : ''}"><div class="kpi-value">${ficheVide}</div><div class="kpi-label">Fiches à vérifier</div></div>
+      <div class="kpi-card"><div class="kpi-value">${totalEventsAvenir}</div><div class="kpi-label">Événements à venir</div></div>
+      ${adminScope === 'all' ? `<div class="kpi-card"><div class="kpi-value">${totalMcAvenir}</div><div class="kpi-label">Masterclass à venir</div></div>` : ''}
+      <div class="kpi-card"><div class="kpi-value">${inscritsNextEvent}</div><div class="kpi-label">Inscrits au prochain event</div></div>
+    `;
+    kpiEl.style.display = 'grid';
+  } else {
+    kpiEl.style.display = 'none';
+  }
+
+  // Prochain événement
+  const upcoming = EVENEMENTS.filter(e => !isPast(e.date)).sort((a,b) => a.date.localeCompare(b.date));
+  const nextEvt = upcoming[0];
+  const evtEl = document.getElementById('dashNextEvent');
+  if (nextEvt) {
+    const d = fmtDate(nextEvt.date, {short:true});
+    evtEl.innerHTML = `
+      <div class="hero-card-label">Prochain événement</div>
+      <h3>${escapeHtml(nextEvt.titre)}</h3>
+      <div class="meta">${d.day} ${d.month} ${d.year} · ${escapeHtml(nextEvt.heure)} · ${escapeHtml(nextEvt.lieu)}</div>
+      <div class="actions">
+        <button class="btn btn-marine btn-sm" onclick="openEventModal('${nextEvt.id}')">Voir le détail</button>
+      </div>`;
+    evtEl.classList.remove('empty');
+  } else {
+    evtEl.classList.add('empty');
+    evtEl.innerHTML = `<div class="hero-card-label">Prochain événement</div><h3>Aucun événement programmé</h3><div class="meta">Revenez bientôt !</div>`;
+  }
+
+  // Prochaine masterclass
+  const upMc = MASTERCLASS.filter(e => !isPast(e.date)).sort((a,b) => a.date.localeCompare(b.date));
+  const nextMc = upMc[0];
+  const mcEl = document.getElementById('dashNextMc');
+  if (nextMc) {
+    const d = fmtDate(nextMc.date, {short:true});
+    const places = nextMc.max - nextMc.inscrits.length;
+    mcEl.innerHTML = `
+      <div class="hero-card-label">Prochaine masterclass</div>
+      <h3>${escapeHtml(nextMc.titre)}</h3>
+      <div class="meta">${d.day} ${d.month} ${d.year} · ${escapeHtml(nextMc.heure)}${nextMc.thematique ? ' · ' + escapeHtml(nextMc.thematique) : ''}</div>
+      <div class="actions">
+        <button class="btn btn-marine btn-sm" onclick="openMcModal('${nextMc.id}')">Voir le détail</button>
+        <span class="places-counter ${places<=3?'warn':''} ${places<=0?'full':''}">${places > 0 ? places + ' places restantes' : 'COMPLET'}</span>
+      </div>`;
+    mcEl.classList.remove('empty');
+  } else {
+    mcEl.classList.add('empty');
+    mcEl.innerHTML = `<div class="hero-card-label">Prochaine masterclass</div><h3>Aucune masterclass programmée</h3><div class="meta">Revenez bientôt !</div>`;
+  }
+
+  // Derniers licenciés (les 5 derniers par ID)
+  const recent = [...LICENCIES].sort((a,b) => b.id.localeCompare(a.id)).slice(0, 5);
+  document.getElementById('dashRecent').innerHTML = recent.map(l => `
+    <div class="mini-card" onclick="openLicencieModal('${l.id}')">
+      <div class="mini-avatar" style="${avatarStyle(l, 'small')}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
+      <div class="mini-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
+      <div class="mini-job">${escapeHtml(l.metier || '—')}</div>
+    </div>`).join('');
+}
+
+/* =====================================================================
+   RENDER — ANNUAIRE
+===================================================================== */
+
+function renderDeptFilter() {
+  const departments = Object.entries(DEPARTEMENTS).sort((a,b) => a[0].localeCompare(b[0]));
+  const buttons = [
+    `<button class="filter-chip ${currentDept==='all'?'active':''}" data-dept="all" onclick="setDeptFilter('all')">Tous</button>`,
+    ...departments.map(([code, info]) =>
+      `<button class="filter-chip filter-chip-dept ${currentDept===code?'active':''}" data-dept="${code}" onclick="setDeptFilter('${code}')" style="--dept-c:${info.couleur};" title="${escapeHtml(info.nom)} — ${escapeHtml(info.ville)}"><span class="dept-dot" style="background:${info.couleur};"></span>${code}</button>`
+    )
+  ];
+  const html = buttons.join('');
+  const a = document.getElementById('filterDept');
+  const b = document.getElementById('filterEventDept');
+  if (a) a.innerHTML = html;
+  if (b) b.innerHTML = html;
+}
+
+function setDeptFilter(dept) {
+  currentDept = dept;
+  document.querySelectorAll('#filterDept .filter-chip, #filterEventDept .filter-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.dept === dept);
+  });
+  renderAnnuaire();
+  renderEvents();
+}
+
+function setAnnuaireView(v) {
+  currentAnnuaireView = v;
+  document.querySelectorAll('#filterView .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.view === v));
+  document.getElementById('annuaireGrid').style.display = v === 'grid' ? '' : 'none';
+  document.getElementById('annuaireList').style.display = v === 'list' ? '' : 'none';
+  renderAnnuaire();
+}
+
+function renderAnnuaire() {
+  const q = (document.getElementById('searchLic')?.value || '').trim().toLowerCase();
+  const filtered = LICENCIES.filter(l => {
+    if (currentDept !== 'all' && l.departement !== currentDept) return false;
+    if (!q) return true;
+    return [l.prenom, l.nom, l.metier, l.id].some(f => (f || '').toLowerCase().includes(q));
+  });
+
+  document.getElementById('countLicencies').textContent = filtered.length;
+  const grid = document.getElementById('annuaireGrid');
+  const list = document.getElementById('annuaireList');
+
+  if (filtered.length === 0) {
+    const empty = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">🔍</div><div>Aucun licencié ne correspond à votre recherche</div></div>`;
+    grid.innerHTML = empty;
+    list.innerHTML = empty;
+    return;
+  }
+
+  // Vue grille
+  grid.innerHTML = filtered.map(l => {
+    const editable = canEditLicencie(l);
+    return `
+    <div class="licencie-card" onclick="openLicencieModal('${l.id}')">
+      ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
+        <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">✎</button>
+        <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">×</button>
+      </div>` : ''}
+      <div class="licencie-avatar" style="${avatarStyle(l)}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
+      <div class="licencie-id">${l.id}</div>
+      <div class="licencie-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
+      <div class="licencie-job">${escapeHtml(l.metier || 'À compléter')}</div>
+      <div class="licencie-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
+    </div>`;
+  }).join('');
+
+  // Vue liste
+  list.innerHTML = filtered.map(l => {
+    const editable = canEditLicencie(l);
+    return `
+    <div class="licencie-row" onclick="openLicencieModal('${l.id}')">
+      <div class="row-avatar" style="${avatarStyle(l, 'small')}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
+      <div>
+        <div class="row-id">${l.id}</div>
+        <div class="row-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
+      </div>
+      <div class="row-metier">${escapeHtml(l.metier || 'À compléter')}</div>
+      <div class="row-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
+      <div class="row-actions">
+        ${l.tel ? `<a class="contact-btn" style="width:32px;height:32px;font-size:14px;" href="tel:${l.tel}" onclick="event.stopPropagation()" title="Téléphone">📞</a>` : ''}
+        ${l.email ? `<a class="contact-btn" style="width:32px;height:32px;font-size:14px;" href="mailto:${l.email}" onclick="event.stopPropagation()" title="Email">✉️</a>` : ''}
+      </div>
+      ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
+        <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">✎</button>
+        <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">×</button>
+      </div>` : '<div></div>'}
+    </div>`;
+  }).join('');
+}
+
+function openLicencieModal(id) {
+  const l = LICENCIES.find(x => x.id === id);
+  if (!l) return;
+
+  const tel = l.tel ? `<a href="tel:${l.tel}" class="contact-btn" title="Téléphone">📞</a>` : `<span class="contact-btn disabled" title="Téléphone manquant">📞</span>`;
+  const mail = l.email ? `<a href="mailto:${l.email}" class="contact-btn" title="Email">✉️</a>` : `<span class="contact-btn disabled" title="Email manquant">✉️</span>`;
+  const wa = l.tel ? `<a href="https://wa.me/${l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33')}" target="_blank" rel="noopener" class="contact-btn" title="WhatsApp">💬</a>` : `<span class="contact-btn disabled" title="WhatsApp indisponible">💬</span>`;
+  const carte = l.carte_url ? `<button class="contact-btn" onclick="openCarteDigitale('${l.id}')" title="Carte digitale">🪪</button>` : `<span class="contact-btn disabled" title="Carte non disponible">🪪</span>`;
+
+  // Réseaux sociaux + site
+  const social = [];
+  if (l.site) social.push(`<a href="${escapeHtml(l.site)}" target="_blank" rel="noopener" class="social-btn" title="Site web"><span>🌐</span><span>Site</span></a>`);
+  if (l.linkedin) social.push(`<a href="${escapeHtml(l.linkedin)}" target="_blank" rel="noopener" class="social-btn" title="LinkedIn"><span style="color:#0A66C2;">in</span><span>LinkedIn</span></a>`);
+  if (l.instagram) social.push(`<a href="${escapeHtml(l.instagram)}" target="_blank" rel="noopener" class="social-btn" title="Instagram"><span>📸</span><span>Instagram</span></a>`);
+  if (l.facebook) social.push(`<a href="${escapeHtml(l.facebook)}" target="_blank" rel="noopener" class="social-btn" title="Facebook"><span style="color:#1877F2;">f</span><span>Facebook</span></a>`);
+  if (l.tiktok) social.push(`<a href="${escapeHtml(l.tiktok)}" target="_blank" rel="noopener" class="social-btn" title="TikTok"><span>🎵</span><span>TikTok</span></a>`);
+  const socialRow = social.length > 0 ? `<div class="social-row">${social.join('')}</div>` : '';
+
+  // Si l'utilisateur consulte sa propre fiche → afficher bouton vers son onglet Profil
+  const isMyOwnCard = currentUser?.id === l.id;
+  const myCardBtn = isMyOwnCard
+    ? `<div style="margin-top:20px; padding:14px; background:var(--ava-creme); border:1px solid var(--ava-bord); border-radius:var(--radius-md); text-align:center;">
+        <p style="font-size:13px; color:var(--ava-texte-sec); margin-bottom:10px;">Vous consultez votre propre fiche.</p>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('modalLicencie').close(); setView('profil');">👤 Aller dans Mon profil</button>
+       </div>`
+    : '';
+
+  document.getElementById('modalLicencieBody').innerHTML = `
+    <div class="fiche-licencie">
+      <div class="fiche-avatar" style="${avatarStyle(l)}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
+      <div class="fiche-id">${l.id}${l.verifie ? ' · <span style="color:var(--ava-success); font-weight:700;">✓ Fiche vérifiée</span>' : ''}</div>
+      <div class="fiche-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
+      <div class="fiche-job">${escapeHtml(l.metier || 'Métier à compléter')}</div>
+      ${badgeDept(l.departement)}
+      <div class="fiche-contact">${tel}${mail}${wa}${carte}</div>
+      ${socialRow}
+      <div class="fiche-bio ${l.bio ? '' : 'empty'}">${l.bio ? escapeHtml(l.bio) : 'Bio non renseignée.'}</div>
+      ${myCardBtn}
+    </div>`;
+  document.getElementById('modalLicencie').showModal();
+}
+
+function openCarteDigitale(id) {
+  const l = LICENCIES.find(x => x.id === id);
+  if (!l) return;
+  // Fermer le modal licencié si ouvert
+  document.getElementById('modalLicencie').close();
+
+  // Réutiliser le modal Event pour afficher la carte
+  document.getElementById('modalEventTitle').textContent = 'Carte digitale';
+  document.getElementById('modalEventBody').innerHTML = `
+    <div style="padding:24px; text-align:center;">
+      <div class="fiche-id" style="margin-bottom:4px;">${l.id}</div>
+      <div class="fiche-name" style="margin-bottom:18px;">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
+      <div style="background:white; padding:20px; border-radius:var(--radius-md); display:inline-block; border:1px solid var(--ava-bord);">
+        ${l.qr_url
+          ? `<img src="${escapeHtml(l.qr_url)}" alt="QR code carte ${l.id}" style="width:200px; height:200px; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+             <div style="display:none; width:200px; height:200px; align-items:center; justify-content:center; color:var(--ava-texte-mute); font-size:12px; flex-direction:column;"><div style="font-size:48px; opacity:0.3;">📱</div>QR code indisponible</div>`
+          : `<div style="width:200px; height:200px; display:flex; align-items:center; justify-content:center; color:var(--ava-texte-mute); font-size:12px; flex-direction:column;"><div style="font-size:48px; opacity:0.3;">📱</div>QR code à générer</div>`
+        }
+      </div>
+      <p style="margin-top:14px; color:var(--ava-texte-sec); font-size:13px;">Scannez ce QR code pour ouvrir la carte digitale</p>
+      ${l.carte_url ? `<a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:14px;">Ouvrir la carte ↗</a>` : ''}
+    </div>`;
+  document.getElementById('modalEvent').showModal();
+}
+
+/* =====================================================================
+   RENDER — ÉVÉNEMENTS
+===================================================================== */
+
+function setEventFilter(s) {
+  currentEventFilter = s;
+  document.querySelectorAll('#filterEventStatus .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.status === s));
+  renderEvents();
+}
+
+function renderEvents() {
+  const q = (document.getElementById('searchLieu')?.value || '').trim().toLowerCase();
+  const filtered = EVENEMENTS.filter(e => {
+    const past = isPast(e.date);
+    if (currentEventFilter === 'past' ? !past : past) return false;
+    if (currentDept !== 'all' && e.departement !== currentDept) return false;
+    if (q && ![e.titre, e.lieu, e.type].some(f => (f || '').toLowerCase().includes(q))) return false;
+    return true;
+  }).sort((a,b) => currentEventFilter === 'past' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+
+  const list = document.getElementById('eventList');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📅</div><div>Aucun événement ${currentEventFilter === 'past' ? 'passé' : 'à venir'} pour ces critères</div></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(e => renderEventCard(e, false)).join('');
+}
+
+function getEventIcon(type) {
+  if (type === 'Apér\'Immo') return '🍸';
+  if (type === 'Pause Café') return '☕';
+  return '📅';
+}
+
+function getTallyUrl(item, isMc) {
+  if (isMc) return CONFIG.tally_masterclass;
+  return CONFIG['tally_events_' + item.departement] || '';
+}
+
+function buildTallyLink(item, isMc) {
+  const baseUrl = getTallyUrl(item, isMc);
+  if (!baseUrl) return '';
+  const params = new URLSearchParams({
+    [isMc ? 'masterclass_id' : 'event_id']: item.id,
+    titre: item.titre,
+    date: item.date,
+    departement: item.departement || '',
+    licencie_id: currentUser?.id || '',
+    licencie_nom: currentUser ? `${capitalize(currentUser.prenom)} ${capitalize(currentUser.nom)}` : '',
+  });
+  return `${baseUrl}?${params.toString()}`;
+}
+
+function renderEventCard(e, isMc) {
+  const d = fmtDate(e.date, {short:true});
+  const past = isPast(e.date);
+  const places = e.max - e.inscrits.length;
+  const inscrit = currentUser && e.inscrits.includes(currentUser.id);
+  const openFn = isMc ? `openMcModal('${e.id}')` : `openEventModal('${e.id}')`;
+
+  // Badges header (type pour events / thématique pour masterclass)
+  let badge = '';
+  let icon = '';
+  if (isMc) {
+    icon = '🎓';
+    badge = e.thematique ? `<span class="badge badge-marine">${escapeHtml(e.thematique)}</span>` : '';
+  } else {
+    icon = getEventIcon(e.type);
+    if (e.type) badge = `<span class="badge badge-orange">${icon} ${escapeHtml(e.type)}</span>`;
+  }
+
+  // Meta info
+  const deptPill = e.departement ? `<span class="dept-pill dept-pill-${e.departement}" style="--dept-c:${deptColor(e.departement)};">${escapeHtml(e.departement)}</span>` : '';
+  const meta = isMc
+    ? `<span>🕐 ${escapeHtml(e.heure)}</span>`
+    : `<span>🕐 ${escapeHtml(e.heure)}</span><span>📍 ${escapeHtml(e.lieu)}</span>${deptPill}`;
+
+  // Bouton inscription
+  let actionBtn = '';
+  if (!past) {
+    if (inscrit) actionBtn = `<button class="btn btn-secondary btn-sm" disabled>✓ Inscrit</button>`;
+    else if (places <= 0) actionBtn = `<button class="btn btn-secondary btn-sm" disabled>Complet</button>`;
+    else {
+      const tallyUrl = buildTallyLink(e, isMc);
+      if (tallyUrl) {
+        actionBtn = `<a href="${tallyUrl}" target="_blank" rel="noopener" class="btn btn-marine btn-sm" onclick="event.stopPropagation()">S'inscrire ↗</a>`;
+      } else {
+        actionBtn = `<button class="btn btn-secondary btn-sm" disabled title="URL Tally non configurée pour ce département">S'inscrire</button>`;
+      }
+    }
+  }
+
+  // Mini liste inscrits (3 premiers + "et X autres")
+  const inscritsMini = e.inscrits.slice(0, 3).map(id => {
+    const l = LICENCIES.find(x => x.id === id);
+    return l ? `<span class="inscrit-mini" title="${capitalize(l.prenom)} ${capitalize(l.nom)}">${initialsOf(l)}</span>` : '';
+  }).join('');
+  const restant = e.inscrits.length - 3;
+  const inscritsMore = restant > 0 ? `<span class="inscrit-mini-more">+${restant}</span>` : '';
+  const inscritsRow = e.inscrits.length > 0
+    ? `<div class="inscrits-mini-row">${inscritsMini}${inscritsMore}</div>`
+    : '';
+
+  // Permissions admin : super-admin partout, admin territorial sur son scope, masterclass = super-admin only
+  const canEdit = isMc ? canEditMasterclass() : canEditEvent(e);
+
+  return `
+    <div class="event-card ${past?'past':''}" onclick="${openFn}">
+      <div class="event-date">
+        <div class="day">${d.day}</div>
+        <div class="month">${d.month}</div>
+        <div class="year">${d.year}</div>
+      </div>
+      <div class="event-info">
+        <div class="event-badges">${badge}</div>
+        <h4>${escapeHtml(e.titre)}</h4>
+        <div class="event-meta">${meta}</div>
+        ${inscritsRow}
+      </div>
+      <div class="event-actions">
+        ${actionBtn}
+        ${!past ? `<span class="places-counter ${places<=3?'warn':''} ${places<=0?'full':''}">${places > 0 ? places + '/' + e.max + ' places' : 'Complet'}</span>` : `<span class="places-counter">${e.inscrits.length} inscrits</span>`}
+        ${!past ? `<button class="btn btn-secondary" onclick="event.stopPropagation(); openShareModal('${e.id}', ${isMc?'true':'false'})" title="Inviter quelqu'un à cet événement"><span style="font-size:15px;">📨</span> Inviter un contact</button>` : ''}
+        ${canEdit ? `<div class="admin-actions-evt" onclick="event.stopPropagation()">
+          <button class="icon-btn" onclick="${isMc?'openMcEdit':'openEventEdit'}('${e.id}')" title="Modifier">✎</button>
+          <button class="icon-btn danger" onclick="${isMc?'deleteMc':'deleteEvent'}('${e.id}')" title="Supprimer">×</button>
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+function deleteEvent(id) {
+  if (!confirm('Supprimer cet événement ?')) return;
+  const idx = EVENEMENTS.findIndex(x => x.id === id);
+  if (idx >= 0) EVENEMENTS.splice(idx, 1);
+  renderAll();
+}
+
+function deleteMc(id) {
+  if (!confirm('Supprimer cette masterclass ?')) return;
+  const idx = MASTERCLASS.findIndex(x => x.id === id);
+  if (idx >= 0) MASTERCLASS.splice(idx, 1);
+  renderAll();
+}
+
+function openEventModal(id) {
+  const e = EVENEMENTS.find(x => x.id === id);
+  if (!e) return;
+  openEventModalGeneric(e, false);
+}
+
+function openMcModal(id) {
+  const m = MASTERCLASS.find(x => x.id === id);
+  if (!m) return;
+  openEventModalGeneric(m, true);
+}
+
+function openEventModalGeneric(e, isMc) {
+  const d = fmtDate(e.date, {short:true});
+  const places = e.max - e.inscrits.length;
+  const past = isPast(e.date);
+  const inscrit = currentUser && e.inscrits.includes(currentUser.id);
+
+  const inscritsList = e.inscrits.map(id => {
+    const l = LICENCIES.find(x => x.id === id);
+    return l ? `<span class="inscrit-pill">${capitalize(l.prenom)} ${capitalize(l.nom)}</span>` : '';
+  }).join('');
+
+  // Bouton inscription Tally
+  let actionBtn = '';
+  if (!past && !inscrit && places > 0) {
+    const tallyUrl = buildTallyLink(e, isMc);
+    if (tallyUrl) {
+      actionBtn = `<a href="${tallyUrl}" target="_blank" rel="noopener" class="btn btn-marine">S'inscrire via le formulaire ↗</a>`;
+    } else {
+      actionBtn = `<button class="btn btn-secondary" disabled title="URL Tally non configurée">Inscription indisponible</button>`;
+    }
+  } else if (inscrit) {
+    actionBtn = `<span class="badge badge-success">✓ Vous êtes inscrit</span>`;
+  }
+
+  // Badge type
+  let typeBadge = '';
+  if (isMc) {
+    typeBadge = e.thematique ? `<span class="badge badge-marine">🎓 ${escapeHtml(e.thematique)}</span>` : '';
+  } else {
+    if (e.type) typeBadge = `<span class="badge badge-orange">${getEventIcon(e.type)} ${escapeHtml(e.type)}</span>`;
+  }
+
+  // Meta supplémentaire
+  const extraMeta = isMc
+    ? `${!past && e.lien_visio ? `<p><strong>🔗 Lien visio :</strong> <a href="${escapeHtml(e.lien_visio)}" target="_blank">${escapeHtml(e.lien_visio)}</a></p>` : ''}`
+    : `<p><strong>📍 Lieu :</strong> ${escapeHtml(e.lieu)}</p>
+       <p><strong>🏢 Département :</strong> ${escapeHtml(deptLabel(e.departement))}</p>`;
+
+  document.getElementById('modalEventTitle').textContent = isMc ? 'Masterclass' : 'Événement';
+  document.getElementById('modalEventBody').innerHTML = `
+    <div class="event-modal-cover">
+      <div class="event-date">
+        <div class="day">${d.day}</div>
+        <div class="month">${d.month}</div>
+        <div class="year">${d.year}</div>
+      </div>
+    </div>
+    <div class="event-modal-body">
+      ${typeBadge ? `<div style="margin-bottom:8px;">${typeBadge}</div>` : ''}
+      <h3>${escapeHtml(e.titre)}</h3>
+      <p style="color:var(--ava-texte-sec); margin-bottom:14px;">🕐 ${escapeHtml(e.heure)}</p>
+      ${extraMeta}
+      <p style="margin-top:14px; line-height:1.6;">${escapeHtml(e.description)}</p>
+      <div style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <strong>${e.inscrits.length} inscrit${e.inscrits.length>1?'s':''} ${e.max ? `/ ${e.max}` : ''}</strong>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          ${!past ? `<button class="btn btn-secondary" onclick="openShareModal('${e.id}', ${isMc?'true':'false'})">📨 Inviter un contact</button>` : ''}
+          ${actionBtn}
+        </div>
+      </div>
+      ${inscritsList ? `<div class="inscrits-list">${inscritsList}</div>` : '<p style="color:var(--ava-texte-mute); font-style:italic; margin-top:10px;">Aucun inscrit pour l\'instant.</p>'}
+    </div>`;
+  document.getElementById('modalEvent').showModal();
+}
+
+function toggleInscription(id, type) {
+  // Inscription gérée via Tally → Make → Sheet. Cette fonction reste pour compatibilité legacy.
+  alert("L'inscription se fait via le formulaire Tally. Cliquez sur le bouton \"S'inscrire\".");
+}
+
+/* =====================================================================
+   PARTAGE D'ÉVÉNEMENT / MASTERCLASS
+===================================================================== */
+
+function openShareModal(id, isMc) {
+  const item = isMc ? MASTERCLASS.find(x => x.id === id) : EVENEMENTS.find(x => x.id === id);
+  if (!item) return;
+
+  // Construire le lien d'inscription Tally (sans licencie_id : on partage à quelqu'un d'extérieur)
+  const baseUrl = getTallyUrl(item, isMc);
+  let inscriptionUrl = baseUrl;
+  if (baseUrl) {
+    const params = new URLSearchParams({
+      [isMc ? 'masterclass_id' : 'event_id']: item.id,
+      titre: item.titre,
+      date: item.date,
+      ...(item.departement && { departement: item.departement }),
+      source: 'partage',
+    });
+    inscriptionUrl = `${baseUrl}?${params.toString()}`;
+  }
+
+  const d = fmtDate(item.date, {short:true});
+  const dateLisible = `${d.day} ${d.month} ${d.year}`;
+  const lieu = isMc ? 'En visio' : (item.lieu || '');
+
+  // Message pré-rédigé pour partage
+  const titreType = isMc ? 'masterclass' : 'événement';
+  const message = `Bonjour,
+
+Je t'invite à participer à ${titreType === 'masterclass' ? 'la' : 'l\''}${titreType} "${item.titre}" organisé${titreType==='masterclass'?'e':''} par la Maison d'Ava.
+
+📅 ${dateLisible} à ${item.heure}
+${lieu ? '📍 ' + lieu + '\n' : ''}
+${inscriptionUrl ? '👉 Inscription : ' + inscriptionUrl : '(Lien d\'inscription à venir)'}
+
+À bientôt !`;
+
+  const messageUrlEncoded = encodeURIComponent(message);
+  const subjectUrlEncoded = encodeURIComponent(`Invitation : ${item.titre} — Maison d'Ava`);
+
+  document.getElementById('modalShareBody').innerHTML = `
+    <div style="padding: 4px 0 14px;">
+      <div style="background:var(--ava-creme); padding:14px; border-radius:var(--radius-md); border:1px solid var(--ava-bord); margin-bottom:18px;">
+        <div style="font-size:11px; font-weight:700; color:var(--ava-orange); letter-spacing:0.08em; margin-bottom:6px;">${titreType.toUpperCase()}</div>
+        <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600; color:var(--ava-marine); margin-bottom:4px;">${escapeHtml(item.titre)}</div>
+        <div style="font-size:13px; color:var(--ava-texte-sec);">${dateLisible} · ${escapeHtml(item.heure)}${lieu ? ' · ' + escapeHtml(lieu) : ''}</div>
+      </div>
+
+      <p style="font-size:13px; color:var(--ava-texte-sec); margin-bottom:14px;">
+        Invitez une personne extérieure au réseau à s'inscrire à ${titreType === 'masterclass' ? 'cette' : 'cet'} ${titreType}. Le lien d'inscription est déjà inclus dans le message :
+      </p>
+
+      <div class="share-grid">
+        <a href="https://wa.me/?text=${messageUrlEncoded}" target="_blank" rel="noopener" class="share-btn">
+          <span class="share-icon" style="background:#25D366;">💬</span>
+          <span>WhatsApp</span>
+        </a>
+        <a href="mailto:?subject=${subjectUrlEncoded}&body=${messageUrlEncoded}" class="share-btn">
+          <span class="share-icon" style="background:var(--ava-marine);">✉️</span>
+          <span>E-mail</span>
+        </a>
+        <a href="sms:?&body=${messageUrlEncoded}" class="share-btn">
+          <span class="share-icon" style="background:var(--ava-orange);">📱</span>
+          <span>SMS</span>
+        </a>
+        <button class="share-btn" onclick="copyShareLink(\`${inscriptionUrl}\`, this)">
+          <span class="share-icon" style="background:var(--ava-marine-soft);">🔗</span>
+          <span>Copier le lien</span>
+        </button>
+      </div>
+
+      ${!inscriptionUrl ? '<p style="margin-top:14px; font-size:12px; color:var(--ava-warn); text-align:center;"><em>⚠️ URL Tally non configurée pour ce département. Renseignez-la dans Paramètres.</em></p>' : ''}
+    </div>`;
+
+  document.getElementById('modalShare').showModal();
+}
+
+function copyShareLink(url, btn) {
+  if (!url) { alert('Aucun lien à copier'); return; }
+  navigator.clipboard.writeText(url).then(() => {
+    const label = btn.querySelector('span:last-child');
+    const original = label.textContent;
+    label.textContent = '✓ Copié !';
+    btn.style.background = 'var(--ava-success)';
+    btn.style.color = 'white';
+    setTimeout(() => {
+      label.textContent = original;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 1500);
+  }).catch(() => {
+    // Fallback : sélection texte
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Lien copié');
+  });
+}
+
+/* =====================================================================
+   RENDER — MASTERCLASS
+===================================================================== */
+
+function setMcFilter(s) {
+  currentMcFilter = s;
+  document.querySelectorAll('#filterMcStatus .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.status === s));
+  renderMasterclass();
+}
+
+function renderMasterclass() {
+  const filtered = MASTERCLASS.filter(e => {
+    const past = isPast(e.date);
+    return currentMcFilter === 'past' ? past : !past;
+  }).sort((a,b) => currentMcFilter === 'past' ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+
+  const list = document.getElementById('mcList');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎓</div><div>Aucune masterclass ${currentMcFilter === 'past' ? 'passée' : 'à venir'}</div></div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(e => renderEventCard(e, true)).join('');
+}
+
+/* =====================================================================
+   RENDER — PROFIL
+===================================================================== */
+
+function renderProfil() {
+  if (!currentUser?.id) return;
+  const l = LICENCIES.find(x => x.id === currentUser.id);
+  if (!l) return;
+
+  const container = document.getElementById('profilContent');
+  const isVerifie = l.verifie;
+  const formUrl = CONFIG.form_carte_numerique || '';
+
+  // Bloc CTA en haut du profil (toujours visible)
+  const ctaTitle = isVerifie
+    ? 'Profil vérifié ✓ — Modifier mes informations'
+    : 'Complétez votre profil Maison d\'Ava';
+  const ctaSub = isVerifie
+    ? 'Vous pouvez mettre à jour vos coordonnées et gérer votre carte digitale à tout moment.'
+    : 'Photo, bio, coordonnées, réseaux sociaux, et option carte digitale — tout se renseigne en un seul formulaire.';
+  const ctaBtn = isVerifie ? 'Modifier mes informations' : 'Compléter mon profil';
+
+  const ctaBlock = formUrl ? `
+    <div class="profil-cta">
+      <div class="profil-cta-content">
+        <strong>${isVerifie ? '✓' : '✨'} ${escapeHtml(ctaTitle)}</strong>
+        <small>${escapeHtml(ctaSub)}</small>
+      </div>
+      <a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener" class="btn">${escapeHtml(ctaBtn)} ↗</a>
+    </div>` : '';
+
+  // Helper pour afficher un champ
+  const info = (icone, label, value, link = null) => {
+    if (!value) {
+      return `<div class="profil-info-item empty">
+        <span class="info-icone">${icone}</span>
+        <div class="info-content"><small>${escapeHtml(label)}</small><strong>Non renseigné</strong></div>
+      </div>`;
+    }
+    const inner = link
+      ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener" style="color:var(--ava-marine); text-decoration:none;">${escapeHtml(value)}</a>`
+      : escapeHtml(value);
+    return `<div class="profil-info-item">
+      <span class="info-icone">${icone}</span>
+      <div class="info-content"><small>${escapeHtml(label)}</small><strong>${inner}</strong></div>
+    </div>`;
+  };
+
+  // Bouton Carte digitale (si dispo)
+  const carteBtn = l.carte_url
+    ? `<button class="btn btn-secondary" onclick="openCarteDigitale('${l.id}')">🪪 Voir ma carte digitale</button>`
+    : '';
+
+  container.innerHTML = `
+    ${ctaBlock}
+    <div class="profil-card">
+      <div class="profil-header">
+        <div class="profil-avatar" style="${avatarStyle(l)}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
+        <div class="profil-identity">
+          <div class="profil-id">${l.id}${isVerifie ? ' · <span style="color:var(--ava-success);">✓ Vérifié</span>' : ''}</div>
+          <h3>${capitalize(l.prenom)} ${capitalize(l.nom)}</h3>
+          <div class="profil-job">${escapeHtml(l.metier || 'Métier à compléter')}</div>
+          ${badgeDept(l.departement)}
+        </div>
+      </div>
+
+      <div class="profil-section">
+        <h4>📞 Coordonnées</h4>
+        <div class="profil-info-grid">
+          ${info('📞', 'Téléphone', l.tel, l.tel ? 'tel:' + l.tel : null)}
+          ${info('✉️', 'Email', l.email, l.email ? 'mailto:' + l.email : null)}
+          ${info('🌐', 'Site web', l.site, l.site)}
+          ${info('💬', 'WhatsApp', l.tel ? l.tel : '', l.tel ? 'https://wa.me/' + l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33') : null)}
+        </div>
+      </div>
+
+      <div class="profil-section">
+        <h4>🔗 Réseaux sociaux</h4>
+        <div class="profil-info-grid">
+          ${info('💼', 'LinkedIn', l.linkedin, l.linkedin)}
+          ${info('📸', 'Instagram', l.instagram, l.instagram)}
+          ${info('👤', 'Facebook', l.facebook, l.facebook)}
+          ${info('🎵', 'TikTok', l.tiktok, l.tiktok)}
+        </div>
+      </div>
+
+      <div class="profil-section">
+        <h4>📝 Bio</h4>
+        <div class="profil-info-item ${l.bio ? '' : 'empty'}" style="display:block;">
+          <strong style="font-weight:400; line-height:1.6;">${l.bio ? escapeHtml(l.bio) : 'Bio non renseignée — ajoutez quelques lignes pour vous présenter au réseau.'}</strong>
+        </div>
+      </div>
+
+      ${carteBtn ? `<div class="profil-section">
+        <h4>🪪 Carte digitale</h4>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          ${carteBtn}
+          ${l.carte_url ? `<a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-ghost">Ouvrir la page ↗</a>` : ''}
+        </div>
+      </div>` : ''}
+    </div>`;
+}
+
+/* =====================================================================
+   RENDER — LIENS
+===================================================================== */
+
+function renderLiens() {
+  // Ordre fixe des catégories (les autres viendront à la fin si admin en ajoute)
+  const ordrePrefere = ['Outils licencié', 'Pour vos clients', 'Formations', 'Plateforme Hub'];
+  const byCategorie = {};
+  LIENS.forEach(l => {
+    if (!byCategorie[l.categorie]) byCategorie[l.categorie] = [];
+    byCategorie[l.categorie].push(l);
+  });
+  // Catégories triées : ordre préféré d'abord, le reste après
+  const catsOrdered = [
+    ...ordrePrefere.filter(c => byCategorie[c]),
+    ...Object.keys(byCategorie).filter(c => !ordrePrefere.includes(c)),
+  ];
+
+  const container = document.getElementById('liensContainer');
+  const canEdit = canEditLien();
+  container.innerHTML = catsOrdered.map(cat => `
+    <div class="liens-categorie">
+      <h3>${escapeHtml(cat)}</h3>
+      <div class="liens-grid">
+        ${byCategorie[cat].map(l => `
+          <div class="lien-card-wrap">
+            <a class="lien-card" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">
+              <span class="arrow">↗</span>
+              ${l.icone ? `<div class="lien-icone">${l.icone}</div>` : ''}
+              <h4>${escapeHtml(l.titre)}</h4>
+              <p>${escapeHtml(l.description)}</p>
+            </a>
+            ${canEdit ? `<div class="lien-admin-actions">
+              <button class="icon-btn" onclick="openLienEdit('${l.id}')" title="Modifier">✎</button>
+              <button class="icon-btn danger" onclick="deleteLien('${l.id}')" title="Supprimer">×</button>
+            </div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function deleteLien(id) {
+  if (!confirm('Supprimer ce lien ?')) return;
+  const idx = LIENS.findIndex(x => x.id === id);
+  if (idx >= 0) LIENS.splice(idx, 1);
+  renderAll();
+}
+
+/* =====================================================================
+   ADMIN CRUD (UI uniquement, pas branché Sheet)
+===================================================================== */
+
+function openLicencieEdit(id) {
+  const l = id ? LICENCIES.find(x => x.id === id) : { id:'AVA-000' + (LICENCIES.length+1).toString().padStart(2,'0'), prenom:'', nom:'', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'', qr_url:'', photo:'', site:'', linkedin:'', instagram:'', facebook:'', tiktok:'', verifie:false };
+  const deptOptions = Object.entries(DEPARTEMENTS).map(([code, info]) =>
+    `<option value="${code}" ${l.departement===code?'selected':''}>${code} — ${info.ville} (${info.nom})</option>`
+  ).join('');
+  document.getElementById('modalEditTitle').textContent = id ? 'Modifier le licencié' : 'Nouveau licencié';
+  document.getElementById('modalEditBody').innerHTML = `
+    <div class="form-group"><label>ID Maison d'Ava</label><input id="f_id" value="${escapeHtml(l.id)}" ${id?'readonly':''}></div>
+    <div class="form-row">
+      <div class="form-group"><label>Prénom</label><input id="f_prenom" value="${escapeHtml(l.prenom)}"></div>
+      <div class="form-group"><label>Nom</label><input id="f_nom" value="${escapeHtml(l.nom)}"></div>
+    </div>
+    <div class="form-group"><label>Métier / Activité</label><input id="f_metier" value="${escapeHtml(l.metier)}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Département</label>
+        <select id="f_dept">${deptOptions}</select>
+      </div>
+      <div class="form-group"><label>Téléphone</label><input id="f_tel" value="${escapeHtml(l.tel)}"></div>
+    </div>
+    <div class="form-group"><label>Email</label><input id="f_email" value="${escapeHtml(l.email)}"></div>
+    <div class="form-group"><label>Bio</label><textarea id="f_bio" rows="3">${escapeHtml(l.bio)}</textarea></div>
+    <div class="form-group"><label>Photo (URL ou chemin)</label><input id="f_photo" value="${escapeHtml(l.photo || '')}" placeholder="./photos/AVA-XXXXX.jpg"></div>
+    <div class="form-group"><label>Site web</label><input id="f_site" value="${escapeHtml(l.site || '')}" placeholder="https://..."></div>
+    <div class="form-row">
+      <div class="form-group"><label>LinkedIn</label><input id="f_linkedin" value="${escapeHtml(l.linkedin || '')}"></div>
+      <div class="form-group"><label>Instagram</label><input id="f_instagram" value="${escapeHtml(l.instagram || '')}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Facebook</label><input id="f_facebook" value="${escapeHtml(l.facebook || '')}"></div>
+      <div class="form-group"><label>TikTok</label><input id="f_tiktok" value="${escapeHtml(l.tiktok || '')}"></div>
+    </div>
+    <div class="form-group"><label>URL Carte digitale (GitHub Pages)</label><input id="f_carte" value="${escapeHtml(l.carte_url || '')}" placeholder="https://maison-ava.github.io/cartes/AVA-00001"></div>
+    <div class="form-group"><label>URL QR code</label><input id="f_qr" value="${escapeHtml(l.qr_url || '')}" placeholder="https://api.qrserver.com/v1/create-qr-code/?data=..."></div>
+    <div class="form-group">
+      <label><input type="checkbox" id="f_verifie" ${l.verifie?'checked':''} style="width:auto; margin-right:6px;"> Fiche vérifiée (badge ✓ vert)</label>
+    </div>`;
+  document.getElementById('modalEditSave').onclick = () => {
+    const data = {
+      id: document.getElementById('f_id').value.trim(),
+      prenom: document.getElementById('f_prenom').value.trim(),
+      nom: document.getElementById('f_nom').value.trim(),
+      metier: document.getElementById('f_metier').value.trim(),
+      departement: document.getElementById('f_dept').value,
+      tel: document.getElementById('f_tel').value.trim(),
+      email: document.getElementById('f_email').value.trim(),
+      bio: document.getElementById('f_bio').value.trim(),
+      photo: document.getElementById('f_photo').value.trim(),
+      site: document.getElementById('f_site').value.trim(),
+      linkedin: document.getElementById('f_linkedin').value.trim(),
+      instagram: document.getElementById('f_instagram').value.trim(),
+      facebook: document.getElementById('f_facebook').value.trim(),
+      tiktok: document.getElementById('f_tiktok').value.trim(),
+      carte_url: document.getElementById('f_carte').value.trim(),
+      qr_url: document.getElementById('f_qr').value.trim(),
+      verifie: document.getElementById('f_verifie').checked,
+    };
+    if (id) Object.assign(LICENCIES.find(x => x.id === id), data);
+    else LICENCIES.push(data);
+    document.getElementById('modalEdit').close();
+    renderAll();
+  };
+  document.getElementById('modalEdit').showModal();
+}
+
+function deleteLicencie(id) {
+  if (!confirm('Supprimer ce licencié ?')) return;
+  const idx = LICENCIES.findIndex(x => x.id === id);
+  if (idx >= 0) LICENCIES.splice(idx, 1);
+  renderAll();
+}
+
+function openEventEdit(id) {
+  const e = id ? EVENEMENTS.find(x => x.id === id) : { id:'E' + String(EVENEMENTS.length+1).padStart(3,'0'), titre:'', type:'Apér\'Immo', date:'', heure:'', lieu:'', description:'', departement: adminScope !== 'all' ? adminScope : '33', max:30, inscrits:[] };
+  // Si admin territorial : limiter à son département
+  const availableDepts = adminScope === 'all'
+    ? Object.entries(DEPARTEMENTS)
+    : [[adminScope, DEPARTEMENTS[adminScope]]];
+  const deptOptions = availableDepts.map(([code, info]) =>
+    `<option value="${code}" ${e.departement===code?'selected':''}>${code} — ${info.ville} (${info.nom})</option>`
+  ).join('');
+  document.getElementById('modalEditTitle').textContent = id ? 'Modifier l\'événement' : 'Nouvel événement';
+  document.getElementById('modalEditBody').innerHTML = `
+    <div class="form-group"><label>Titre</label><input id="f_titre" value="${escapeHtml(e.titre)}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Type</label>
+        <select id="f_type">
+          <option ${e.type==='Apér\'Immo'?'selected':''}>Apér'Immo</option>
+          <option ${e.type==='Pause Café'?'selected':''}>Pause Café</option>
+          <option ${e.type==='Autre'?'selected':''}>Autre</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Département</label>
+        <select id="f_dept">${deptOptions}</select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input type="date" id="f_date" value="${e.date}"></div>
+      <div class="form-group"><label>Heure</label><input type="time" id="f_heure" value="${e.heure}"></div>
+    </div>
+    <div class="form-group"><label>Lieu</label><input id="f_lieu" value="${escapeHtml(e.lieu)}" placeholder="Ex: Bordeaux — Place Pey-Berland"></div>
+    <div class="form-group"><label>Places max</label><input type="number" id="f_max" value="${e.max}"></div>
+    <div class="form-group"><label>Description</label><textarea id="f_desc" rows="3">${escapeHtml(e.description)}</textarea></div>`;
+  document.getElementById('modalEditSave').onclick = () => {
+    const data = {
+      titre: document.getElementById('f_titre').value.trim(),
+      type: document.getElementById('f_type').value,
+      date: document.getElementById('f_date').value,
+      heure: document.getElementById('f_heure').value,
+      lieu: document.getElementById('f_lieu').value.trim(),
+      departement: document.getElementById('f_dept').value,
+      max: parseInt(document.getElementById('f_max').value) || 30,
+      description: document.getElementById('f_desc').value.trim(),
+    };
+    if (id) Object.assign(EVENEMENTS.find(x => x.id === id), data);
+    else EVENEMENTS.push({ ...e, ...data });
+    document.getElementById('modalEdit').close();
+    renderAll();
+  };
+  document.getElementById('modalEdit').showModal();
+}
+
+function openMcEdit(id) {
+  const m = id ? MASTERCLASS.find(x => x.id === id) : { id:'M' + String(MASTERCLASS.length+1).padStart(3,'0'), titre:'', date:'', heure:'', thematique:'', description:'', lien_visio:'', max:30, inscrits:[] };
+  document.getElementById('modalEditTitle').textContent = id ? 'Modifier la masterclass' : 'Nouvelle masterclass';
+  document.getElementById('modalEditBody').innerHTML = `
+    <div class="form-group"><label>Titre</label><input id="f_titre" value="${escapeHtml(m.titre)}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input type="date" id="f_date" value="${m.date}"></div>
+      <div class="form-group"><label>Heure</label><input type="time" id="f_heure" value="${m.heure}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Thématique</label><input id="f_them" value="${escapeHtml(m.thematique)}"></div>
+      <div class="form-group"><label>Places max</label><input type="number" id="f_max" value="${m.max}"></div>
+    </div>
+    <div class="form-group"><label>Lien visio</label><input id="f_lien" value="${escapeHtml(m.lien_visio)}"></div>
+    <div class="form-group"><label>Description</label><textarea id="f_desc" rows="3">${escapeHtml(m.description)}</textarea></div>`;
+  document.getElementById('modalEditSave').onclick = () => {
+    const data = {
+      titre: document.getElementById('f_titre').value.trim(),
+      date: document.getElementById('f_date').value,
+      heure: document.getElementById('f_heure').value,
+      thematique: document.getElementById('f_them').value.trim(),
+      lien_visio: document.getElementById('f_lien').value.trim(),
+      max: parseInt(document.getElementById('f_max').value) || 30,
+      description: document.getElementById('f_desc').value.trim(),
+    };
+    if (id) Object.assign(MASTERCLASS.find(x => x.id === id), data);
+    else MASTERCLASS.push({ ...m, ...data });
+    document.getElementById('modalEdit').close();
+    renderAll();
+  };
+  document.getElementById('modalEdit').showModal();
+}
+
+function openLienEdit(id) {
+  const l = id ? LIENS.find(x => x.id === id) : { id:'L' + (LIENS.length+1), titre:'', url:'', description:'', categorie:'Outils licencié', icone:'🔗' };
+  document.getElementById('modalEditTitle').textContent = id ? 'Modifier le lien' : 'Nouveau lien';
+  document.getElementById('modalEditBody').innerHTML = `
+    <div class="form-row">
+      <div class="form-group"><label>Icône (1 emoji)</label><input id="f_icone" value="${escapeHtml(l.icone || '🔗')}" maxlength="3" style="text-align:center; font-size:18px;"></div>
+      <div class="form-group" style="grid-column: span 1;"><label>Titre</label><input id="f_titre" value="${escapeHtml(l.titre)}"></div>
+    </div>
+    <div class="form-group"><label>URL</label><input id="f_url" value="${escapeHtml(l.url)}" placeholder="https://..."></div>
+    <div class="form-group">
+      <label>Catégorie</label>
+      <input id="f_cat" value="${escapeHtml(l.categorie)}" list="catList">
+      <datalist id="catList">
+        <option>Outils licencié</option>
+        <option>Pour vos clients</option>
+        <option>Formations</option>
+        <option>Plateforme Hub</option>
+        <option>Partenaires</option>
+      </datalist>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="f_desc" rows="2">${escapeHtml(l.description)}</textarea></div>`;
+  document.getElementById('modalEditSave').onclick = () => {
+    const data = {
+      icone: document.getElementById('f_icone').value.trim() || '🔗',
+      titre: document.getElementById('f_titre').value.trim(),
+      url: document.getElementById('f_url').value.trim(),
+      categorie: document.getElementById('f_cat').value.trim() || 'Autres',
+      description: document.getElementById('f_desc').value.trim(),
+    };
+    if (id) Object.assign(LIENS.find(x => x.id === id), data);
+    else LIENS.push({ ...l, ...data });
+    document.getElementById('modalEdit').close();
+    renderAll();
+  };
+  document.getElementById('modalEdit').showModal();
+}
+
+/* =====================================================================
+   RENDER ALL
+===================================================================== */
+
+function renderAll() {
+  renderDashboard();
+  renderAnnuaire();
+  renderEvents();
+  renderMasterclass();
+  renderLiens();
+  renderProfil();
+}
+
+function dismissCTA() {
+  window._ctaProfilDismissed = true;
+  document.getElementById('dashCompleteFiche').style.display = 'none';
+}
+
+</script>
+</body>
+</html>
