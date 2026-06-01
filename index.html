@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#294C60">
-<title>La Maison d'Ava — Hub Immobilier</title>
+<title>La Maison d'Ava — HUB-IMMO+</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -74,6 +74,27 @@ button { cursor: pointer; }
 a { color: var(--ava-orange); text-decoration: none; }
 a:hover { text-decoration: underline; }
 img { max-width: 100%; height: auto; display: block; }
+
+/* ====================================================================
+   ICÔNES SVG
+==================================================================== */
+.ic {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.ic-12 { width: 12px; height: 12px; }
+.ic-14 { width: 14px; height: 14px; }
+.ic-16 { width: 16px; height: 16px; }
+.ic-18 { width: 18px; height: 18px; }
+.ic-20 { width: 20px; height: 20px; }
+.ic-22 { width: 22px; height: 22px; }
+.ic-24 { width: 24px; height: 24px; }
+.ic-28 { width: 28px; height: 28px; }
+.ic-success { color: var(--ava-success); }
+.ic-marine { color: var(--ava-marine); }
+.ic-orange { color: var(--ava-orange); }
+.ic-muted { color: var(--ava-texte-mute); }
 
 /* ====================================================================
    COMPOSANTS GÉNÉRIQUES
@@ -508,7 +529,11 @@ body.admin-mode .nav { top: 113px; }
   border-bottom: 3px solid transparent;
   white-space: nowrap;
   transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
+.tab .ic { color: currentColor; }
 .tab:hover { color: var(--ava-marine); }
 .tab.active {
   color: var(--ava-orange);
@@ -651,7 +676,11 @@ main {
   letter-spacing: 0.1em;
   color: var(--ava-texte-mute);
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+.profil-section h4 .ic { color: var(--ava-orange); }
 .profil-info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -667,9 +696,19 @@ main {
   font-size: 13px;
 }
 .profil-info-item .info-icone {
-  font-size: 18px;
   flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid var(--ava-bord);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ava-marine);
 }
+.profil-info-item .info-icone .ic { color: var(--ava-marine); }
+.profil-info-item .info-icone .social-logo { transform: scale(1.1); }
 .profil-info-item .info-content {
   flex: 1;
   min-width: 0;
@@ -824,9 +863,9 @@ main {
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 16px;
   flex-shrink: 0;
 }
+.share-icon .ic { color: white; }
 
 /* ====================================================================
    FOOTER
@@ -1673,13 +1712,34 @@ body.admin-mode .licencie-row .admin-actions { display: flex; }
   top: 20px;
   right: 20px;
   color: var(--ava-orange);
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: all 0.15s;
+}
+.lien-card:hover .arrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
 }
 .lien-icone {
-  font-size: 26px;
-  line-height: 1;
-  margin-bottom: 4px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
 }
+/* Variante 1 : cadre bleu marine, icône orange */
+.lien-icone-bm {
+  background: var(--ava-marine);
+}
+.lien-icone-bm .ic { color: var(--ava-orange); }
+/* Variante 2 : cadre orange, icône bleue marine */
+.lien-icone-om {
+  background: var(--ava-orange);
+}
+.lien-icone-om .ic { color: var(--ava-marine); }
 .lien-card-wrap {
   position: relative;
 }
@@ -1841,10 +1901,29 @@ dialog::backdrop {
   text-decoration: none;
   color: var(--ava-marine);
 }
-.social-btn span:first-child {
-  font-size: 14px;
+.social-btn .ic { color: var(--ava-marine); }
+.social-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  text-transform: lowercase;
   line-height: 1;
-  font-family: 'Playfair Display', serif;
+}
+.social-logo-ig {
+  background: linear-gradient(45deg, #FFC93C 0%, #FF655A 50%, #C04AC4 100%);
+}
+.verified-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ava-success);
   font-weight: 700;
 }
 .contact-btn {
@@ -1856,20 +1935,24 @@ dialog::backdrop {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   color: var(--ava-marine);
   text-decoration: none;
 }
 .contact-btn:hover {
-  background: var(--ava-orange);
+  background: var(--ava-marine);
   color: white;
-  border-color: var(--ava-orange);
+  border-color: var(--ava-marine);
   text-decoration: none;
 }
 .contact-btn.disabled {
   opacity: 0.4;
   pointer-events: none;
 }
+.contact-btn-sm {
+  width: 32px !important;
+  height: 32px !important;
+}
+.contact-btn-sm .ic { width: 14px; height: 14px; }
 .fiche-bio {
   text-align: left;
   margin-top: 18px;
@@ -1970,7 +2053,7 @@ dialog::backdrop {
     </div>
     <div class="login-brand">
       <h1>La Maison d'Ava</h1>
-      <div class="subtitle">Hub Immobilier</div>
+      <div class="subtitle">HUB-IMMO+</div>
     </div>
     <div class="login-form">
       <input type="text" id="loginCode" placeholder="Votre code d'accès" autocomplete="off" autocapitalize="characters">
@@ -1997,7 +2080,7 @@ dialog::backdrop {
       </div>
       <div class="header-title">
         <h1>La Maison d'Ava</h1>
-        <div class="subtitle">Hub Immobilier</div>
+        <div class="subtitle">HUB-IMMO+</div>
       </div>
     </div>
     <div class="header-right">
@@ -2006,12 +2089,12 @@ dialog::backdrop {
         <span class="header-user-avatar" id="userAvatar">?</span>
         <span class="header-welcome">Bienvenue <strong id="userName">Visiteur</strong></span>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="logout()">⏻</button>
+      <button class="btn btn-ghost btn-sm" onclick="logout()" title="Se déconnecter" id="btnLogout"></button>
     </div>
   </header>
 
   <div id="adminBanner" style="display:none;" class="admin-banner">
-    <span id="adminBannerText">🔒 <strong>Mode administration actif</strong></span>
+    <span id="adminBannerText"><strong>Mode administration actif</strong></span>
     <button class="btn btn-sm btn-secondary" onclick="toggleAdminMode()">Quitter le mode admin</button>
   </div>
 
@@ -2021,8 +2104,8 @@ dialog::backdrop {
     <button class="tab" data-view="evenements" onclick="setView('evenements')">Événements</button>
     <button class="tab" data-view="masterclass" onclick="setView('masterclass')">Masterclass</button>
     <button class="tab" data-view="liens" onclick="setView('liens')">Liens utiles</button>
-    <button class="tab tab-profil" data-view="profil" onclick="setView('profil')" id="tabProfil" style="display:none;">👤 Mon profil</button>
-    <button class="tab admin-only-tab" data-view="parametres" onclick="setView('parametres')" style="display:none;">⚙ Paramètres</button>
+    <button class="tab tab-profil" data-view="profil" onclick="setView('profil')" id="tabProfil" style="display:none;"><span id="tabProfilIcon"></span> Mon profil</button>
+    <button class="tab admin-only-tab" data-view="parametres" onclick="setView('parametres')" style="display:none;"><span id="tabParamIcon"></span> Paramètres</button>
   </nav>
 
   <main>
@@ -2152,7 +2235,7 @@ dialog::backdrop {
     <section id="view-parametres" class="view">
       <div class="section-header">
         <div>
-          <h2 class="section-title">⚙ Paramètres</h2>
+          <h2 class="section-title">Paramètres</h2>
           <div class="section-subtitle">Configuration globale de l'application — accès super-admin uniquement</div>
         </div>
       </div>
@@ -2251,11 +2334,11 @@ dialog::backdrop {
   <!-- FOOTER -->
   <footer class="app-footer">
     <div class="footer-content">
-      <span>© 2026 La Maison d'Ava · Hub Immobilier</span>
+      <span>© 2026 La Maison d'Ava · HUB-IMMO+</span>
       <span class="footer-sep">·</span>
       <button class="footer-link" onclick="document.getElementById('modalMentions').showModal();">Mentions légales & RGPD</button>
       <span class="footer-sep">·</span>
-      <span class="footer-credit">Développé par <a href="https://lrenov-ia-studio.fr" target="_blank" rel="noopener">L'Rénov IA Studio</a></span>
+      <span class="footer-credit">Propulsé par <a href="https://lrenov-ia-studio.fr" target="_blank" rel="noopener">L'Rénov IA Studio</a> — en exclusivité pour la Maison d'Ava</span>
     </div>
   </footer>
 </div>
@@ -2308,9 +2391,9 @@ dialog::backdrop {
 
     <h4 style="color:var(--ava-marine); margin-top:0;">Éditeur du site</h4>
     <p>
-      La présente application <strong>La Maison d'Ava — Hub Immobilier</strong> est éditée par&nbsp;:<br>
+      La présente application <strong>La Maison d'Ava — HUB-IMMO+</strong> est éditée par&nbsp;:<br>
       <strong>Linda Crespellier</strong><br>
-      Maison d'Ava — Hub Immobilier<br>
+      Maison d'Ava — HUB-IMMO+<br>
       Contact&nbsp;: <a href="mailto:linda@lamaisondava.fr">linda@lamaisondava.fr</a>
     </p>
 
@@ -2591,6 +2674,15 @@ function enterApp() {
     tabProfil.classList.toggle('needs-completion', !currentUser.verifie);
   }
 
+  // Injecter les icônes SVG dans les onglets nav
+  const tpIcon = document.getElementById('tabProfilIcon');
+  if (tpIcon) tpIcon.innerHTML = icon('user', 16);
+  const tparamIcon = document.getElementById('tabParamIcon');
+  if (tparamIcon) tparamIcon.innerHTML = icon('settings', 16);
+  // Icône bouton logout
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) btnLogout.innerHTML = icon('power', 16);
+
   renderDeptFilter();
   renderAll();
 }
@@ -2622,9 +2714,9 @@ function toggleAdminMode() {
   const bannerText = document.getElementById('adminBannerText');
   if (bannerText && adminModeActive) {
     if (adminRole === 'super') {
-      bannerText.innerHTML = `🔒 <strong>Mode administration — Super-admin</strong> · Accès total au réseau. <span style="opacity:0.85;">Onglet <strong>⚙ Paramètres</strong> dispo en haut.</span>`;
+      bannerText.innerHTML = `${icon('lock', 16)} <strong>Mode administration — Super-admin</strong> · Accès total au réseau. <span style="opacity:0.85;">Onglet <strong>Paramètres</strong> dispo en haut.</span>`;
     } else if (adminRole === 'lm') {
-      bannerText.innerHTML = `🏷️ <strong>Mode administration — Licencié de Marque (LM ${adminScope})</strong> · Vous gérez uniquement les licenciés et événements du département <strong>${adminScope}</strong>.`;
+      bannerText.innerHTML = `${icon('tag', 16)} <strong>Mode administration — Licencié de Marque (LM ${adminScope})</strong> · Vous gérez uniquement les licenciés et événements du département <strong>${adminScope}</strong>.`;
     }
   }
   // Afficher les boutons "+ Ajouter"
@@ -2666,7 +2758,7 @@ function renderParametres() {
         <strong>${code}</strong>
         <span>${escapeHtml(info.nom)}</span>
         <span style="color:var(--ava-texte-sec);">${escapeHtml(info.ville)}</span>
-        <button class="icon-btn danger" onclick="delDept('${code}')" title="Supprimer">×</button>
+        <button class="icon-btn danger" onclick="delDept('${code}')" title="Supprimer">${icon('x', 14)}</button>
       </div>`).join('');
   }
 
@@ -2833,6 +2925,49 @@ function escapeHtml(s) {
 }
 
 /* =====================================================================
+   ICÔNES SVG (style Lucide — filaire élégant, 1.75px stroke)
+===================================================================== */
+
+const ICONS = {
+  phone:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+  mail:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+  message:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+  card:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+  globe:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  mapPin:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  edit:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
+  trash:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  x:           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  send:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9 22,2"/></svg>',
+  share:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+  user:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  settings:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  lock:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  tag:         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+  checkCircle: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm-1.41 14.59L7 13l1.41-1.41L10.59 13.76 15.18 9.17 16.59 10.59z"/></svg>',
+  clock:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>',
+  users:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  calendar:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  graduation:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+  link:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  copy:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  power:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>',
+  arrowRight:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>',
+  externalLink:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+  inbox:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22,12 16,12 14,15 10,15 8,12 2,12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+  target:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  home:        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>',
+  briefcase:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+  fileText:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+};
+
+function icon(name, size = 16, extraClass = '') {
+  const svg = ICONS[name];
+  if (!svg) return '';
+  return svg.replace('<svg ', `<svg class="ic ic-${size} ${extraClass}" width="${size}" height="${size}" `);
+}
+
+/* =====================================================================
    RENDER — DASHBOARD
 ===================================================================== */
 
@@ -2851,18 +2986,18 @@ function renderDashboard() {
 
     const formUrl = CONFIG.form_carte_numerique || '';
     const carteBtn = formUrl
-      ? `<a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener" class="btn btn-cta-secondary">🪪 Demander ma carte digitale ↗</a>`
+      ? `<a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener" class="btn btn-cta-secondary">${icon('card', 16)} Demander ma carte digitale ${icon('externalLink', 14)}</a>`
       : '';
 
     ctaEl.innerHTML = `
       <div class="cta-banner-content">
-        <strong>👋 ${escapeHtml(titre)}</strong>
+        <strong>${escapeHtml(titre)}</strong>
         <small>${escapeHtml(sous)}</small>
       </div>
       <div class="cta-banner-actions">
-        <button class="btn btn-cta-primary" onclick="setView('profil')">👤 Voir mon profil</button>
+        <button class="btn btn-cta-primary" onclick="setView('profil')">${icon('user', 16)} Voir mon profil</button>
         ${carteBtn}
-        <button class="cta-dismiss" onclick="dismissCTA()" title="Masquer">×</button>
+        <button class="cta-dismiss" onclick="dismissCTA()" title="Masquer">${icon('x', 14)}</button>
       </div>`;
     ctaEl.style.display = 'flex';
   } else {
@@ -3016,8 +3151,8 @@ function renderAnnuaire() {
     return `
     <div class="licencie-card" onclick="openLicencieModal('${l.id}')">
       ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
-        <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">✎</button>
-        <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">×</button>
+        <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">${icon('edit', 14)}</button>
+        <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">${icon('x', 14)}</button>
       </div>` : ''}
       <div class="licencie-avatar" style="${avatarStyle(l)}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
       <div class="licencie-id">${l.id}</div>
@@ -3040,12 +3175,12 @@ function renderAnnuaire() {
       <div class="row-metier">${escapeHtml(l.metier || 'À compléter')}</div>
       <div class="row-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
       <div class="row-actions">
-        ${l.tel ? `<a class="contact-btn" style="width:32px;height:32px;font-size:14px;" href="tel:${l.tel}" onclick="event.stopPropagation()" title="Téléphone">📞</a>` : ''}
-        ${l.email ? `<a class="contact-btn" style="width:32px;height:32px;font-size:14px;" href="mailto:${l.email}" onclick="event.stopPropagation()" title="Email">✉️</a>` : ''}
+        ${l.tel ? `<a class="contact-btn contact-btn-sm" href="tel:${l.tel}" onclick="event.stopPropagation()" title="Téléphone">${icon('phone', 14)}</a>` : ''}
+        ${l.email ? `<a class="contact-btn contact-btn-sm" href="mailto:${l.email}" onclick="event.stopPropagation()" title="Email">${icon('mail', 14)}</a>` : ''}
       </div>
       ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
-        <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">✎</button>
-        <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">×</button>
+        <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">${icon('edit', 14)}</button>
+        <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">${icon('x', 14)}</button>
       </div>` : '<div></div>'}
     </div>`;
   }).join('');
@@ -3055,18 +3190,18 @@ function openLicencieModal(id) {
   const l = LICENCIES.find(x => x.id === id);
   if (!l) return;
 
-  const tel = l.tel ? `<a href="tel:${l.tel}" class="contact-btn" title="Téléphone">📞</a>` : `<span class="contact-btn disabled" title="Téléphone manquant">📞</span>`;
-  const mail = l.email ? `<a href="mailto:${l.email}" class="contact-btn" title="Email">✉️</a>` : `<span class="contact-btn disabled" title="Email manquant">✉️</span>`;
-  const wa = l.tel ? `<a href="https://wa.me/${l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33')}" target="_blank" rel="noopener" class="contact-btn" title="WhatsApp">💬</a>` : `<span class="contact-btn disabled" title="WhatsApp indisponible">💬</span>`;
-  const carte = l.carte_url ? `<button class="contact-btn" onclick="openCarteDigitale('${l.id}')" title="Carte digitale">🪪</button>` : `<span class="contact-btn disabled" title="Carte non disponible">🪪</span>`;
+  const tel = l.tel ? `<a href="tel:${l.tel}" class="contact-btn" title="Téléphone">${icon('phone', 18)}</a>` : `<span class="contact-btn disabled" title="Téléphone manquant">${icon('phone', 18)}</span>`;
+  const mail = l.email ? `<a href="mailto:${l.email}" class="contact-btn" title="Email">${icon('mail', 18)}</a>` : `<span class="contact-btn disabled" title="Email manquant">${icon('mail', 18)}</span>`;
+  const wa = l.tel ? `<a href="https://wa.me/${l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33')}" target="_blank" rel="noopener" class="contact-btn" title="WhatsApp">${icon('message', 18)}</a>` : `<span class="contact-btn disabled" title="WhatsApp indisponible">${icon('message', 18)}</span>`;
+  const carte = l.carte_url ? `<button class="contact-btn" onclick="openCarteDigitale('${l.id}')" title="Carte digitale">${icon('card', 18)}</button>` : `<span class="contact-btn disabled" title="Carte non disponible">${icon('card', 18)}</span>`;
 
-  // Réseaux sociaux + site
+  // Réseaux sociaux + site (logos officiels conservés pour LinkedIn/FB pour cohérence visuelle)
   const social = [];
-  if (l.site) social.push(`<a href="${escapeHtml(l.site)}" target="_blank" rel="noopener" class="social-btn" title="Site web"><span>🌐</span><span>Site</span></a>`);
-  if (l.linkedin) social.push(`<a href="${escapeHtml(l.linkedin)}" target="_blank" rel="noopener" class="social-btn" title="LinkedIn"><span style="color:#0A66C2;">in</span><span>LinkedIn</span></a>`);
-  if (l.instagram) social.push(`<a href="${escapeHtml(l.instagram)}" target="_blank" rel="noopener" class="social-btn" title="Instagram"><span>📸</span><span>Instagram</span></a>`);
-  if (l.facebook) social.push(`<a href="${escapeHtml(l.facebook)}" target="_blank" rel="noopener" class="social-btn" title="Facebook"><span style="color:#1877F2;">f</span><span>Facebook</span></a>`);
-  if (l.tiktok) social.push(`<a href="${escapeHtml(l.tiktok)}" target="_blank" rel="noopener" class="social-btn" title="TikTok"><span>🎵</span><span>TikTok</span></a>`);
+  if (l.site) social.push(`<a href="${escapeHtml(l.site)}" target="_blank" rel="noopener" class="social-btn" title="Site web">${icon('globe', 14)}<span>Site</span></a>`);
+  if (l.linkedin) social.push(`<a href="${escapeHtml(l.linkedin)}" target="_blank" rel="noopener" class="social-btn" title="LinkedIn"><span class="social-logo" style="background:#0A66C2;">in</span><span>LinkedIn</span></a>`);
+  if (l.instagram) social.push(`<a href="${escapeHtml(l.instagram)}" target="_blank" rel="noopener" class="social-btn" title="Instagram"><span class="social-logo social-logo-ig">ig</span><span>Instagram</span></a>`);
+  if (l.facebook) social.push(`<a href="${escapeHtml(l.facebook)}" target="_blank" rel="noopener" class="social-btn" title="Facebook"><span class="social-logo" style="background:#1877F2;">f</span><span>Facebook</span></a>`);
+  if (l.tiktok) social.push(`<a href="${escapeHtml(l.tiktok)}" target="_blank" rel="noopener" class="social-btn" title="TikTok"><span class="social-logo" style="background:#000;">tk</span><span>TikTok</span></a>`);
   const socialRow = social.length > 0 ? `<div class="social-row">${social.join('')}</div>` : '';
 
   // Si l'utilisateur consulte sa propre fiche → afficher bouton vers son onglet Profil
@@ -3074,14 +3209,14 @@ function openLicencieModal(id) {
   const myCardBtn = isMyOwnCard
     ? `<div style="margin-top:20px; padding:14px; background:var(--ava-creme); border:1px solid var(--ava-bord); border-radius:var(--radius-md); text-align:center;">
         <p style="font-size:13px; color:var(--ava-texte-sec); margin-bottom:10px;">Vous consultez votre propre fiche.</p>
-        <button class="btn btn-primary btn-sm" onclick="document.getElementById('modalLicencie').close(); setView('profil');">👤 Aller dans Mon profil</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('modalLicencie').close(); setView('profil');">${icon('user', 16)} Aller dans Mon profil</button>
        </div>`
     : '';
 
   document.getElementById('modalLicencieBody').innerHTML = `
     <div class="fiche-licencie">
       <div class="fiche-avatar" style="${avatarStyle(l)}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
-      <div class="fiche-id">${l.id}${l.verifie ? ' · <span style="color:var(--ava-success); font-weight:700;">✓ Fiche vérifiée</span>' : ''}</div>
+      <div class="fiche-id">${l.id}${l.verifie ? ` · <span class="verified-inline">${icon('checkCircle', 14, 'ic-success')} Fiche vérifiée</span>` : ''}</div>
       <div class="fiche-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
       <div class="fiche-job">${escapeHtml(l.metier || 'Métier à compléter')}</div>
       ${badgeDept(l.departement)}
@@ -3181,13 +3316,13 @@ function renderEventCard(e, isMc) {
 
   // Badges header (type pour events / thématique pour masterclass)
   let badge = '';
-  let icon = '';
+  let typeIcon = '';
   if (isMc) {
-    icon = '🎓';
+    typeIcon = '🎓';
     badge = e.thematique ? `<span class="badge badge-marine">${escapeHtml(e.thematique)}</span>` : '';
   } else {
-    icon = getEventIcon(e.type);
-    if (e.type) badge = `<span class="badge badge-orange">${icon} ${escapeHtml(e.type)}</span>`;
+    typeIcon = getEventIcon(e.type);
+    if (e.type) badge = `<span class="badge badge-orange">${typeIcon} ${escapeHtml(e.type)}</span>`;
   }
 
   // Meta info
@@ -3241,10 +3376,10 @@ function renderEventCard(e, isMc) {
       <div class="event-actions">
         ${actionBtn}
         ${!past ? `<span class="places-counter ${places<=3?'warn':''} ${places<=0?'full':''}">${places > 0 ? places + '/' + e.max + ' places' : 'Complet'}</span>` : `<span class="places-counter">${e.inscrits.length} inscrits</span>`}
-        ${!past ? `<button class="btn btn-secondary" onclick="event.stopPropagation(); openShareModal('${e.id}', ${isMc?'true':'false'})" title="Inviter quelqu'un à cet événement"><span style="font-size:15px;">📨</span> Inviter un contact</button>` : ''}
+        ${!past ? `<button class="btn btn-secondary" onclick="event.stopPropagation(); openShareModal('${e.id}', ${isMc?'true':'false'})" title="Inviter quelqu'un à cet événement">${icon('send', 16)} Inviter un contact</button>` : ''}
         ${canEdit ? `<div class="admin-actions-evt" onclick="event.stopPropagation()">
-          <button class="icon-btn" onclick="${isMc?'openMcEdit':'openEventEdit'}('${e.id}')" title="Modifier">✎</button>
-          <button class="icon-btn danger" onclick="${isMc?'deleteMc':'deleteEvent'}('${e.id}')" title="Supprimer">×</button>
+          <button class="icon-btn" onclick="${isMc?'openMcEdit':'openEventEdit'}('${e.id}')" title="Modifier">${icon('edit', 14)}</button>
+          <button class="icon-btn danger" onclick="${isMc?'deleteMc':'deleteEvent'}('${e.id}')" title="Supprimer">${icon('x', 14)}</button>
         </div>` : ''}
       </div>
     </div>`;
@@ -3332,7 +3467,7 @@ function openEventModalGeneric(e, isMc) {
       <div style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <strong>${e.inscrits.length} inscrit${e.inscrits.length>1?'s':''} ${e.max ? `/ ${e.max}` : ''}</strong>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          ${!past ? `<button class="btn btn-secondary" onclick="openShareModal('${e.id}', ${isMc?'true':'false'})">📨 Inviter un contact</button>` : ''}
+          ${!past ? `<button class="btn btn-secondary" onclick="openShareModal('${e.id}', ${isMc?'true':'false'})">${icon('send', 16)} Inviter un contact</button>` : ''}
           ${actionBtn}
         </div>
       </div>
@@ -3401,19 +3536,19 @@ ${inscriptionUrl ? '👉 Inscription : ' + inscriptionUrl : '(Lien d\'inscriptio
 
       <div class="share-grid">
         <a href="https://wa.me/?text=${messageUrlEncoded}" target="_blank" rel="noopener" class="share-btn">
-          <span class="share-icon" style="background:#25D366;">💬</span>
+          <span class="share-icon" style="background:#25D366;">${icon('message', 18)}</span>
           <span>WhatsApp</span>
         </a>
         <a href="mailto:?subject=${subjectUrlEncoded}&body=${messageUrlEncoded}" class="share-btn">
-          <span class="share-icon" style="background:var(--ava-marine);">✉️</span>
+          <span class="share-icon" style="background:var(--ava-marine);">${icon('mail', 18)}</span>
           <span>E-mail</span>
         </a>
         <a href="sms:?&body=${messageUrlEncoded}" class="share-btn">
-          <span class="share-icon" style="background:var(--ava-orange);">📱</span>
+          <span class="share-icon" style="background:var(--ava-orange);">${icon('inbox', 18)}</span>
           <span>SMS</span>
         </a>
         <button class="share-btn" onclick="copyShareLink(\`${inscriptionUrl}\`, this)">
-          <span class="share-icon" style="background:var(--ava-marine-soft);">🔗</span>
+          <span class="share-icon" style="background:var(--ava-marine-soft);">${icon('link', 18)}</span>
           <span>Copier le lien</span>
         </button>
       </div>
@@ -3523,7 +3658,7 @@ function renderProfil() {
 
   // Bouton Carte digitale (si dispo)
   const carteBtn = l.carte_url
-    ? `<button class="btn btn-secondary" onclick="openCarteDigitale('${l.id}')">🪪 Voir ma carte digitale</button>`
+    ? `<button class="btn btn-secondary" onclick="openCarteDigitale('${l.id}')">${icon('card', 16)} Voir ma carte digitale</button>`
     : '';
 
   container.innerHTML = `
@@ -3532,7 +3667,7 @@ function renderProfil() {
       <div class="profil-header">
         <div class="profil-avatar" style="${avatarStyle(l)}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
         <div class="profil-identity">
-          <div class="profil-id">${l.id}${isVerifie ? ' · <span style="color:var(--ava-success);">✓ Vérifié</span>' : ''}</div>
+          <div class="profil-id">${l.id}${isVerifie ? ` · <span class="verified-inline">${icon('checkCircle', 12, 'ic-success')} Vérifié</span>` : ''}</div>
           <h3>${capitalize(l.prenom)} ${capitalize(l.nom)}</h3>
           <div class="profil-job">${escapeHtml(l.metier || 'Métier à compléter')}</div>
           ${badgeDept(l.departement)}
@@ -3540,37 +3675,37 @@ function renderProfil() {
       </div>
 
       <div class="profil-section">
-        <h4>📞 Coordonnées</h4>
+        <h4>${icon('phone', 14)} Coordonnées</h4>
         <div class="profil-info-grid">
-          ${info('📞', 'Téléphone', l.tel, l.tel ? 'tel:' + l.tel : null)}
-          ${info('✉️', 'Email', l.email, l.email ? 'mailto:' + l.email : null)}
-          ${info('🌐', 'Site web', l.site, l.site)}
-          ${info('💬', 'WhatsApp', l.tel ? l.tel : '', l.tel ? 'https://wa.me/' + l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33') : null)}
+          ${info(icon('phone', 18), 'Téléphone', l.tel, l.tel ? 'tel:' + l.tel : null)}
+          ${info(icon('mail', 18), 'Email', l.email, l.email ? 'mailto:' + l.email : null)}
+          ${info(icon('globe', 18), 'Site web', l.site, l.site)}
+          ${info(icon('message', 18), 'WhatsApp', l.tel ? l.tel : '', l.tel ? 'https://wa.me/' + l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33') : null)}
         </div>
       </div>
 
       <div class="profil-section">
-        <h4>🔗 Réseaux sociaux</h4>
+        <h4>${icon('share', 14)} Réseaux sociaux</h4>
         <div class="profil-info-grid">
-          ${info('💼', 'LinkedIn', l.linkedin, l.linkedin)}
-          ${info('📸', 'Instagram', l.instagram, l.instagram)}
-          ${info('👤', 'Facebook', l.facebook, l.facebook)}
-          ${info('🎵', 'TikTok', l.tiktok, l.tiktok)}
+          ${info('<span class="social-logo" style="background:#0A66C2;">in</span>', 'LinkedIn', l.linkedin, l.linkedin)}
+          ${info('<span class="social-logo social-logo-ig">ig</span>', 'Instagram', l.instagram, l.instagram)}
+          ${info('<span class="social-logo" style="background:#1877F2;">f</span>', 'Facebook', l.facebook, l.facebook)}
+          ${info('<span class="social-logo" style="background:#000;">tk</span>', 'TikTok', l.tiktok, l.tiktok)}
         </div>
       </div>
 
       <div class="profil-section">
-        <h4>📝 Bio</h4>
+        <h4>${icon('fileText', 14)} Bio</h4>
         <div class="profil-info-item ${l.bio ? '' : 'empty'}" style="display:block;">
           <strong style="font-weight:400; line-height:1.6;">${l.bio ? escapeHtml(l.bio) : 'Bio non renseignée — ajoutez quelques lignes pour vous présenter au réseau.'}</strong>
         </div>
       </div>
 
       ${carteBtn ? `<div class="profil-section">
-        <h4>🪪 Carte digitale</h4>
+        <h4>${icon('card', 14)} Carte digitale</h4>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           ${carteBtn}
-          ${l.carte_url ? `<a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-ghost">Ouvrir la page ↗</a>` : ''}
+          ${l.carte_url ? `<a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-ghost">Ouvrir la page ${icon('externalLink', 14)}</a>` : ''}
         </div>
       </div>` : ''}
     </div>`;
@@ -3596,23 +3731,43 @@ function renderLiens() {
 
   const container = document.getElementById('liensContainer');
   const canEdit = canEditLien();
+
+  // Mapping emoji → SVG pro (pour les liens utiles)
+  const emojiToIconName = {
+    '📝': 'fileText',
+    '🎯': 'target',
+    '📅': 'calendar',
+    '🎓': 'graduation',
+    '🤖': 'briefcase',
+    '🏠': 'home',
+    '🔗': 'link',
+    '📋': 'fileText',
+    '📞': 'phone',
+    '✉️': 'mail',
+  };
+
   container.innerHTML = catsOrdered.map(cat => `
     <div class="liens-categorie">
       <h3>${escapeHtml(cat)}</h3>
       <div class="liens-grid">
-        ${byCategorie[cat].map(l => `
+        ${byCategorie[cat].map((l, idx) => {
+          const iconName = emojiToIconName[l.icone] || 'link';
+          // Alternance : pair = cadre marine icône orange, impair = cadre orange icône marine
+          const variant = idx % 2 === 0 ? 'bm' : 'om';
+          return `
           <div class="lien-card-wrap">
             <a class="lien-card" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">
-              <span class="arrow">↗</span>
-              ${l.icone ? `<div class="lien-icone">${l.icone}</div>` : ''}
+              <span class="arrow">${icon('externalLink', 14)}</span>
+              <div class="lien-icone lien-icone-${variant}">${icon(iconName, 28)}</div>
               <h4>${escapeHtml(l.titre)}</h4>
               <p>${escapeHtml(l.description)}</p>
             </a>
             ${canEdit ? `<div class="lien-admin-actions">
-              <button class="icon-btn" onclick="openLienEdit('${l.id}')" title="Modifier">✎</button>
-              <button class="icon-btn danger" onclick="deleteLien('${l.id}')" title="Supprimer">×</button>
+              <button class="icon-btn" onclick="openLienEdit('${l.id}')" title="Modifier">${icon('edit', 14)}</button>
+              <button class="icon-btn danger" onclick="deleteLien('${l.id}')" title="Supprimer">${icon('x', 14)}</button>
             </div>` : ''}
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </div>
     </div>`).join('');
 }
