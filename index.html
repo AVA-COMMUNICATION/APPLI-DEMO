@@ -829,6 +829,55 @@ main {
 }
 
 /* ====================================================================
+   FOOTER
+==================================================================== */
+.app-footer {
+  margin-top: 60px;
+  padding: 20px 24px;
+  background: white;
+  border-top: 1px solid var(--ava-bord);
+}
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--ava-texte-mute);
+}
+.footer-sep {
+  color: var(--ava-bord);
+}
+.footer-link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 11px;
+  color: var(--ava-texte-sec);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+}
+.footer-link:hover {
+  color: var(--ava-marine);
+}
+.footer-credit a {
+  color: var(--ava-orange);
+  text-decoration: none;
+  font-weight: 600;
+}
+.footer-credit a:hover {
+  text-decoration: underline;
+}
+@media (max-width: 600px) {
+  .footer-content { flex-direction: column; gap: 4px; text-align: center; }
+  .footer-sep { display: none; }
+}
+
+/* ====================================================================
    CTA Dashboard licencié (bleu marine)
 ==================================================================== */
 .cta-banner {
@@ -1054,6 +1103,50 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 14px;
+}
+
+/* Sur mobile, cacher la section "Derniers licenciés" et afficher un lien vers l'annuaire */
+@media (max-width: 768px) {
+  .recent-section {
+    display: none;
+  }
+  .recent-section-mobile-cta {
+    display: flex !important;
+  }
+}
+.recent-section-mobile-cta {
+  display: none;
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-top: 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.recent-section-mobile-cta:hover,
+.recent-section-mobile-cta:active {
+  border-color: var(--ava-orange);
+  background: var(--ava-creme);
+}
+.recent-section-mobile-cta strong {
+  font-weight: 600;
+  color: var(--ava-marine);
+  font-size: 14px;
+}
+.recent-section-mobile-cta small {
+  display: block;
+  font-size: 11px;
+  color: var(--ava-texte-sec);
+  margin-top: 2px;
+}
+.recent-section-mobile-cta .arrow-link {
+  color: var(--ava-orange);
+  font-size: 18px;
+  font-weight: 700;
 }
 .mini-card {
   background: white;
@@ -1622,6 +1715,11 @@ dialog {
   box-shadow: 0 30px 80px rgba(0,0,0,0.25);
   background: white;
 }
+dialog.modal-large {
+  max-width: 720px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
 dialog::backdrop {
   background: rgba(41, 76, 96, 0.6);
   backdrop-filter: blur(4px);
@@ -1879,12 +1977,6 @@ dialog::backdrop {
       <button class="btn btn-primary" onclick="login()">Entrer</button>
       <div id="loginError" style="display:none;" class="login-error"></div>
     </div>
-    <div class="login-help">
-      <strong>Codes d'accès :</strong><br>
-      Super-admin : <code>LINDAVA</code> · <code>LAUAVA</code><br>
-      Admin territorial : <code>ADMIN94</code> (Renato — 94)<br>
-      Licencié : votre ID Maison d'Ava (ex : <code>AVA-00013</code>)
-    </div>
   </div>
 </div>
 
@@ -1919,7 +2011,7 @@ dialog::backdrop {
   </header>
 
   <div id="adminBanner" style="display:none;" class="admin-banner">
-    <span>🔒 <strong>Mode administration actif</strong> — modifications enregistrées immédiatement. <span style="opacity:0.85;">Onglet <strong>⚙ Paramètres</strong> dispo en haut.</span></span>
+    <span id="adminBannerText">🔒 <strong>Mode administration actif</strong></span>
     <button class="btn btn-sm btn-secondary" onclick="toggleAdminMode()">Quitter le mode admin</button>
   </div>
 
@@ -1955,6 +2047,14 @@ dialog::backdrop {
       <div class="recent-section">
         <h3>Derniers licenciés du réseau</h3>
         <div class="recent-grid" id="dashRecent"></div>
+      </div>
+      <!-- CTA mobile uniquement (remplace la section "Derniers licenciés" sur petit écran) -->
+      <div class="recent-section-mobile-cta" onclick="setView('annuaire')">
+        <div>
+          <strong>📋 Voir tous les licenciés</strong>
+          <small>Accès à l'annuaire complet du réseau</small>
+        </div>
+        <span class="arrow-link">→</span>
       </div>
     </section>
 
@@ -2123,17 +2223,22 @@ dialog::backdrop {
 
       <div class="params-card" style="margin-top:20px;">
         <h3>🛡️ Administrateurs</h3>
-        <p style="color:var(--ava-texte-sec); font-size:13px;">
-          Linda (super-admin) et Laurence (super-admin) peuvent tout administrer.
-          Pour un admin territorial (ex: Renato sur le 94), créer le code admin lié à son ID licencié.
-          Cette gestion sera disponible une fois l'app reliée au Sheet (V1 fonctionnelle).
+        <p style="color:var(--ava-texte-sec); font-size:13px; margin-bottom:8px;">
+          <strong>Deux niveaux d'administration</strong> :
+        </p>
+        <ul style="color:var(--ava-texte-sec); font-size:13px; padding-left:18px; margin-bottom:14px;">
+          <li><strong style="color:var(--ava-orange);">Super-admin</strong> — Linda et Laurence : accès total (réseau entier, masterclass, liens, paramètres).</li>
+          <li><strong>LM (Licencié de Marque)</strong> — un licencié délégué à la gestion d'un département : modifie les fiches et les événements de SON département uniquement. Ne touche pas aux masterclass, liens utiles ou paramètres.</li>
+        </ul>
+        <p style="color:var(--ava-texte-sec); font-size:12px; margin-bottom:14px;">
+          <em>Pour nommer un nouveau LM : convention <code>LM</code> + code département (ex : <code>LM33</code>, <code>LM75</code>). La gestion complète sera disponible une fois l'app reliée au Sheet (V1 fonctionnelle).</em>
         </p>
         <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;">
           <thead>
             <tr style="background:var(--ava-creme);">
               <th style="padding:8px 12px; text-align:left;">Code</th>
               <th style="padding:8px 12px; text-align:left;">Licencié</th>
-              <th style="padding:8px 12px; text-align:left;">Scope</th>
+              <th style="padding:8px 12px; text-align:left;">Rôle</th>
             </tr>
           </thead>
           <tbody id="adminList"></tbody>
@@ -2142,6 +2247,17 @@ dialog::backdrop {
     </section>
 
   </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <span>© 2026 La Maison d'Ava · Hub Immobilier</span>
+      <span class="footer-sep">·</span>
+      <button class="footer-link" onclick="document.getElementById('modalMentions').showModal();">Mentions légales & RGPD</button>
+      <span class="footer-sep">·</span>
+      <span class="footer-credit">Développé par <a href="https://lrenov-ia-studio.fr" target="_blank" rel="noopener">L'Rénov IA Studio</a></span>
+    </div>
+  </footer>
 </div>
 
 <!-- =====================================================================
@@ -2181,6 +2297,65 @@ dialog::backdrop {
     <button class="modal-close" onclick="document.getElementById('modalShare').close()">×</button>
   </div>
   <div class="modal-body" id="modalShareBody"></div>
+</dialog>
+
+<dialog id="modalMentions" class="modal-large">
+  <div class="modal-header">
+    <h3>Mentions légales & RGPD</h3>
+    <button class="modal-close" onclick="document.getElementById('modalMentions').close()">×</button>
+  </div>
+  <div class="modal-body" style="font-size:13px; line-height:1.65; color:var(--ava-texte-sec);">
+
+    <h4 style="color:var(--ava-marine); margin-top:0;">Éditeur du site</h4>
+    <p>
+      La présente application <strong>La Maison d'Ava — Hub Immobilier</strong> est éditée par&nbsp;:<br>
+      <strong>Linda Crespellier</strong><br>
+      Maison d'Ava — Hub Immobilier<br>
+      Contact&nbsp;: <a href="mailto:linda@lamaisondava.fr">linda@lamaisondava.fr</a>
+    </p>
+
+    <h4 style="color:var(--ava-marine);">Hébergement</h4>
+    <p>
+      Application hébergée sur <strong>GitHub Pages</strong> — GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA.
+    </p>
+
+    <h4 style="color:var(--ava-marine);">Conception & développement technique</h4>
+    <p>
+      Conception, développement et maintenance technique de l'application&nbsp;: <strong>L'Rénov IA Studio</strong> — Laurence Borras, 33290 Blanquefort.<br>
+      Site&nbsp;: <a href="https://lrenov-ia-studio.fr" target="_blank" rel="noopener">lrenov-ia-studio.fr</a>
+    </p>
+
+    <h4 style="color:var(--ava-marine);">Données personnelles (RGPD)</h4>
+    <p>
+      L'application collecte uniquement les données nécessaires au fonctionnement du réseau Maison d'Ava&nbsp;:
+      nom, prénom, coordonnées professionnelles, métier, département d'activité, photo de profil et liens vers vos réseaux sociaux professionnels.
+    </p>
+    <p>
+      <strong>Finalité du traitement</strong>&nbsp;: gestion de l'annuaire interne, organisation des événements et masterclass du réseau,
+      communication entre licenciés. Ces données ne sont ni revendues, ni partagées avec des tiers à des fins commerciales.
+    </p>
+    <p>
+      <strong>Vos droits</strong>&nbsp;: conformément au Règlement Général sur la Protection des Données (RGPD),
+      vous disposez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos données.
+      Pour exercer ces droits, contactez&nbsp;: <a href="mailto:linda@lamaisondava.fr">linda@lamaisondava.fr</a>
+    </p>
+
+    <h4 style="color:var(--ava-marine);">Cookies</h4>
+    <p>
+      L'application n'utilise pas de cookies de traçage ni d'analytics tiers. Aucune information n'est partagée à des fins publicitaires.
+    </p>
+
+    <h4 style="color:var(--ava-marine);">Propriété intellectuelle</h4>
+    <p>
+      L'application, son code source, son design et l'ensemble de ses contenus sont protégés par le droit d'auteur.
+      La marque <strong>Maison d'Ava</strong> et ses éléments visuels sont la propriété exclusive de Linda Crespellier.
+      Le code applicatif a été développé par <strong>L'Rénov IA Studio</strong> pour la Maison d'Ava — toute reproduction ou diffusion non autorisée est interdite.
+    </p>
+
+    <p style="margin-top:24px; font-size:11px; color:var(--ava-texte-mute); border-top:1px solid var(--ava-bord); padding-top:12px;">
+      Dernière mise à jour&nbsp;: mai 2026
+    </p>
+  </div>
 </dialog>
 
 <script>
@@ -2234,10 +2409,10 @@ const LIENS = [
 
   // ===== Pour vos clients (à partager) =====
   { id:'L2', titre:'Confier sa recherche immobilière', url:'https://tally.so/r/XxePDY', description:'Lien à partager à vos prospects : formulaire de prise de mandat de recherche. Récupération du brief et coordonnées du client.', categorie:'Pour vos clients', icone:'🎯' },
-  { id:'L3', titre:'Prise de RDV — Dépôt mandat de recherche', url:'https://calendly.com/linda-lamaisondava/new-meeting', description:'Lien Calendly de Linda pour caler un RDV de dépôt de mandat de recherche.', categorie:'Pour vos clients', icone:'📅' },
+  { id:'L3', titre:'Mon quart d\'heure avec Linda', url:'https://calendly.com/linda-lamaisondava/new-meeting', description:'Lien Calendly pour caler un RDV avec Linda (dépôt de mandat de recherche, échange réseau, prise de contact).', categorie:'Pour vos clients', icone:'📅' },
 
   // ===== Formations =====
-  { id:'L4', titre:'AVA Formation', url:'https://ava-formation.lovable.app/', description:'Plateforme de formations Maison d\'Ava. Accès au catalogue et inscriptions.', categorie:'Formations', icone:'🎓' },
+  { id:'L4', titre:'AVA Formation (loi ALUR)', url:'https://ava-formation.lovable.app/', description:'Plateforme de formations Maison d\'Ava, certifiées loi ALUR. Accès au catalogue et inscriptions.', categorie:'Formations', icone:'🎓' },
   { id:'L5', titre:'Catalogue Formation Immo / IA', url:'https://catalogueavaformationimmobilier.netlify.app/', description:'Catalogue complet des formations immobilier et IA proposées par AVA Formation.', categorie:'Formations', icone:'🤖' },
 
   // ===== Plateforme Hub =====
@@ -2245,9 +2420,20 @@ const LIENS = [
 ];
 
 const ADMIN_CODES = {
-  'LINDAVA':  { id: 'AVA-00001', scope: 'all' },   // Linda Crespellier - super-admin
-  'LAUAVA':   { id: 'AVA-00013', scope: 'all' },   // Laurence Borras - super-admin
-  'ADMIN94':  { id: 'AVA-00016', scope: '94' },    // Renato Ponzio - admin territorial 94
+  // Super-admins : accès total à tout
+  'LINDAVA':  { id: 'AVA-00001', scope: 'all', role: 'super' },     // Linda Crespellier
+  'LAUAVA':   { id: 'AVA-00013', scope: 'all', role: 'super' },     // Laurence Borras
+
+  // Licenciés de Marque (LM) : admin restreint à leur département
+  // Convention : LM + code département (ex: LM94, LM33)
+  // Linda peut en créer autant qu'elle veut depuis Paramètres
+  'LM94':     { id: 'AVA-00016', scope: '94', role: 'lm' },         // Renato Ponzio - LM Val-de-Marne
+  // 'LM33':  { id: 'AVA-XXXXX', scope: '33', role: 'lm' },         // À créer quand Linda nomme un LM Gironde
+  // 'LM75':  { id: 'AVA-XXXXX', scope: '75', role: 'lm' },         // À créer
+  // 'LM92':  { id: 'AVA-XXXXX', scope: '92', role: 'lm' },         // À créer
+
+  // Compatibilité ancien code (à supprimer après migration)
+  'ADMIN94':  { id: 'AVA-00016', scope: '94', role: 'lm' },         // alias historique → LM94
 };
 
 // Départements actifs (Linda gère depuis Paramètres)
@@ -2288,7 +2474,8 @@ const CONFIG = {
 
 let currentUser = null;
 let isAdmin = false;
-let adminScope = null;       // 'all' (super-admin) | département (admin territorial) | null
+let adminScope = null;       // 'all' (super-admin) | département (LM) | null
+let adminRole = null;        // 'super' | 'lm' | null
 let adminModeActive = false;
 let currentDept = 'all';
 let currentAnnuaireView = 'grid';
@@ -2336,14 +2523,15 @@ function login() {
 
   if (!code) { showLoginError('Saisissez un code'); return; }
 
-  // Code admin → on connecte le vrai licencié + flag admin + scope
+  // Code admin → on connecte le vrai licencié + flag admin + scope + role
   if (ADMIN_CODES[code]) {
     const admin = ADMIN_CODES[code];
     const licencie = LICENCIES.find(l => l.id === admin.id);
     if (licencie) {
       currentUser = licencie;
       isAdmin = true;
-      adminScope = admin.scope;  // 'all' ou département ('94', '33', etc.)
+      adminScope = admin.scope;  // 'all' (super) ou département ('94', '33', etc.)
+      adminRole = admin.role;    // 'super' ou 'lm'
       enterApp();
       return;
     }
@@ -2355,6 +2543,7 @@ function login() {
     currentUser = licencie;
     isAdmin = false;
     adminScope = null;
+    adminRole = null;
     enterApp();
     return;
   }
@@ -2380,8 +2569,15 @@ function enterApp() {
 
   // Admin toggle
   if (isAdmin) {
-    document.getElementById('adminToggle').style.display = 'inline-flex';
-    // Si admin territorial : préfiltrer son département
+    const btn = document.getElementById('adminToggle');
+    btn.style.display = 'inline-flex';
+    // Adapter le libellé selon le rôle
+    if (adminRole === 'super') {
+      btn.textContent = 'Mode Admin';
+    } else if (adminRole === 'lm') {
+      btn.textContent = `Mode LM ${adminScope}`;
+    }
+    // Si admin territorial (LM) : préfiltrer son département
     if (adminScope && adminScope !== 'all') {
       currentDept = adminScope;
     }
@@ -2403,6 +2599,7 @@ function logout() {
   currentUser = null;
   isAdmin = false;
   adminScope = null;
+  adminRole = null;
   adminModeActive = false;
   currentDept = 'all';
   document.body.classList.remove('admin-mode');
@@ -2421,6 +2618,15 @@ function toggleAdminMode() {
   document.body.classList.toggle('admin-mode', adminModeActive);
   document.getElementById('adminToggle').classList.toggle('active', adminModeActive);
   document.getElementById('adminBanner').style.display = adminModeActive ? 'flex' : 'none';
+  // Adapter le texte du bandeau selon le rôle (super-admin vs LM)
+  const bannerText = document.getElementById('adminBannerText');
+  if (bannerText && adminModeActive) {
+    if (adminRole === 'super') {
+      bannerText.innerHTML = `🔒 <strong>Mode administration — Super-admin</strong> · Accès total au réseau. <span style="opacity:0.85;">Onglet <strong>⚙ Paramètres</strong> dispo en haut.</span>`;
+    } else if (adminRole === 'lm') {
+      bannerText.innerHTML = `🏷️ <strong>Mode administration — Licencié de Marque (LM ${adminScope})</strong> · Vous gérez uniquement les licenciés et événements du département <strong>${adminScope}</strong>.`;
+    }
+  }
   // Afficher les boutons "+ Ajouter"
   document.querySelectorAll('.admin-only').forEach(el => {
     el.style.display = adminModeActive ? '' : 'none';
@@ -2482,17 +2688,28 @@ function renderParametres() {
   const ifc = document.getElementById('param_form_carte');
   if (ifc) ifc.value = CONFIG.form_carte_numerique || '';
 
-  // Liste admins
+  // Liste admins (n'affiche pas les alias historiques comme ADMIN94)
   const adminList = document.getElementById('adminList');
   if (adminList) {
-    adminList.innerHTML = Object.entries(ADMIN_CODES).map(([code, info]) => {
-      const lic = LICENCIES.find(l => l.id === info.id);
-      return `<tr>
-        <td style="padding:8px 12px;"><code>${code}</code></td>
-        <td style="padding:8px 12px;">${lic ? capitalize(lic.prenom) + ' ' + capitalize(lic.nom) : info.id}</td>
-        <td style="padding:8px 12px;">${info.scope === 'all' ? '<span class="badge badge-orange">SUPER-ADMIN</span>' : '<span class="badge badge-marine">Territoire ' + info.scope + '</span>'}</td>
-      </tr>`;
-    }).join('');
+    const aliasCodes = ['ADMIN94']; // codes historiques masqués (LM94 prend le relais)
+    adminList.innerHTML = Object.entries(ADMIN_CODES)
+      .filter(([code]) => !aliasCodes.includes(code))
+      .map(([code, info]) => {
+        const lic = LICENCIES.find(l => l.id === info.id);
+        let badge = '';
+        if (info.role === 'super') {
+          badge = '<span class="badge badge-orange">SUPER-ADMIN</span>';
+        } else if (info.role === 'lm') {
+          badge = `<span class="badge badge-dept-soft badge-dept-soft-${info.scope}">LM ${info.scope}</span>`;
+        } else {
+          badge = `<span class="badge badge-marine">${info.scope}</span>`;
+        }
+        return `<tr>
+          <td style="padding:8px 12px;"><code>${code}</code></td>
+          <td style="padding:8px 12px;">${lic ? capitalize(lic.prenom) + ' ' + capitalize(lic.nom) : info.id}</td>
+          <td style="padding:8px 12px;">${badge}</td>
+        </tr>`;
+      }).join('');
   }
 }
 
@@ -3365,7 +3582,7 @@ function renderProfil() {
 
 function renderLiens() {
   // Ordre fixe des catégories (les autres viendront à la fin si admin en ajoute)
-  const ordrePrefere = ['Outils licencié', 'Pour vos clients', 'Formations', 'Plateforme Hub'];
+  const ordrePrefere = ['Pour vos clients', 'Formations', 'Plateforme Hub', 'Outils licencié'];
   const byCategorie = {};
   LIENS.forEach(l => {
     if (!byCategorie[l.categorie]) byCategorie[l.categorie] = [];
