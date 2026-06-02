@@ -76,6 +76,73 @@ a:hover { text-decoration: underline; }
 img { max-width: 100%; height: auto; display: block; }
 
 /* ====================================================================
+   LOADER API
+==================================================================== */
+#apiLoader {
+  position: fixed;
+  inset: 0;
+  background: rgba(238, 243, 246, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+#apiLoader .loader-box {
+  background: white;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(41, 76, 96, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ava-marine);
+  font-weight: 600;
+}
+#apiLoader .loader-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--ava-bord);
+  border-top-color: var(--ava-orange);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Status API dans le header */
+.api-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ava-texte-mute);
+  font-family: 'DM Sans', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 6px;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-ok { background: var(--ava-success); box-shadow: 0 0 6px var(--ava-success); }
+.status-off { background: var(--ava-texte-mute); }
+#btnReload {
+  padding: 6px 10px;
+}
+#btnReload:hover .ic { animation: spin 0.5s linear; }
+
+@media (max-width: 768px) {
+  .api-status { display: none; }
+}
+
+/* ====================================================================
    ICÔNES SVG
 ==================================================================== */
 .ic {
@@ -668,6 +735,21 @@ main {
 .profil-section {
   margin-bottom: 24px;
 }
+.profil-section-hub {
+  background: linear-gradient(135deg, rgba(247, 110, 23, 0.04), rgba(41, 76, 96, 0.04));
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 28px;
+}
+.profil-section-hub h4 {
+  color: var(--ava-marine);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+}
 .profil-section h4 {
   font-family: 'DM Sans', sans-serif;
   font-size: 11px;
@@ -1144,7 +1226,130 @@ main {
   gap: 14px;
 }
 
-/* Sur mobile, cacher la section "Derniers licenciés" et afficher un lien vers l'annuaire */
+/* ==== MARKET CARDS (Marché interne) ==== */
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.market-card {
+  background: white;
+  border: 1px solid var(--ava-bord);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  border-left: 4px solid var(--ava-bord);
+}
+.market-card:hover {
+  border-color: var(--ava-orange);
+  box-shadow: 0 4px 16px rgba(41, 76, 96, 0.08);
+  transform: translateY(-2px);
+}
+.market-card-bien {
+  border-left-color: var(--ava-marine);
+}
+.market-card-demande {
+  border-left-color: var(--ava-orange);
+}
+.market-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.market-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.market-tag-bien {
+  background: var(--ava-marine);
+  color: white;
+}
+.market-tag-bien .ic { color: white; }
+.market-tag-demande {
+  background: var(--ava-orange);
+  color: white;
+}
+.market-tag-demande .ic { color: white; }
+.market-tag-exclu {
+  background: var(--ava-creme);
+  color: var(--ava-marine);
+  border: 1px solid var(--ava-bord);
+}
+.market-tag-urgent {
+  background: #fff3cd;
+  color: #8a6d1d;
+  border: 1px solid #f0d978;
+}
+.market-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ava-marine);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.market-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--ava-texte-sec);
+  margin-bottom: 8px;
+}
+.market-price {
+  font-weight: 700;
+  color: var(--ava-marine);
+  font-size: 15px;
+}
+.market-sep {
+  color: var(--ava-texte-mute);
+  opacity: 0.5;
+}
+.market-loc {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ava-texte-sec);
+  margin-bottom: 8px;
+}
+.market-loc .ic { color: var(--ava-orange); }
+.badge-dept-mini {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  margin-left: 4px;
+}
+.market-author {
+  font-size: 11px;
+  color: var(--ava-texte-mute);
+  font-style: italic;
+}
+.market-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--ava-texte-mute);
+  background: white;
+  border: 1px dashed var(--ava-bord);
+  border-radius: var(--radius-md);
+}
+
+/* Sur mobile, cacher la section "Derniers membres" et afficher un lien vers l'annuaire */
 @media (max-width: 768px) {
   .recent-section {
     display: none;
@@ -2084,6 +2289,8 @@ dialog::backdrop {
       </div>
     </div>
     <div class="header-right">
+      <span class="api-status" id="apiStatus" title="État de la connexion au Sheet"></span>
+      <button class="btn btn-ghost btn-sm" onclick="reloadFromAPI()" title="Recharger les données du Sheet" id="btnReload"></button>
       <button class="admin-toggle" id="adminToggle" onclick="toggleAdminMode()" style="display:none;">Mode Admin</button>
       <div class="header-user">
         <span class="header-user-avatar" id="userAvatar">?</span>
@@ -2128,16 +2335,17 @@ dialog::backdrop {
         <div id="dashNextMc" class="hero-card"></div>
       </div>
       <div class="recent-section">
-        <h3>Derniers licenciés du réseau</h3>
-        <div class="recent-grid" id="dashRecent"></div>
+        <h3>Marché interne du réseau</h3>
+        <div class="section-subtitle" style="margin-bottom:16px;">Les dernières opportunités partagées entre membres</div>
+        <div class="market-grid" id="dashMarket"></div>
       </div>
-      <!-- CTA mobile uniquement (remplace la section "Derniers licenciés" sur petit écran) -->
+      <!-- CTA mobile uniquement (remplace la section "Derniers membres" sur petit écran) -->
       <div class="recent-section-mobile-cta" onclick="setView('annuaire')">
         <div>
-          <strong>📋 Voir tous les licenciés</strong>
+          <strong id="mobileCtaText">Voir tous les membres</strong>
           <small>Accès à l'annuaire complet du réseau</small>
         </div>
-        <span class="arrow-link">→</span>
+        <span class="arrow-link" id="mobileCtaArrow">→</span>
       </div>
     </section>
 
@@ -2146,13 +2354,13 @@ dialog::backdrop {
       <div class="section-header">
         <div>
           <h2 class="section-title">Annuaire</h2>
-          <div class="section-subtitle"><span id="countLicencies">0</span> licenciés du réseau</div>
+          <div class="section-subtitle"><span id="countLicencies">0</span> membres du réseau</div>
         </div>
-        <button class="btn btn-primary admin-only" onclick="openLicencieEdit()" style="display:none;">+ Ajouter un licencié</button>
+        <button class="btn btn-primary admin-only" onclick="openLicencieEdit()" style="display:none;">+ Ajouter un membre</button>
       </div>
       <div class="toolbar">
         <div class="search-box">
-          <input type="text" id="searchLic" placeholder="Rechercher un licencié, un métier…" oninput="renderAnnuaire()">
+          <input type="text" id="searchLic" placeholder="Rechercher un membre, un métier…" oninput="renderAnnuaire()">
         </div>
         <div class="filter-group" id="filterDept">
           <!-- Rempli dynamiquement par renderDeptFilter('annuaire') -->
@@ -2208,7 +2416,7 @@ dialog::backdrop {
       <div class="event-list" id="mcList"></div>
     </section>
 
-    <!-- PROFIL (licencié connecté uniquement) -->
+    <!-- PROFIL (membre connecté uniquement) -->
     <section id="view-profil" class="view">
       <div class="section-header">
         <div>
@@ -2260,7 +2468,7 @@ dialog::backdrop {
         <p style="color:var(--ava-texte-sec); font-size:13px; margin-bottom:18px;">
           1 URL Tally par département pour les événements (Apér'Immo / Pause Café),
           1 URL Tally globale pour les masterclass (toutes antennes).
-          Les boutons "S'inscrire" transmettent les paramètres pour que Make sache quel event/licencié relier.
+          Les boutons "S'inscrire" transmettent les paramètres pour que Make sache quel event/membre relier.
         </p>
 
         <div id="tallyEventsParams"></div>
@@ -2271,7 +2479,7 @@ dialog::backdrop {
         </div>
 
         <div class="form-group" style="margin-top:24px; padding-top:18px; border-top:1px dashed var(--ava-bord);">
-          <label>Google Forms — Compléter sa carte numérique <small style="color:var(--ava-texte-mute);">Saisie/MAJ des infos par chaque licencié</small></label>
+          <label>Google Forms — Compléter sa carte numérique <small style="color:var(--ava-texte-mute);">Saisie/MAJ des infos par chaque membre</small></label>
           <input type="url" id="param_form_carte" placeholder="https://forms.gle/xxxxx" value="">
         </div>
 
@@ -2282,7 +2490,7 @@ dialog::backdrop {
       <div class="params-card" style="margin-top:20px;">
         <h3>📋 Champs à transmettre dans Tally</h3>
         <p style="color:var(--ava-texte-sec); font-size:13px; margin-bottom:14px;">
-          Pour que Make sache à quel événement et quel licencié relier l'inscription, configurez
+          Pour que Make sache à quel événement et quel membre relier l'inscription, configurez
           ces "Hidden fields" dans chacun de vos formulaires Tally. L'app transmet ces valeurs en query string.
         </p>
         <table style="width:100%; border-collapse:collapse; font-size:13px;">
@@ -2298,7 +2506,7 @@ dialog::backdrop {
             <tr><td style="padding:8px 12px;"><code>titre</code></td><td>Titre de l'event</td><td>Pour le mail confirmation</td></tr>
             <tr><td style="padding:8px 12px;"><code>date</code></td><td>Date ISO (YYYY-MM-DD)</td><td>Pour les rappels</td></tr>
             <tr><td style="padding:8px 12px;"><code>departement</code></td><td>Code département (ex: 94)</td><td>Pour le routage admin</td></tr>
-            <tr><td style="padding:8px 12px;"><code>licencie_id</code></td><td>ID du licencié (ex: AVA-00013)</td><td>Pour relier au profil</td></tr>
+            <tr><td style="padding:8px 12px;"><code>licencie_id</code></td><td>ID du membre (ex: AVA-00013)</td><td>Pour relier au profil</td></tr>
             <tr><td style="padding:8px 12px;"><code>licencie_nom</code></td><td>Prénom + Nom</td><td>Pour pré-remplir Tally</td></tr>
           </tbody>
         </table>
@@ -2311,7 +2519,7 @@ dialog::backdrop {
         </p>
         <ul style="color:var(--ava-texte-sec); font-size:13px; padding-left:18px; margin-bottom:14px;">
           <li><strong style="color:var(--ava-orange);">Super-admin</strong> — Linda et Laurence : accès total (réseau entier, masterclass, liens, paramètres).</li>
-          <li><strong>LM (Licencié de Marque)</strong> — un licencié délégué à la gestion d'un département : modifie les fiches et les événements de SON département uniquement. Ne touche pas aux masterclass, liens utiles ou paramètres.</li>
+          <li><strong>LM (Licencié de Marque)</strong> — un membre délégué à la gestion d'un département : modifie les fiches et les événements de SON département uniquement. Ne touche pas aux masterclass, liens utiles ou paramètres.</li>
         </ul>
         <p style="color:var(--ava-texte-sec); font-size:12px; margin-bottom:14px;">
           <em>Pour nommer un nouveau LM : convention <code>LM</code> + code département (ex : <code>LM33</code>, <code>LM75</code>). La gestion complète sera disponible une fois l'app reliée au Sheet (V1 fonctionnelle).</em>
@@ -2320,7 +2528,7 @@ dialog::backdrop {
           <thead>
             <tr style="background:var(--ava-creme);">
               <th style="padding:8px 12px; text-align:left;">Code</th>
-              <th style="padding:8px 12px; text-align:left;">Licencié</th>
+              <th style="padding:8px 12px; text-align:left;">Membre</th>
               <th style="padding:8px 12px; text-align:left;">Rôle</th>
             </tr>
           </thead>
@@ -2348,7 +2556,7 @@ dialog::backdrop {
 ===================================================================== -->
 <dialog id="modalLicencie">
   <div class="modal-header">
-    <h3>Fiche licencié</h3>
+    <h3>Fiche membre</h3>
     <button class="modal-close" onclick="document.getElementById('modalLicencie').close()">×</button>
   </div>
   <div class="modal-body" id="modalLicencieBody"></div>
@@ -2380,6 +2588,14 @@ dialog::backdrop {
     <button class="modal-close" onclick="document.getElementById('modalShare').close()">×</button>
   </div>
   <div class="modal-body" id="modalShareBody"></div>
+</dialog>
+
+<dialog id="modalDepot" class="modal-large">
+  <div class="modal-header">
+    <h3 id="modalDepotTitle">Déposer</h3>
+    <button class="modal-close" onclick="document.getElementById('modalDepot').close()">×</button>
+  </div>
+  <div class="modal-body" id="modalDepotBody"></div>
 </dialog>
 
 <dialog id="modalMentions" class="modal-large">
@@ -2443,10 +2659,240 @@ dialog::backdrop {
 
 <script>
 /* =====================================================================
-   DONNÉES — Maquette
+   CONFIGURATION API APPS SCRIPT (Google Sheet)
 ===================================================================== */
 
-const LICENCIES = [
+// URL de l'API Web App déployée depuis Apps Script
+// ⚠️ Si vide ou invalide, l'app utilise les données en dur (mode démo)
+const API_URL = 'https://script.google.com/macros/s/AKfycbx_4YjE7Vu7OxeqjbgYVBrJ04x7_g7_bpnpKkcsNeHmhnZWINjqHmmuo--KdcgUdrIYlw/exec';
+
+// Flag : indique si l'API est joignable
+let API_READY = false;
+// Timestamp du dernier chargement réussi
+let LAST_SYNC = null;
+
+/* =====================================================================
+   FONCTIONS API
+===================================================================== */
+
+// Appel API GET (lecture)
+async function apiGet(action = 'getData', params = {}) {
+  if (!API_URL) throw new Error('API_URL non configurée');
+  const url = new URL(API_URL);
+  url.searchParams.set('action', action);
+  Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
+  const response = await fetch(url.toString(), { method: 'GET' });
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  const data = await response.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+// Appel API POST (écriture)
+async function apiPost(action, data = {}) {
+  if (!API_URL) throw new Error('API_URL non configurée');
+  // Le code d'accès est obligatoire pour les POST
+  const code = (currentUser && currentUser.adminCode) || (currentUser && currentUser.id) || '';
+  const body = { action, code, data };
+  // Note : fetch en mode 'no-cors' pour éviter prefligh ; Apps Script accepte les POST text/plain
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    mode: 'cors',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // contourne le CORS preflight
+    body: JSON.stringify(body)
+  });
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  const result = await response.json();
+  if (result.error) throw new Error(result.error);
+  return result;
+}
+
+// Charger toutes les données depuis l'API et remplacer les variables locales
+async function loadFromAPI() {
+  if (!API_URL) {
+    console.warn('API_URL vide, on reste en mode démo (données en dur)');
+    return false;
+  }
+  try {
+    showLoader('Chargement des données…');
+    const data = await apiGet('getData');
+
+    // Remplacer les variables locales si l'API a renvoyé des données
+    if (data.membres && data.membres.length > 0) {
+      LICENCIES = data.membres.map(normalizeMembre);
+    }
+    if (data.evenements && data.evenements.length > 0) {
+      EVENEMENTS = data.evenements.map(normalizeEvent);
+    }
+    if (data.masterclass && data.masterclass.length > 0) {
+      MASTERCLASS = data.masterclass.map(normalizeMasterclass);
+    }
+    if (data.liens && data.liens.length > 0) {
+      LIENS = data.liens.map(normalizeLien);
+    }
+    if (data.biens && data.biens.length > 0) {
+      BIENS = data.biens.map(normalizeBien);
+    } else if (data.biens) {
+      BIENS = []; // Si l'API renvoie un array vide, on garde vide (pas de fallback)
+    }
+    if (data.demandes && data.demandes.length > 0) {
+      DEMANDES = data.demandes.map(normalizeDemande);
+    } else if (data.demandes) {
+      DEMANDES = [];
+    }
+    if (data.departements && data.departements.length > 0) {
+      DEPARTEMENTS = {};
+      data.departements.forEach(d => {
+        if (d.code) {
+          DEPARTEMENTS[String(d.code)] = {
+            nom: d.nom, ville: d.ville,
+            couleur: d.couleur, couleur_clair: d.couleur_clair,
+            actif: d.actif !== false
+          };
+        }
+      });
+    }
+    if (data.config && data.config.length > 0) {
+      CONFIG = {};
+      data.config.forEach(c => { if (c.cle) CONFIG[c.cle] = c.valeur; });
+    }
+    if (data.admins && data.admins.length > 0) {
+      ADMIN_CODES = {};
+      data.admins.forEach(a => {
+        if (a.code) {
+          ADMIN_CODES[String(a.code).toUpperCase()] = {
+            id: a.membre_id, role: a.role, scope: String(a.scope || 'all')
+          };
+        }
+      });
+    }
+
+    API_READY = true;
+    LAST_SYNC = new Date();
+    hideLoader();
+    console.log('✅ Données chargées depuis le Sheet :', {
+      membres: LICENCIES.length, events: EVENEMENTS.length,
+      masterclass: MASTERCLASS.length, liens: LIENS.length,
+      biens: BIENS.length, demandes: DEMANDES.length
+    });
+    return true;
+  } catch (err) {
+    console.error('❌ Erreur API, fallback données en dur :', err.message);
+    API_READY = false;
+    hideLoader();
+    return false;
+  }
+}
+
+// Normalisations (le Sheet retourne des strings, on convertit en bons types)
+function normalizeMembre(m) {
+  return {
+    id: m.id, prenom: m.prenom || '', nom: m.nom || '',
+    metier: m.metier || '', departement: String(m.departement || ''),
+    tel: m.tel || '', email: m.email || '', site: m.site || '',
+    linkedin: m.linkedin || '', instagram: m.instagram || '',
+    facebook: m.facebook || '', tiktok: m.tiktok || '',
+    photo: m.photo || ('./photos/' + m.id + '.jpg'),
+    logo: m.logo || '', bio: m.bio || '',
+    carte_url: m.carte_url || '', qr_url: m.qr_url || '',
+    verifie: m.verifie === true || m.verifie === 'TRUE',
+    actif: m.actif !== false && m.actif !== 'FALSE'
+  };
+}
+function normalizeEvent(e) {
+  return {
+    id: e.id, titre: e.titre || '', type: e.type || '',
+    date: e.date || '', heure: e.heure || '', duree: e.duree || '',
+    lieu: e.lieu || '', departement: String(e.departement || ''),
+    description: e.description || '',
+    max: parseInt(e.max) || 0,
+    actif: e.actif !== false && e.actif !== 'FALSE',
+    tally_url: e.tally_url || '',
+    inscrits: e.inscrits || []
+  };
+}
+function normalizeMasterclass(m) {
+  return {
+    id: m.id, titre: m.titre || '', thematique: m.thematique || '',
+    date: m.date || '', heure: m.heure || '', duree: m.duree || '',
+    format: m.format || '', description: m.description || '',
+    max: parseInt(m.max) || 0,
+    actif: m.actif !== false && m.actif !== 'FALSE',
+    tally_url: m.tally_url || '',
+    inscrits: m.inscrits || []
+  };
+}
+function normalizeLien(l) {
+  return {
+    id: l.id, titre: l.titre || '', url: l.url || '',
+    description: l.description || '', categorie: l.categorie || '',
+    icone: l.icone || '🔗', ordre: parseInt(l.ordre) || 99,
+    actif: l.actif !== false && l.actif !== 'FALSE'
+  };
+}
+function normalizeBien(b) {
+  return {
+    id: b.id, titre: b.titre || '', type_bien: b.type_bien || '',
+    prix: parseInt(b.prix) || 0,
+    surface: parseInt(b.surface) || null,
+    pieces: parseInt(b.pieces) || null,
+    ville: b.ville || '', departement: String(b.departement || ''),
+    description: b.description || '', membre_id: b.membre_id || '',
+    photo_url: b.photo_url || '', date_ajout: b.date_ajout || '',
+    actif: b.actif !== false && b.actif !== 'FALSE',
+    url_externe: b.url_externe || '',
+    exclusivite: b.exclusivite === true || b.exclusivite === 'TRUE'
+  };
+}
+function normalizeDemande(d) {
+  return {
+    id: d.id, titre: d.titre || '', type_recherche: d.type_recherche || '',
+    budget_max: parseInt(d.budget_max) || 0,
+    surface_min: parseInt(d.surface_min) || null,
+    pieces_min: parseInt(d.pieces_min) || null,
+    ville: d.ville || '', departement: String(d.departement || ''),
+    description: d.description || '', membre_id: d.membre_id || '',
+    date_ajout: d.date_ajout || '',
+    actif: d.actif !== false && d.actif !== 'FALSE',
+    urgence: d.urgence || '', financement: d.financement || ''
+  };
+}
+
+// Loader d'écran
+function showLoader(msg) {
+  let el = document.getElementById('apiLoader');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'apiLoader';
+    el.innerHTML = `<div class="loader-box"><div class="loader-spinner"></div><div id="apiLoaderMsg">${msg || 'Chargement…'}</div></div>`;
+    document.body.appendChild(el);
+  } else {
+    document.getElementById('apiLoaderMsg').textContent = msg || 'Chargement…';
+    el.style.display = 'flex';
+  }
+}
+function hideLoader() {
+  const el = document.getElementById('apiLoader');
+  if (el) el.style.display = 'none';
+}
+
+// Recharger les données depuis le Sheet (bouton "🔄")
+async function reloadFromAPI() {
+  const ok = await loadFromAPI();
+  if (ok) {
+    renderAll();
+    alert('✅ Données rafraichies depuis le Sheet');
+  } else {
+    alert('⚠️ Impossible de joindre l\'API. Affichage en mode démo.');
+  }
+}
+
+/* =====================================================================
+   DONNÉES — Maquette (fallback si API down)
+===================================================================== */
+
+let LICENCIES = [
   { id:'AVA-00001', prenom:'LINDA', nom:'CRESPELLIER', metier:"FONDATRICE MAISON D'AVA", departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00001', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00001', photo:'./photos/AVA-00001.jpg', verifie:false },
   { id:'AVA-00002', prenom:'ANNE-CECILE', nom:'PERROMAT', metier:'', departement:'33', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00002', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00002', photo:'./photos/AVA-00002.jpg', verifie:false },
   { id:'AVA-00003', prenom:'ROMAIN', nom:'DROUILLARD', metier:'Agent immobilier / Mandataire', departement:'33', tel:'0612565174', email:'imaxia.immo@gmail.com', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00003', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00003', photo:'./photos/AVA-00003.jpg', linkedin:'https://www.linkedin.com/in/romain-drouillard-804940101', verifie:true },
@@ -2472,42 +2918,59 @@ const LICENCIES = [
   { id:'AVA-00023', prenom:'DIDIER', nom:'MICKAELIAN', metier:'', departement:'92', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00023', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00023', photo:'./photos/AVA-00023.jpg', verifie:false },
 ];
 
-const EVENEMENTS = [
-  { id:'E001', titre:'Cocktail des fondateurs', type:'Apér\'Immo', date:'2026-06-12', heure:'19:00', lieu:'Bordeaux — Place Pey-Berland', description:'Rencontre annuelle des fondateurs et premiers licenciés Maison d\'Ava. Cocktail dînatoire pour échanger sur l\'année écoulée.', departement:'33', max:50, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013'] },
+let EVENEMENTS = [
+  { id:'E001', titre:'Cocktail des fondateurs', type:'Apér\'Immo', date:'2026-06-12', heure:'19:00', lieu:'Bordeaux — Place Pey-Berland', description:'Rencontre annuelle des fondateurs et premiers membres Maison d\'Ava. Cocktail dînatoire pour échanger sur l\'année écoulée.', departement:'33', max:50, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013'] },
   { id:'E002', titre:'Petit-déjeuner réseau — Tendances marché 2026', type:'Pause Café', date:'2026-05-28', heure:'08:30', lieu:'Bordeaux — Coffee Place', description:'Décryptage des tendances immo Q2 2026 avec un économiste invité. Petit-déjeuner offert.', departement:'33', max:25, inscrits:['AVA-00003','AVA-00009','AVA-00013','AVA-00021'] },
   { id:'E003', titre:'Lancement antenne Paris', type:'Autre', date:'2026-09-15', heure:'18:00', lieu:'Paris — 8e arrondissement', description:'Soirée de lancement officiel de l\'antenne parisienne Maison d\'Ava. Invités VIP et presse.', departement:'75', max:80, inscrits:['AVA-00001','AVA-00013'] },
-  { id:'E005', titre:'Apér\'Immo Créteil — Networking 94', type:'Apér\'Immo', date:'2026-07-08', heure:'18:30', lieu:'Créteil — Brasserie de l\'Hôtel de Ville', departement:'94', description:'Premier Apér\'Immo organisé par l\'antenne 94. Networking entre licenciés du Val-de-Marne et partenaires locaux.', max:25, inscrits:['AVA-00016','AVA-00017','AVA-00018','AVA-00020'] },
+  { id:'E005', titre:'Apér\'Immo Créteil — Networking 94', type:'Apér\'Immo', date:'2026-07-08', heure:'18:30', lieu:'Créteil — Brasserie de l\'Hôtel de Ville', departement:'94', description:'Premier Apér\'Immo organisé par l\'antenne 94. Networking entre membres du Val-de-Marne et partenaires locaux.', max:25, inscrits:['AVA-00016','AVA-00017','AVA-00018','AVA-00020'] },
   { id:'E004', titre:'Afterwork Q1', type:'Apér\'Immo', date:'2026-03-20', heure:'18:30', lieu:'Bordeaux — Quais', description:'Premier afterwork de l\'année 2026.', departement:'33', max:30, inscrits:['AVA-00001','AVA-00003','AVA-00009'] },
 ];
 
-const MASTERCLASS = [
+let MASTERCLASS = [
   { id:'M001', titre:'IA pour mandataires : 5 outils à intégrer dès demain', date:'2026-06-05', heure:'10:00', thematique:'IA Métier', description:'Tour d\'horizon pratique des 5 outils IA les plus rentables pour un mandataire immo en 2026. Démos live + replay.', lien_visio:'https://zoom.us/j/123456', max:30, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00010','AVA-00021'] },
   { id:'M002', titre:'Storytelling immobilier — Vendre par l\'émotion', date:'2026-06-22', heure:'14:00', thematique:'Vente', description:'Comment raconter un bien pour déclencher le coup de cœur. Atelier pratique avec mises en situation.', lien_visio:'https://zoom.us/j/789012', max:20, inscrits:['AVA-00003','AVA-00006','AVA-00009','AVA-00011','AVA-00013','AVA-00021'] },
   { id:'M003', titre:'Mandat exclusif : argumentaire qui convertit', date:'2026-05-15', heure:'10:00', thematique:'Vente', description:'Replay disponible.', lien_visio:'https://zoom.us/j/345678', max:25, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013','AVA-00021'] },
 ];
 
-const LIENS = [
-  // ===== Outils licencié =====
-  { id:'L1', titre:'Compléter ma carte numérique', url:'https://forms.gle/ncWbV96fDQmcnaoq8', description:'Formulaire pour transmettre ou mettre à jour tes infos (photo, bio, coordonnées) qui apparaîtront sur ta carte digitale Maison d\'Ava.', categorie:'Outils licencié', icone:'📝' },
+let LIENS = [
+  // ===== 1. Pour vos clients & consulter les biens =====
+  { id:'L1', titre:'Confier sa recherche immobilière', url:'https://tally.so/r/XxePDY', description:'Lien à partager à vos prospects : formulaire de prise de mandat de recherche. Récupération du brief et coordonnées du client.', categorie:'Pour vos clients & biens', icone:'🎯' },
+  { id:'L2', titre:'Mon quart d\'heure avec Linda', url:'https://calendly.com/linda-lamaisondava/new-meeting', description:'Lien Calendly pour caler un RDV avec Linda (dépôt de mandat, échange réseau).', categorie:'Pour vos clients & biens', icone:'📅' },
+  { id:'L3', titre:'Consulter les biens en ligne (Neti)', url:'https://neti.fr', description:'Plateforme externe Neti : tous les biens à la vente du réseau accessibles aux clients.', categorie:'Pour vos clients & biens', icone:'🔗' },
 
-  // ===== Pour vos clients (à partager) =====
-  { id:'L2', titre:'Confier sa recherche immobilière', url:'https://tally.so/r/XxePDY', description:'Lien à partager à vos prospects : formulaire de prise de mandat de recherche. Récupération du brief et coordonnées du client.', categorie:'Pour vos clients', icone:'🎯' },
-  { id:'L3', titre:'Mon quart d\'heure avec Linda', url:'https://calendly.com/linda-lamaisondava/new-meeting', description:'Lien Calendly pour caler un RDV avec Linda (dépôt de mandat de recherche, échange réseau, prise de contact).', categorie:'Pour vos clients', icone:'📅' },
-
-  // ===== Formations =====
+  // ===== 2. Formations =====
   { id:'L4', titre:'AVA Formation (loi ALUR)', url:'https://ava-formation.lovable.app/', description:'Plateforme de formations Maison d\'Ava, certifiées loi ALUR. Accès au catalogue et inscriptions.', categorie:'Formations', icone:'🎓' },
   { id:'L5', titre:'Catalogue Formation Immo / IA', url:'https://catalogueavaformationimmobilier.netlify.app/', description:'Catalogue complet des formations immobilier et IA proposées par AVA Formation.', categorie:'Formations', icone:'🤖' },
 
-  // ===== Plateforme Hub =====
-  { id:'L6', titre:'La Maison d\'Ava — Hub Immobilier', url:'https://lamaisondava-hubimmobilier.fr/', description:'Site officiel du Hub Immobilier Maison d\'Ava. Présentation publique du réseau.', categorie:'Plateforme Hub', icone:'🏠' },
+  // ===== 3. Plateforme du hub & outils membres =====
+  { id:'L6', titre:'La Maison d\'Ava — Hub Immobilier', url:'https://lamaisondava-hubimmobilier.fr/', description:'Site officiel du Hub Immobilier Maison d\'Ava. Présentation publique du réseau.', categorie:'Plateforme Hub & outils', icone:'🏠' },
+  { id:'L7', titre:'Compléter ma carte numérique', url:'https://forms.gle/ncWbV96fDQmcnaoq8', description:'Formulaire pour transmettre ou mettre à jour tes infos (photo, bio, coordonnées) qui apparaîtront sur ta carte digitale.', categorie:'Plateforme Hub & outils', icone:'📝' },
 ];
 
-const ADMIN_CODES = {
+/* =====================================================================
+   BIENS À VENDRE (marché interne du réseau)
+===================================================================== */
+let BIENS = [
+  { id:'B001', titre:'Maison T5 vue Garonne', type_bien:'Maison', prix:485000, surface:135, pieces:5, ville:'Bordeaux Caudéran', departement:'33', description:'Charmante maison 1930 entièrement rénovée — vue dégagée sur Garonne — jardin 200m² — proche commerces', membre_id:'AVA-00003', photo_url:'', date_ajout:'2026-05-30', actif:true, url_externe:'', exclusivite:true },
+  { id:'B002', titre:'Appartement T3 lumineux centre Vincennes', type_bien:'Appartement', prix:520000, surface:68, pieces:3, ville:'Vincennes', departement:'94', description:'Appartement traversant 3e étage avec ascenseur — refait à neuf — proche RER A et écoles', membre_id:'AVA-00016', photo_url:'', date_ajout:'2026-05-28', actif:true, url_externe:'', exclusivite:false },
+  { id:'B003', titre:'Viager occupé — femme 78 ans', type_bien:'Viager', prix:180000, surface:95, pieces:4, ville:'Mérignac', departement:'33', description:'Viager occupé — bouquet 65k€ + rente 850€/mois — maison 1980 sur parcelle 600m² — quartier calme', membre_id:'AVA-00006', photo_url:'', date_ajout:'2026-05-25', actif:true, url_externe:'', exclusivite:true },
+];
+
+/* =====================================================================
+   DEMANDES DE RECHERCHE (clients qui cherchent)
+===================================================================== */
+let DEMANDES = [
+  { id:'D001', titre:'Famille cherche T4 Bordeaux Sud', type_recherche:'Achat résidence principale', budget_max:450000, surface_min:90, pieces_min:4, ville:'Bordeaux Sud — Talence Pessac', departement:'33', description:'Couple avec 2 enfants — recherche maison avec jardin — proche écoles primaires — budget extensible si coup de cœur', membre_id:'AVA-00005', date_ajout:'2026-05-29', actif:true, urgence:'Sous 6 mois', financement:'Validé' },
+  { id:'D002', titre:'Investisseur cherche immeuble de rapport', type_recherche:'Investissement locatif', budget_max:800000, surface_min:200, pieces_min:null, ville:'Bordeaux centre', departement:'33', description:'Investisseur expérimenté — cherche immeuble de rapport 4-6 lots — rendement min 6% — préfère secteur Saint-Michel ou Capucins', membre_id:'AVA-00009', date_ajout:'2026-05-27', actif:true, urgence:'Pas pressé', financement:'Comptant' },
+  { id:'D003', titre:'Cadre Paris cherche pied-à-terre Vincennes', type_recherche:'Achat résidence principale', budget_max:580000, surface_min:55, pieces_min:2, ville:'Vincennes', departement:'94', description:'Cadre Paris muté — cherche T2/T3 proche RER A — calme et lumineux — budget serré mais financement OK', membre_id:'AVA-00016', date_ajout:'2026-05-26', actif:true, urgence:'Sous 3 mois', financement:'En cours' },
+];
+
+let ADMIN_CODES = {
   // Super-admins : accès total à tout
   'LINDAVA':  { id: 'AVA-00001', scope: 'all', role: 'super' },     // Linda Crespellier
   'LAUAVA':   { id: 'AVA-00013', scope: 'all', role: 'super' },     // Laurence Borras
 
-  // Licenciés de Marque (LM) : admin restreint à leur département
+  // Membres de Marque (LM) : admin restreint à leur département
   // Convention : LM + code département (ex: LM94, LM33)
   // Linda peut en créer autant qu'elle veut depuis Paramètres
   'LM94':     { id: 'AVA-00016', scope: '94', role: 'lm' },         // Renato Ponzio - LM Val-de-Marne
@@ -2520,7 +2983,7 @@ const ADMIN_CODES = {
 };
 
 // Départements actifs (Linda gère depuis Paramètres)
-const DEPARTEMENTS = {
+let DEPARTEMENTS = {
   '33': { nom: 'Gironde', ville: 'Bordeaux', couleur: '#8B2D3A', couleurClair: '#B85968' },
   '75': { nom: 'Paris', ville: 'Paris', couleur: '#5B7C99', couleurClair: '#7E9CB4' },
   '92': { nom: 'Hauts-de-Seine', ville: 'Nanterre', couleur: '#5D8A6E', couleurClair: '#82AC91' },
@@ -2542,7 +3005,7 @@ function badgeDept(code, soft = true) {
 
 // Paramètres globaux modifiables depuis l'onglet Paramètres (mode admin)
 // Dans la V1, ces valeurs seront stockées dans l'onglet CONFIG du Sheet
-const CONFIG = {
+let CONFIG = {
   tally_events_33: 'https://tally.so/r/vGyO2g',   // Apér'Immo/Pause Café Gironde
   tally_events_94: 'https://tally.so/r/jax0eY',   // Apér'Immo/Pause Café Val-de-Marne
   tally_events_75: '',                            // Paris (à configurer)
@@ -2612,6 +3075,7 @@ function login() {
     const licencie = LICENCIES.find(l => l.id === admin.id);
     if (licencie) {
       currentUser = licencie;
+      currentUser.adminCode = code;  // pour authentification API
       isAdmin = true;
       adminScope = admin.scope;  // 'all' (super) ou département ('94', '33', etc.)
       adminRole = admin.role;    // 'super' ou 'lm'
@@ -2624,6 +3088,7 @@ function login() {
   const licencie = LICENCIES.find(l => l.id === code);
   if (licencie) {
     currentUser = licencie;
+    currentUser.adminCode = code;  // pour authentification API (= son propre ID)
     isAdmin = false;
     adminScope = null;
     adminRole = null;
@@ -2666,7 +3131,7 @@ function enterApp() {
     }
   }
 
-  // Onglet Profil (visible pour tout licencié connecté)
+  // Onglet Profil (visible pour tout membre connecté)
   if (currentUser?.id) {
     const tabProfil = document.getElementById('tabProfil');
     tabProfil.style.display = 'inline-flex';
@@ -2682,6 +3147,25 @@ function enterApp() {
   // Icône bouton logout
   const btnLogout = document.getElementById('btnLogout');
   if (btnLogout) btnLogout.innerHTML = icon('power', 16);
+  // Bouton recharger depuis le Sheet
+  const btnReload = document.getElementById('btnReload');
+  if (btnReload) btnReload.innerHTML = icon('arrowRight', 16); // ressemble à un refresh
+  // Statut API
+  const apiStatus = document.getElementById('apiStatus');
+  if (apiStatus) {
+    if (API_READY) {
+      apiStatus.innerHTML = '<span class="status-dot status-ok"></span> Sheet connecté';
+      apiStatus.classList.add('status-ok-wrap');
+    } else {
+      apiStatus.innerHTML = '<span class="status-dot status-off"></span> Mode démo';
+      apiStatus.classList.add('status-off-wrap');
+    }
+  }
+  // Icônes CTA mobile dashboard
+  const mobileCtaText = document.getElementById('mobileCtaText');
+  if (mobileCtaText) mobileCtaText.innerHTML = icon('users', 16) + ' Voir tous les membres';
+  const mobileCtaArrow = document.getElementById('mobileCtaArrow');
+  if (mobileCtaArrow) mobileCtaArrow.innerHTML = icon('arrowRight', 14);
 
   renderDeptFilter();
   renderAll();
@@ -2716,7 +3200,7 @@ function toggleAdminMode() {
     if (adminRole === 'super') {
       bannerText.innerHTML = `${icon('lock', 16)} <strong>Mode administration — Super-admin</strong> · Accès total au réseau. <span style="opacity:0.85;">Onglet <strong>Paramètres</strong> dispo en haut.</span>`;
     } else if (adminRole === 'lm') {
-      bannerText.innerHTML = `${icon('tag', 16)} <strong>Mode administration — Licencié de Marque (LM ${adminScope})</strong> · Vous gérez uniquement les licenciés et événements du département <strong>${adminScope}</strong>.`;
+      bannerText.innerHTML = `${icon('tag', 16)} <strong>Mode administration — Licencié de Marque (LM ${adminScope})</strong> · Vous gérez uniquement les membres et événements du département <strong>${adminScope}</strong>.`;
     }
   }
   // Afficher les boutons "+ Ajouter"
@@ -2821,11 +3305,11 @@ function addDept() {
 }
 
 function delDept(code) {
-  // Vérifier qu'aucun licencié/event n'utilise ce code
+  // Vérifier qu'aucun membre/event n'utilise ce code
   const usedByLic = LICENCIES.some(l => l.departement === code);
   const usedByEvt = EVENEMENTS.some(e => e.departement === code);
   if (usedByLic || usedByEvt) {
-    alert(`Impossible de supprimer : ce département est utilisé par ${usedByLic ? 'des licenciés' : ''}${usedByLic && usedByEvt ? ' et ' : ''}${usedByEvt ? 'des événements' : ''}.`);
+    alert(`Impossible de supprimer : ce département est utilisé par ${usedByLic ? 'des membres' : ''}${usedByLic && usedByEvt ? ' et ' : ''}${usedByEvt ? 'des événements' : ''}.`);
     return;
   }
   if (!confirm(`Supprimer le département ${code} ?`)) return;
@@ -2853,6 +3337,19 @@ function saveParams() {
 document.getElementById('loginCode').addEventListener('keydown', e => {
   if (e.key === 'Enter') login();
 });
+
+/* =====================================================================
+   INIT AU DÉMARRAGE — Charger depuis l'API si dispo
+===================================================================== */
+
+(async function bootApp() {
+  // Tente de charger depuis l'API. Si échec, les données en dur restent.
+  await loadFromAPI();
+  // Une fois les données chargées (API ou fallback), si un utilisateur est déjà loggé, on rafraîchit l'UI
+  if (typeof currentUser !== 'undefined' && currentUser) {
+    renderAll();
+  }
+})();
 
 /* =====================================================================
    NAVIGATION
@@ -2972,7 +3469,7 @@ function icon(name, size = 16, extraClass = '') {
 ===================================================================== */
 
 function renderDashboard() {
-  // CTA Dashboard pour licencié connecté (pas en mode admin)
+  // CTA Dashboard pour membre connecté (pas en mode admin)
   // Bleu marine, 2 boutons : Voir mon profil + Demander carte digitale
   const ctaEl = document.getElementById('dashCompleteFiche');
   const dismissed = window._ctaProfilDismissed;
@@ -3028,7 +3525,7 @@ function renderDashboard() {
 
     kpiEl.innerHTML = `
       <div class="kpi-header">${scopeLabel}</div>
-      <div class="kpi-card"><div class="kpi-value">${totalLic}</div><div class="kpi-label">Licenciés ${adminScope === 'all' ? 'actifs' : 'sur ' + adminScope}</div></div>
+      <div class="kpi-card"><div class="kpi-value">${totalLic}</div><div class="kpi-label">Membres ${adminScope === 'all' ? 'actifs' : 'sur ' + adminScope}</div></div>
       <div class="kpi-card ${tauxCompletion < 50 ? 'warn' : ''}"><div class="kpi-value">${tauxCompletion}%</div><div class="kpi-label">Fiches vérifiées</div></div>
       <div class="kpi-card ${ficheVide > 5 ? 'warn' : ''}"><div class="kpi-value">${ficheVide}</div><div class="kpi-label">Fiches à vérifier</div></div>
       <div class="kpi-card"><div class="kpi-value">${totalEventsAvenir}</div><div class="kpi-label">Événements à venir</div></div>
@@ -3080,14 +3577,100 @@ function renderDashboard() {
     mcEl.innerHTML = `<div class="hero-card-label">Prochaine masterclass</div><h3>Aucune masterclass programmée</h3><div class="meta">Revenez bientôt !</div>`;
   }
 
-  // Derniers licenciés (les 5 derniers par ID)
-  const recent = [...LICENCIES].sort((a,b) => b.id.localeCompare(a.id)).slice(0, 5);
-  document.getElementById('dashRecent').innerHTML = recent.map(l => `
-    <div class="mini-card" onclick="openLicencieModal('${l.id}')">
-      <div class="mini-avatar" style="${avatarStyle(l, 'small')}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
-      <div class="mini-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
-      <div class="mini-job">${escapeHtml(l.metier || '—')}</div>
-    </div>`).join('');
+  // Marché interne : 3 derniers biens à vendre + 3 dernières demandes
+  // Filtrés selon scope si admin LM
+  let biensVisibles = BIENS.filter(b => b.actif);
+  let demandesVisibles = DEMANDES.filter(d => d.actif);
+  if (adminScope && adminScope !== 'all') {
+    biensVisibles = biensVisibles.filter(b => b.departement === adminScope);
+    demandesVisibles = demandesVisibles.filter(d => d.departement === adminScope);
+  }
+  // Tri par date_ajout décroissant, prendre les 3 plus récents
+  biensVisibles.sort((a,b) => (b.date_ajout || '').localeCompare(a.date_ajout || ''));
+  demandesVisibles.sort((a,b) => (b.date_ajout || '').localeCompare(a.date_ajout || ''));
+  const topBiens = biensVisibles.slice(0, 3);
+  const topDemandes = demandesVisibles.slice(0, 3);
+
+  const dashMarket = document.getElementById('dashMarket');
+  if (dashMarket) {
+    const bienCards = topBiens.map(b => {
+      const auteur = LICENCIES.find(l => l.id === b.membre_id);
+      const auteurNom = auteur ? `${capitalize(auteur.prenom)} ${capitalize(auteur.nom)}` : '—';
+      const deptInfo = DEPARTEMENTS[b.departement] || {};
+      return `
+        <div class="market-card market-card-bien" onclick="openBienModal('${b.id}')">
+          <div class="market-card-header">
+            <span class="market-tag market-tag-bien">${icon('home', 12)} À vendre</span>
+            ${b.exclusivite ? '<span class="market-tag market-tag-exclu">Exclusivité</span>' : ''}
+          </div>
+          <h4 class="market-title">${escapeHtml(b.titre)}</h4>
+          <div class="market-meta">
+            <span class="market-price">${formatPrix(b.prix)}</span>
+            <span class="market-sep">·</span>
+            <span>${b.surface ? b.surface + ' m²' : ''}</span>
+            ${b.pieces ? `<span class="market-sep">·</span><span>${b.pieces} p.</span>` : ''}
+          </div>
+          <div class="market-loc">${icon('mapPin', 12)} ${escapeHtml(b.ville)} <span class="badge-dept-mini" style="background:${deptInfo.couleur_clair || '#ccc'};">${b.departement}</span></div>
+          <div class="market-author">par ${escapeHtml(auteurNom)}</div>
+        </div>`;
+    }).join('');
+
+    const demandeCards = topDemandes.map(d => {
+      const auteur = LICENCIES.find(l => l.id === d.membre_id);
+      const auteurNom = auteur ? `${capitalize(auteur.prenom)} ${capitalize(auteur.nom)}` : '—';
+      const deptInfo = DEPARTEMENTS[d.departement] || {};
+      return `
+        <div class="market-card market-card-demande" onclick="openDemandeModal('${d.id}')">
+          <div class="market-card-header">
+            <span class="market-tag market-tag-demande">${icon('target', 12)} Recherche</span>
+            ${d.urgence === 'Sous 3 mois' ? '<span class="market-tag market-tag-urgent">Urgent</span>' : ''}
+          </div>
+          <h4 class="market-title">${escapeHtml(d.titre)}</h4>
+          <div class="market-meta">
+            <span class="market-price">${formatPrix(d.budget_max)} max</span>
+            ${d.surface_min ? `<span class="market-sep">·</span><span>${d.surface_min}+ m²</span>` : ''}
+            ${d.pieces_min ? `<span class="market-sep">·</span><span>${d.pieces_min}+ p.</span>` : ''}
+          </div>
+          <div class="market-loc">${icon('mapPin', 12)} ${escapeHtml(d.ville)} <span class="badge-dept-mini" style="background:${deptInfo.couleur_clair || '#ccc'};">${d.departement}</span></div>
+          <div class="market-author">par ${escapeHtml(auteurNom)}</div>
+        </div>`;
+    }).join('');
+
+    if (topBiens.length === 0 && topDemandes.length === 0) {
+      dashMarket.innerHTML = `<div class="market-empty">Aucune opportunité publiée pour le moment.</div>`;
+    } else {
+      dashMarket.innerHTML = bienCards + demandeCards;
+    }
+  }
+}
+
+/* =====================================================================
+   FORMATAGE PRIX
+===================================================================== */
+function formatPrix(n) {
+  if (!n || isNaN(n)) return '—';
+  if (n >= 1000000) return (n/1000000).toFixed(1).replace('.0','') + ' M€';
+  if (n >= 1000) return Math.round(n/1000) + ' k€';
+  return n + ' €';
+}
+
+/* =====================================================================
+   MODALS BIENS / DEMANDES (placeholder simple)
+===================================================================== */
+function openBienModal(id) {
+  const b = BIENS.find(x => x.id === id);
+  if (!b) return;
+  const auteur = LICENCIES.find(l => l.id === b.membre_id);
+  const auteurNom = auteur ? `${capitalize(auteur.prenom)} ${capitalize(auteur.nom)}` : '—';
+  const deptInfo = DEPARTEMENTS[b.departement] || {};
+  alert(`${b.titre}\n\n${formatPrix(b.prix)} · ${b.surface || '?'} m² · ${b.pieces || '?'} pièces\n${b.ville} (${b.departement})\n\n${b.description}\n\nProposé par ${auteurNom}${auteur ? ' — ' + (auteur.tel || auteur.email || '') : ''}`);
+}
+function openDemandeModal(id) {
+  const d = DEMANDES.find(x => x.id === id);
+  if (!d) return;
+  const auteur = LICENCIES.find(l => l.id === d.membre_id);
+  const auteurNom = auteur ? `${capitalize(auteur.prenom)} ${capitalize(auteur.nom)}` : '—';
+  alert(`${d.titre}\n\nBudget max : ${formatPrix(d.budget_max)}\n${d.surface_min ? d.surface_min + '+ m²' : ''} · ${d.pieces_min ? d.pieces_min + '+ pièces' : ''}\n${d.ville} (${d.departement})\nUrgence : ${d.urgence} · Financement : ${d.financement}\n\n${d.description}\n\nDemande portée par ${auteurNom}${auteur ? ' — ' + (auteur.tel || auteur.email || '') : ''}`);
 }
 
 /* =====================================================================
@@ -3139,7 +3722,7 @@ function renderAnnuaire() {
   const list = document.getElementById('annuaireList');
 
   if (filtered.length === 0) {
-    const empty = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">🔍</div><div>Aucun licencié ne correspond à votre recherche</div></div>`;
+    const empty = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">🔍</div><div>Aucun membre ne correspond à votre recherche</div></div>`;
     grid.innerHTML = empty;
     list.innerHTML = empty;
     return;
@@ -3708,7 +4291,244 @@ function renderProfil() {
           ${l.carte_url ? `<a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-ghost">Ouvrir la page ${icon('externalLink', 14)}</a>` : ''}
         </div>
       </div>` : ''}
+
+      <div class="profil-section profil-section-hub">
+        <h4>${icon('briefcase', 14)} Mon activité Hub</h4>
+        <p style="font-size:13px; color:var(--ava-texte-sec); margin-bottom:12px;">Partagez vos opportunités avec les autres membres du Collectif AVA.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-marine" onclick="openDepotBienModal()">${icon('home', 16)} Déposer un bien à la vente</button>
+          <button class="btn btn-primary" onclick="openDepotDemandeModal()">${icon('target', 16)} Déposer une recherche client</button>
+        </div>
+        ${countMesBiens(l.id) > 0 || countMesDemandes(l.id) > 0 ? `
+        <div style="margin-top:14px; font-size:12px; color:var(--ava-texte-mute);">
+          Vous avez publié <strong>${countMesBiens(l.id)} bien${countMesBiens(l.id)>1?'s':''}</strong> et <strong>${countMesDemandes(l.id)} recherche${countMesDemandes(l.id)>1?'s':''}</strong> en cours.
+        </div>` : ''}
+      </div>
     </div>`;
+}
+
+/* =====================================================================
+   DÉPÔT BIEN / DEMANDE — Helpers et modales
+===================================================================== */
+function countMesBiens(membreId) {
+  return BIENS.filter(b => b.membre_id === membreId && b.actif).length;
+}
+function countMesDemandes(membreId) {
+  return DEMANDES.filter(d => d.membre_id === membreId && d.actif).length;
+}
+
+function openDepotBienModal() {
+  if (!currentUser) return;
+  const dom = document.getElementById('modalDepotBody');
+  if (!dom) return;
+  document.getElementById('modalDepotTitle').textContent = 'Déposer un bien à la vente';
+  dom.innerHTML = `
+    <p style="font-size:13px; color:var(--ava-texte-sec); margin-bottom:16px;">Cette annonce sera visible par tous les membres du Collectif AVA sur leur dashboard.</p>
+    <div class="form-group"><label>Titre du bien *</label><input id="b_titre" placeholder="Ex : Maison T5 vue Garonne"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Type *</label>
+        <select id="b_type">
+          <option>Maison</option>
+          <option>Appartement</option>
+          <option>Terrain</option>
+          <option>Local commercial</option>
+          <option>Viager</option>
+          <option>Immeuble</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Prix (€) *</label><input id="b_prix" type="number" placeholder="485000"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Surface (m²)</label><input id="b_surface" type="number" placeholder="135"></div>
+      <div class="form-group"><label>Pièces</label><input id="b_pieces" type="number" placeholder="5"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Ville / quartier *</label><input id="b_ville" placeholder="Bordeaux Caudéran"></div>
+      <div class="form-group"><label>Département *</label>
+        <select id="b_dept">
+          ${Object.keys(DEPARTEMENTS).map(c => `<option value="${c}" ${c===currentUser.departement?'selected':''}>${c} — ${DEPARTEMENTS[c].nom}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Description *</label><textarea id="b_desc" rows="3" placeholder="Charmante maison 1930 entièrement rénovée — vue dégagée — jardin 200m²..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>URL annonce externe (optionnel)</label><input id="b_url" placeholder="https://www.iadfrance.fr/..."></div>
+      <div class="form-group" style="display:flex; align-items:center; padding-top:24px;">
+        <label style="display:flex; align-items:center; gap:8px; font-weight:600;"><input type="checkbox" id="b_exclu" style="width:auto;"> Exclusivité Maison d'Ava</label>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('modalDepot').close();">Annuler</button>
+      <button class="btn btn-primary" onclick="submitDepotBien()">${icon('send', 16)} Publier le bien</button>
+    </div>
+  `;
+  document.getElementById('modalDepot').showModal();
+}
+
+function openDepotDemandeModal() {
+  if (!currentUser) return;
+  const dom = document.getElementById('modalDepotBody');
+  if (!dom) return;
+  document.getElementById('modalDepotTitle').textContent = 'Déposer une recherche client';
+  dom.innerHTML = `
+    <p style="font-size:13px; color:var(--ava-texte-sec); margin-bottom:16px;">Cette demande sera visible par tous les membres du Collectif AVA sur leur dashboard.</p>
+    <div class="form-group"><label>Titre de la recherche *</label><input id="d_titre" placeholder="Ex : Famille cherche T4 Bordeaux Sud"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Type de recherche *</label>
+        <select id="d_type">
+          <option>Achat résidence principale</option>
+          <option>Investissement locatif</option>
+          <option>Résidence secondaire</option>
+          <option>Viager</option>
+          <option>Local commercial</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Budget max (€) *</label><input id="d_budget" type="number" placeholder="450000"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Surface min (m²)</label><input id="d_surface" type="number" placeholder="90"></div>
+      <div class="form-group"><label>Pièces min</label><input id="d_pieces" type="number" placeholder="4"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Zone(s) recherchée(s) *</label><input id="d_ville" placeholder="Bordeaux Sud — Talence, Pessac"></div>
+      <div class="form-group"><label>Département *</label>
+        <select id="d_dept">
+          ${Object.keys(DEPARTEMENTS).map(c => `<option value="${c}" ${c===currentUser.departement?'selected':''}>${c} — ${DEPARTEMENTS[c].nom}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Description du projet *</label><textarea id="d_desc" rows="3" placeholder="Couple avec 2 enfants — recherche maison avec jardin..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Urgence</label>
+        <select id="d_urgence">
+          <option>Sous 3 mois</option>
+          <option selected>Sous 6 mois</option>
+          <option>Pas pressé</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Financement</label>
+        <select id="d_financement">
+          <option>Validé</option>
+          <option selected>En cours</option>
+          <option>Comptant</option>
+          <option>À étudier</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('modalDepot').close();">Annuler</button>
+      <button class="btn btn-primary" onclick="submitDepotDemande()">${icon('send', 16)} Publier la recherche</button>
+    </div>
+  `;
+  document.getElementById('modalDepot').showModal();
+}
+
+async function submitDepotBien() {
+  const titre = document.getElementById('b_titre').value.trim();
+  const type_bien = document.getElementById('b_type').value;
+  const prix = parseInt(document.getElementById('b_prix').value) || 0;
+  const surface = parseInt(document.getElementById('b_surface').value) || null;
+  const pieces = parseInt(document.getElementById('b_pieces').value) || null;
+  const ville = document.getElementById('b_ville').value.trim();
+  const departement = document.getElementById('b_dept').value;
+  const description = document.getElementById('b_desc').value.trim();
+  const url_externe = document.getElementById('b_url').value.trim();
+  const exclusivite = document.getElementById('b_exclu').checked;
+
+  if (!titre || !prix || !ville || !description) {
+    alert('Merci de remplir les champs obligatoires : titre, prix, ville, description.');
+    return;
+  }
+
+  const bienData = {
+    titre, type_bien, prix, surface, pieces, ville, departement, description,
+    url_externe, exclusivite
+  };
+
+  // Si API dispo, on POST. Sinon, ajout local uniquement.
+  if (API_READY) {
+    try {
+      showLoader('Publication du bien…');
+      const res = await apiPost('addBien', bienData);
+      const newBien = {
+        id: res.id, ...bienData, membre_id: currentUser.id,
+        photo_url: '', date_ajout: new Date().toISOString().split('T')[0], actif: true
+      };
+      BIENS.unshift(newBien);
+      hideLoader();
+      document.getElementById('modalDepot').close();
+      renderDashboard();
+      alert('✅ Bien publié dans le Sheet — visible par tous les membres.');
+    } catch (err) {
+      hideLoader();
+      alert('❌ Erreur lors de la publication : ' + err.message);
+    }
+  } else {
+    // Mode démo : ajout local
+    const newBien = {
+      id: 'B' + String(BIENS.length + 1).padStart(3, '0'),
+      ...bienData, membre_id: currentUser.id, photo_url: '',
+      date_ajout: new Date().toISOString().split('T')[0], actif: true
+    };
+    BIENS.unshift(newBien);
+    document.getElementById('modalDepot').close();
+    renderDashboard();
+    alert('✅ Bien publié (mode démo — non persisté dans le Sheet).');
+  }
+}
+
+async function submitDepotDemande() {
+  const titre = document.getElementById('d_titre').value.trim();
+  const type_recherche = document.getElementById('d_type').value;
+  const budget_max = parseInt(document.getElementById('d_budget').value) || 0;
+  const surface_min = parseInt(document.getElementById('d_surface').value) || null;
+  const pieces_min = parseInt(document.getElementById('d_pieces').value) || null;
+  const ville = document.getElementById('d_ville').value.trim();
+  const departement = document.getElementById('d_dept').value;
+  const description = document.getElementById('d_desc').value.trim();
+  const urgence = document.getElementById('d_urgence').value;
+  const financement = document.getElementById('d_financement').value;
+
+  if (!titre || !budget_max || !ville || !description) {
+    alert('Merci de remplir les champs obligatoires : titre, budget, zone, description.');
+    return;
+  }
+
+  const demandeData = {
+    titre, type_recherche, budget_max, surface_min, pieces_min, ville, departement,
+    description, urgence, financement
+  };
+
+  if (API_READY) {
+    try {
+      showLoader('Publication de la recherche…');
+      const res = await apiPost('addDemande', demandeData);
+      const newDemande = {
+        id: res.id, ...demandeData, membre_id: currentUser.id,
+        date_ajout: new Date().toISOString().split('T')[0], actif: true
+      };
+      DEMANDES.unshift(newDemande);
+      hideLoader();
+      document.getElementById('modalDepot').close();
+      renderDashboard();
+      alert('✅ Recherche publiée dans le Sheet — visible par tous les membres.');
+    } catch (err) {
+      hideLoader();
+      alert('❌ Erreur lors de la publication : ' + err.message);
+    }
+  } else {
+    const newDemande = {
+      id: 'D' + String(DEMANDES.length + 1).padStart(3, '0'),
+      ...demandeData, membre_id: currentUser.id,
+      date_ajout: new Date().toISOString().split('T')[0], actif: true
+    };
+    DEMANDES.unshift(newDemande);
+    document.getElementById('modalDepot').close();
+    renderDashboard();
+    alert('✅ Recherche publiée (mode démo — non persistée dans le Sheet).');
+  }
 }
 
 /* =====================================================================
@@ -3717,7 +4537,7 @@ function renderProfil() {
 
 function renderLiens() {
   // Ordre fixe des catégories (les autres viendront à la fin si admin en ajoute)
-  const ordrePrefere = ['Pour vos clients', 'Formations', 'Plateforme Hub', 'Outils licencié'];
+  const ordrePrefere = ['Pour vos clients & biens', 'Formations', 'Plateforme Hub & outils'];
   const byCategorie = {};
   LIENS.forEach(l => {
     if (!byCategorie[l.categorie]) byCategorie[l.categorie] = [];
@@ -3788,7 +4608,7 @@ function openLicencieEdit(id) {
   const deptOptions = Object.entries(DEPARTEMENTS).map(([code, info]) =>
     `<option value="${code}" ${l.departement===code?'selected':''}>${code} — ${info.ville} (${info.nom})</option>`
   ).join('');
-  document.getElementById('modalEditTitle').textContent = id ? 'Modifier le licencié' : 'Nouveau licencié';
+  document.getElementById('modalEditTitle').textContent = id ? 'Modifier le membre' : 'Nouveau membre';
   document.getElementById('modalEditBody').innerHTML = `
     <div class="form-group"><label>ID Maison d'Ava</label><input id="f_id" value="${escapeHtml(l.id)}" ${id?'readonly':''}></div>
     <div class="form-row">
@@ -3848,7 +4668,7 @@ function openLicencieEdit(id) {
 }
 
 function deleteLicencie(id) {
-  if (!confirm('Supprimer ce licencié ?')) return;
+  if (!confirm('Supprimer ce membre ?')) return;
   const idx = LICENCIES.findIndex(x => x.id === id);
   if (idx >= 0) LICENCIES.splice(idx, 1);
   renderAll();
@@ -3938,7 +4758,7 @@ function openMcEdit(id) {
 }
 
 function openLienEdit(id) {
-  const l = id ? LIENS.find(x => x.id === id) : { id:'L' + (LIENS.length+1), titre:'', url:'', description:'', categorie:'Outils licencié', icone:'🔗' };
+  const l = id ? LIENS.find(x => x.id === id) : { id:'L' + (LIENS.length+1), titre:'', url:'', description:'', categorie:'Pour vos clients & biens', icone:'🔗' };
   document.getElementById('modalEditTitle').textContent = id ? 'Modifier le lien' : 'Nouveau lien';
   document.getElementById('modalEditBody').innerHTML = `
     <div class="form-row">
@@ -3950,10 +4770,9 @@ function openLienEdit(id) {
       <label>Catégorie</label>
       <input id="f_cat" value="${escapeHtml(l.categorie)}" list="catList">
       <datalist id="catList">
-        <option>Outils licencié</option>
-        <option>Pour vos clients</option>
+        <option>Pour vos clients & biens</option>
         <option>Formations</option>
-        <option>Plateforme Hub</option>
+        <option>Plateforme Hub & outils</option>
         <option>Partenaires</option>
       </datalist>
     </div>
