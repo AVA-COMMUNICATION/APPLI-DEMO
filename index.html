@@ -2814,24 +2814,47 @@ async function loadFromAPI() {
 }
 
 // Normalisations (le Sheet retourne des strings, on convertit en bons types)
+function cleanSocialUrl(v) {
+  const s = String(v || '').trim();
+  if (!s) return '';
+  // Garder uniquement si ça ressemble à une URL ou un domaine
+  if (/^https?:\/\//i.test(s)) return s;
+  if (/\.(com|fr|net|org|io)/i.test(s)) return 'https://' + s.replace(/^\/+/, '');
+  // Sinon c'est du texte (nom, pseudo) → on ignore (pas de lien cassé)
+  return '';
+}
 function normalizeMembre(m) {
   return {
     id: m.id, prenom: m.prenom || '', nom: m.nom || '',
     metier: m.metier || '', departement: String(m.departement || ''),
-    tel: m.tel || '', email: m.email || '', site: m.site || '',
-    linkedin: m.linkedin || '', instagram: m.instagram || '',
-    facebook: m.facebook || '', tiktok: m.tiktok || '',
-    photo: m.photo || ('./photos/' + m.id + '.jpg'),
+    tel: m.tel != null ? String(m.tel) : '', email: m.email != null ? String(m.email) : '', site: m.site != null ? String(m.site) : '',
+    linkedin: cleanSocialUrl(m.linkedin), instagram: cleanSocialUrl(m.instagram),
+    facebook: cleanSocialUrl(m.facebook), tiktok: cleanSocialUrl(m.tiktok),
+    photo: (function(){
+      const p = String(m.photo || '').trim();
+      // Garder uniquement les vraies URLs http(s) chargeables (jpg/png/webp)
+      if (/^https?:\/\//i.test(p) && !/\.tif$/i.test(p)) return p;
+      return ''; // sinon : pas de photo → initiales sur fond couleur dept
+    })(),
     logo: m.logo || '', bio: m.bio || '',
     carte_url: m.carte_url || '', qr_url: m.qr_url || '',
     verifie: m.verifie === true || m.verifie === 'TRUE',
     actif: m.actif !== false && m.actif !== 'FALSE'
   };
 }
+function normalizeDate(d) {
+  if (!d) return '';
+  let s = String(d);
+  if (s.includes('T')) s = s.split('T')[0];  // ISO datetime → date
+  // Format Google "DD/MM/YYYY" → "YYYY-MM-DD"
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return m[3] + '-' + m[2].padStart(2,'0') + '-' + m[1].padStart(2,'0');
+  return s;
+}
 function normalizeEvent(e) {
   return {
     id: e.id, titre: e.titre || '', type: e.type || '',
-    date: e.date || '', heure: e.heure || '', duree: e.duree || '',
+    date: normalizeDate(e.date), heure: e.heure || '', duree: e.duree || '',
     lieu: e.lieu || '', departement: String(e.departement || ''),
     description: e.description || '',
     max: parseInt(e.max) || 0,
@@ -2843,7 +2866,7 @@ function normalizeEvent(e) {
 function normalizeMasterclass(m) {
   return {
     id: m.id, titre: m.titre || '', thematique: m.thematique || '',
-    date: m.date || '', heure: m.heure || '', duree: m.duree || '',
+    date: normalizeDate(m.date), heure: m.heure || '', duree: m.duree || '',
     format: m.format || '', description: m.description || '',
     max: parseInt(m.max) || 0,
     actif: m.actif !== false && m.actif !== 'FALSE',
@@ -2941,10 +2964,11 @@ function getRoleInfo(metier, id) {
   // Détection par métier
   if (/chasseur/.test(m))
     return { label: 'Chasseur', cls: 'chasseur' };
+  // Mandataire prime (ex: "Mandataire — Esprit Viager" = Mandataire malgré "viager")
+  if (/mandataire|transaction|agent immo/.test(m))
+    return { label: 'Mandataire', cls: 'mandataire' };
   if (/notaire|courtier|diagnostiqueur|expert|viager|patrimoine|gestionnaire|assur|financ/.test(m))
     return { label: 'Expert', cls: 'expert' };
-  if (/mandataire|agent|immo|transaction/.test(m))
-    return { label: 'Mandataire', cls: 'mandataire' };
   // Si le métier est renseigné mais ne rentre dans aucune catégorie → Expert par défaut
   if (m && m.length > 3)
     return { label: 'Expert', cls: 'expert' };
@@ -2986,29 +3010,9 @@ let LICENCIES = [
   { id:'AVA-00023', prenom:'DIDIER', nom:'MICKAELIAN', metier:'', departement:'92', tel:'', email:'', bio:'', carte_url:'https://maison-ava.github.io/cartes/AVA-00023', qr_url:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maison-ava.github.io/cartes/AVA-00023', photo:'./photos/AVA-00023.jpg', verifie:false },
 ];
 
-let EVENEMENTS = [
-  // ===== PAUSE CAFÉ PARIS =====
-  { id:'E-P01', titre:'Pause Café — Paris · Présentation Hub Immo+', type:'Pause Café', date:'2026-06-10', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café de présentation officielle du Hub Immo+ aux membres parisiens.', departement:'94', max:30, tally_url:'', inscrits:[] },
-  { id:'E-P02', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'94', max:30, tally_url:'', inscrits:[] },
-  { id:'E-P03', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-09-01', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'94', max:30, tally_url:'', inscrits:[] },
-  // ===== PAUSE CAFÉ BORDEAUX =====
-  { id:'E-B01', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-06-11', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
-  { id:'E-B02', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
-  { id:'E-B03', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-09-17', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
-  // ===== APÉR'IMMO =====
-  { id:'E-A01', titre:'Apér\'Immo — Bordeaux', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Bordeaux', description:'Soirée de networking Apér\'Immo pour les membres du réseau bordelais.', departement:'33', max:50, tally_url:'', inscrits:[] },
-  { id:'E-A02', titre:'Apér\'Immo — Paris', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Paris', description:'Soirée de networking Apér\'Immo pour les membres du réseau parisien.', departement:'94', max:50, tally_url:'', inscrits:[] },
-  // ===== COCKTAIL DES MEMBRES =====
-  { id:'E-C01', titre:'Cocktail des Membres AVA — Édition AV1', type:'Cocktail des Membres', date:'2026-11-25', heure:'19:00', lieu:'France entière — antennes simultanées', description:'Grand Cocktail des Membres annuel Maison d\'Ava — toutes antennes réunies simultanément pour cette soirée nationale du réseau.', departement:'33', max:150, tally_url:'', inscrits:[] },
-];
+let EVENEMENTS = []; // Chargé depuis le Sheet (onglet Evenements) via l'API
 
-let MASTERCLASS = [
-  { id:'M001', titre:'Masterclass AVA — Juillet', date:'2026-07-06', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
-  { id:'M002', titre:'Masterclass AVA — Juillet (2)', date:'2026-07-28', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
-  { id:'M003', titre:'Masterclass AVA — Septembre', date:'2026-09-07', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
-  { id:'M004', titre:'Masterclass AVA — Octobre', date:'2026-10-16', heure:'14:00', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
-  { id:'M005', titre:'Masterclass AVA — Décembre', date:'2026-12-07', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
-];
+let MASTERCLASS = []; // Chargé depuis le Sheet (onglet Masterclass) via l'API
 
 let LIENS = [
   // ===== 1. Pour vos clients & consulter les biens =====
@@ -3496,7 +3500,13 @@ function fmtDate(iso, opts = {}) {
 }
 
 function isPast(iso) {
-  return new Date(iso) < new Date(new Date().toDateString());
+  if (!iso) return false;
+  // Normaliser : si c'est une date Google (avec T ou /), extraire YYYY-MM-DD
+  let dateStr = String(iso);
+  if (dateStr.includes('T')) dateStr = dateStr.split('T')[0];
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return false; // date invalide → considérer comme à venir
+  return d < new Date(new Date().toDateString());
 }
 
 function escapeHtml(s) {
@@ -3598,7 +3608,7 @@ function renderDashboard() {
     const ficheVide = totalLic - verifiees;
     const tauxCompletion = totalLic > 0 ? Math.round((verifiees / totalLic) * 100) : 0;
     const nextEvt = myEvt.filter(e => !isPast(e.date)).sort((a,b) => a.date.localeCompare(b.date))[0];
-    const inscritsNextEvent = nextEvt?.inscrits.length || 0;
+    const inscritsNextEvent = nextEvt?.inscrits?.length || 0;
     const totalEventsAvenir = myEvt.filter(e => !isPast(e.date)).length;
     const totalMcAvenir = myMc.filter(e => !isPast(e.date)).length;
 
@@ -3645,7 +3655,7 @@ function renderDashboard() {
   const mcEl = document.getElementById('dashNextMc');
   if (nextMc) {
     const d = fmtDate(nextMc.date, {short:true});
-    const places = nextMc.max - nextMc.inscrits.length;
+    const places = nextMc.max - (nextMc.inscrits?.length || 0);
     mcEl.innerHTML = `
       <div class="hero-card-label">Prochaine masterclass</div>
       <h3>${escapeHtml(nextMc.titre)}</h3>
@@ -3996,6 +4006,7 @@ function buildTallyLink(item, isMc) {
 }
 
 function renderEventCard(e, isMc) {
+  if (!e.inscrits) e.inscrits = [];
   const d = fmtDate(e.date, {short:true});
   const past = isPast(e.date);
   const places = e.max - e.inscrits.length;
@@ -4100,6 +4111,7 @@ function openMcModal(id) {
 }
 
 function openEventModalGeneric(e, isMc) {
+  if (!e.inscrits) e.inscrits = [];
   const d = fmtDate(e.date, {short:true});
   const places = e.max - e.inscrits.length;
   const past = isPast(e.date);
@@ -5196,12 +5208,13 @@ function openLienEdit(id) {
 ===================================================================== */
 
 function renderAll() {
-  renderDashboard();
-  renderAnnuaire();
-  renderEvents();
-  renderMasterclass();
-  renderLiens();
-  renderProfil();
+  const safe = (name, fn) => { try { fn(); } catch(e) { console.error('Erreur render ' + name + ':', e.message); } };
+  safe('Dashboard', renderDashboard);
+  safe('Annuaire', renderAnnuaire);
+  safe('Events', renderEvents);
+  safe('Masterclass', renderMasterclass);
+  safe('Liens', renderLiens);
+  safe('Profil', renderProfil);
 }
 
 function dismissCTA() {
