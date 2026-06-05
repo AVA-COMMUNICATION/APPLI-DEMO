@@ -2988,16 +2988,16 @@ let LICENCIES = [
 
 let EVENEMENTS = [
   // ===== PAUSE CAFÉ PARIS =====
-  { id:'E-P01', titre:'Pause Café — Paris · Présentation Hub Immo+', type:'Pause Café', date:'2026-06-10', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café de présentation officielle du Hub Immo+ aux membres parisiens.', departement:'75', max:30, tally_url:'', inscrits:[] },
-  { id:'E-P02', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'75', max:30, tally_url:'', inscrits:[] },
-  { id:'E-P03', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-09-01', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'75', max:30, tally_url:'', inscrits:[] },
+  { id:'E-P01', titre:'Pause Café — Paris · Présentation Hub Immo+', type:'Pause Café', date:'2026-06-10', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café de présentation officielle du Hub Immo+ aux membres parisiens.', departement:'94', max:30, tally_url:'', inscrits:[] },
+  { id:'E-P02', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'94', max:30, tally_url:'', inscrits:[] },
+  { id:'E-P03', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-09-01', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'94', max:30, tally_url:'', inscrits:[] },
   // ===== PAUSE CAFÉ BORDEAUX =====
   { id:'E-B01', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-06-11', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
   { id:'E-B02', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
   { id:'E-B03', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-09-17', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
   // ===== APÉR'IMMO =====
   { id:'E-A01', titre:'Apér\'Immo — Bordeaux', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Bordeaux', description:'Soirée de networking Apér\'Immo pour les membres du réseau bordelais.', departement:'33', max:50, tally_url:'', inscrits:[] },
-  { id:'E-A02', titre:'Apér\'Immo — Paris', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Paris', description:'Soirée de networking Apér\'Immo pour les membres du réseau parisien.', departement:'75', max:50, tally_url:'', inscrits:[] },
+  { id:'E-A02', titre:'Apér\'Immo — Paris', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Paris', description:'Soirée de networking Apér\'Immo pour les membres du réseau parisien.', departement:'94', max:50, tally_url:'', inscrits:[] },
   // ===== COCKTAIL DES MEMBRES =====
   { id:'E-C01', titre:'Cocktail des Membres AVA — Édition AV1', type:'Cocktail des Membres', date:'2026-11-25', heure:'19:00', lieu:'France entière — antennes simultanées', description:'Grand Cocktail des Membres annuel Maison d\'Ava — toutes antennes réunies simultanément pour cette soirée nationale du réseau.', departement:'33', max:150, tally_url:'', inscrits:[] },
 ];
@@ -4933,10 +4933,15 @@ function openEventEdit(id) {
       max: parseInt(document.getElementById('f_max').value) || 30,
       description: document.getElementById('f_desc').value.trim(),
     };
+    const eventData = id ? { ...EVENEMENTS.find(x => x.id === id), ...data } : { ...e, ...data };
     if (id) Object.assign(EVENEMENTS.find(x => x.id === id), data);
-    else EVENEMENTS.push({ ...e, ...data });
+    else EVENEMENTS.push(eventData);
     document.getElementById('modalEdit').close();
     renderAll();
+    if (API_READY) {
+      apiPost(id ? 'updateEvent' : 'addEvent', { id: id || eventData.id, ...data })
+        .catch(err => console.warn('Sync event échouée:', err.message));
+    }
   };
   document.getElementById('modalEdit').showModal();
 }
@@ -4966,10 +4971,15 @@ function openMcEdit(id) {
       max: parseInt(document.getElementById('f_max').value) || 30,
       description: document.getElementById('f_desc').value.trim(),
     };
+    const mcData = id ? { ...MASTERCLASS.find(x => x.id === id), ...data } : { ...m, ...data };
     if (id) Object.assign(MASTERCLASS.find(x => x.id === id), data);
-    else MASTERCLASS.push({ ...m, ...data });
+    else MASTERCLASS.push(mcData);
     document.getElementById('modalEdit').close();
     renderAll();
+    if (API_READY) {
+      apiPost(id ? 'updateMasterclass' : 'addMasterclass', { id: id || mcData.id, ...data })
+        .catch(err => console.warn('Sync masterclass échouée:', err.message));
+    }
   };
   document.getElementById('modalEdit').showModal();
 }
