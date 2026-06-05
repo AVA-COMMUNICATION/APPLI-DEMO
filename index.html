@@ -1550,6 +1550,7 @@ main {
 .role-badge-experte-ia  { background: #5D8A6E; }   /* vert   — Laurence */
 .role-badge-fondatrice  { background: #C4963A; }
 .role-badge-autre       { background: #8B97A2; }
+.role-badge-lm          { background: #1A7A7A; letter-spacing: 0.08em; }
 
 /* Bordure gauche vue liste */
 .licencie-row {
@@ -2759,11 +2760,22 @@ async function loadFromAPI() {
     }
     if (data.departements && data.departements.length > 0) {
       DEPARTEMENTS = {};
+      // Couleurs officielles — prioritaires sur le Sheet
+      const COULEURS_OFFICIELLES = {
+        '33': { couleur: '#8B2D3A', couleurClair: '#B85968' },
+        '75': { couleur: '#5B7C99', couleurClair: '#7E9CB4' },
+        '92': { couleur: '#5D8A6E', couleurClair: '#82AC91' },
+        '94': { couleur: '#1A7A7A', couleurClair: '#2AA8A8' },
+      };
       data.departements.forEach(d => {
         if (d.code) {
-          DEPARTEMENTS[String(d.code)] = {
+          const code = String(d.code);
+          const officiel = COULEURS_OFFICIELLES[code] || {};
+          DEPARTEMENTS[code] = {
             nom: d.nom, ville: d.ville,
-            couleur: d.couleur, couleur_clair: d.couleur_clair,
+            couleur: officiel.couleur || d.couleur,
+            couleurClair: officiel.couleurClair || d.couleur_clair,
+            couleur_clair: officiel.couleurClair || d.couleur_clair,
             actif: d.actif !== false
           };
         }
@@ -2925,6 +2937,7 @@ function getRoleInfo(metier, id) {
   // Cas hardcodés par ID
   if (id === 'AVA-00001') return { label: 'Fondatrice', cls: 'fondatrice' };
   if (id === 'AVA-00013') return { label: 'Experte IA', cls: 'experte-ia' };
+  if (id === 'AVA-00016') return { label: 'LM 94', cls: 'lm' };
   // Détection par métier
   if (/chasseur/.test(m))
     return { label: 'Chasseur', cls: 'chasseur' };
@@ -3778,7 +3791,23 @@ function renderAnnuaire() {
     if (!q) return true;
     return [l.prenom, l.nom, l.metier, l.id].some(f => (f || '').toLowerCase().includes(q));
   });
+  // Tri : Linda en 1er, Laurence en 2e, puis alphabétique par nom
+  filtered.sort((a, b) => {
+    if (a.id === 'AVA-00001') return -1;
+    if (b.id === 'AVA-00001') return 1;
+    if (a.id === 'AVA-00013') return -1;
+    if (b.id === 'AVA-00013') return 1;
+    return a.nom.localeCompare(b.nom, 'fr');
+  });
 
+  // Tri : Linda en 1er, Laurence en 2e, puis alphabétique par nom
+  filtered.sort((a, b) => {
+    if (a.id === 'AVA-00001') return -1;
+    if (b.id === 'AVA-00001') return 1;
+    if (a.id === 'AVA-00013') return -1;
+    if (b.id === 'AVA-00013') return 1;
+    return a.nom.localeCompare(b.nom, 'fr');
+  });
   document.getElementById('countLicencies').textContent = filtered.length;
   const grid = document.getElementById('annuaireGrid');
   const list = document.getElementById('annuaireList');
@@ -3805,7 +3834,7 @@ function renderAnnuaire() {
       <div class="licencie-job">${escapeHtml(l.metier || 'À compléter')}</div>
       ${l.verifie ? '<span class="profil-complete-badge">🛡 Profil complété</span>' : ''}
       ${roleBadgeHTML(l.metier, l.id)}
-      <div class="licencie-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
+      <div class="licencie-antenne" style="color:${getDeptColor(l.departement)}">● ${escapeHtml(l.departement)}</div>
     </div>`;
   }).join('');
 
@@ -3820,7 +3849,7 @@ function renderAnnuaire() {
         <div class="row-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
       </div>
       <div class="row-metier">${escapeHtml(l.metier || 'À compléter')} ${roleBadgeHTML(l.metier, l.id)}</div>
-      <div class="row-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
+      <div class="row-antenne" style="color:${getDeptColor(l.departement)}; font-weight:700;">● ${escapeHtml(l.departement)}</div>
       <div class="row-actions">
         ${l.tel ? `<a class="contact-btn contact-btn-sm" href="tel:${l.tel}" onclick="event.stopPropagation()" title="Téléphone">${icon('phone', 14)}</a>` : ''}
         ${l.email ? `<a class="contact-btn contact-btn-sm" href="mailto:${l.email}" onclick="event.stopPropagation()" title="Email">${icon('mail', 14)}</a>` : ''}
@@ -4847,6 +4876,10 @@ function openLicencieEdit(id) {
     else LICENCIES.push(data);
     document.getElementById('modalEdit').close();
     renderAll();
+    // Sync API si disponible
+    if (API_READY) {
+      apiPost(id ? 'updateMembre' : 'addMembre', data).catch(e => console.warn('Sync API échouée:', e.message));
+    }
   };
   document.getElementById('modalEdit').showModal();
 }
