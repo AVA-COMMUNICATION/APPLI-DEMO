@@ -3421,6 +3421,14 @@ document.getElementById('loginCode').addEventListener('keydown', e => {
 ===================================================================== */
 
 (async function bootApp() {
+  // Listener global pour ouvrir la fiche d'un membre au clic (robuste)
+  document.addEventListener('click', function(e) {
+    const card = e.target.closest('[data-lid]');
+    if (card && !e.target.closest('.admin-actions') && !e.target.closest('a')) {
+      const id = card.getAttribute('data-lid');
+      if (id) openLicencieModal(id);
+    }
+  });
   // Tente de charger depuis l'API. Si échec, les données en dur restent.
   await loadFromAPI();
   // Une fois les données chargées (API ou fallback), si un utilisateur est déjà loggé, on rafraîchit l'UI
@@ -3866,8 +3874,9 @@ function renderAnnuaire() {
 }
 
 function openLicencieModal(id) {
-  const l = LICENCIES.find(x => x.id === id);
-  if (!l) return;
+  const uid = String(id).trim().toUpperCase();
+  const l = LICENCIES.find(x => String(x.id).trim().toUpperCase() === uid);
+  if (!l) { console.warn('Membre introuvable:', id); return; }
 
   const tel = l.tel ? `<a href="tel:${l.tel}" class="contact-btn" title="Téléphone">${icon('phone', 18)}</a>` : `<span class="contact-btn disabled" title="Téléphone manquant">${icon('phone', 18)}</span>`;
   const mail = l.email ? `<a href="mailto:${l.email}" class="contact-btn" title="Email">${icon('mail', 18)}</a>` : `<span class="contact-btn disabled" title="Email manquant">${icon('mail', 18)}</span>`;
@@ -4293,7 +4302,8 @@ function renderMasterclass() {
 
 function renderProfil() {
   if (!currentUser?.id) return;
-  const l = LICENCIES.find(x => x.id === currentUser.id);
+  const uid = String(currentUser.id).trim().toUpperCase();
+  const l = LICENCIES.find(x => String(x.id).trim().toUpperCase() === uid);
   if (!l) {
     // Membre connecté mais pas trouvé dans LICENCIES (Sheet pas encore chargé ou ID mismatch)
     const container = document.getElementById('profilContent');
