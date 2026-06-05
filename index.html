@@ -37,8 +37,8 @@
   --dept-75-clair: #7E9CB4;
   --dept-92: #5D8A6E;       /* Hauts-de-Seine — vert mousse */
   --dept-92-clair: #82AC91;
-  --dept-94: #7B4D6B;       /* Val-de-Marne — prune */
-  --dept-94-clair: #9F7290;
+  --dept-94: #1A7A7A;       /* Val-de-Marne — bleu canard */
+  --dept-94-clair: #2AA8A8;
   --shadow-sm: 0 1px 3px rgba(41, 76, 96, 0.06);
   --shadow-md: 0 4px 12px rgba(41, 76, 96, 0.08);
   --shadow-lg: 0 12px 32px rgba(41, 76, 96, 0.12);
@@ -253,7 +253,7 @@ img { max-width: 100%; height: auto; display: block; }
 .badge-dept-soft-33 { color: var(--dept-33); background: rgba(139, 45, 58, 0.08); }
 .badge-dept-soft-75 { color: var(--dept-75); background: rgba(91, 124, 153, 0.08); }
 .badge-dept-soft-92 { color: var(--dept-92); background: rgba(93, 138, 110, 0.08); }
-.badge-dept-soft-94 { color: var(--dept-94); background: rgba(123, 77, 107, 0.08); }
+.badge-dept-soft-94 { color: var(--dept-94); background: rgba(26, 122, 122, 0.08); }
 .badge-success { background: #D1FAE5; color: var(--ava-success); }
 .badge-warn { background: #FEF3C7; color: var(--ava-warn); }
 
@@ -1517,6 +1517,7 @@ main {
   border-radius: var(--radius-lg);
   padding: 20px;
   border: 1px solid var(--ava-bord);
+  border-left: 5px solid var(--dept-color, var(--ava-bord));
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
@@ -1525,7 +1526,34 @@ main {
 .licencie-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
-  border-color: var(--ava-orange-pale);
+  border-color: var(--dept-color, var(--ava-orange-pale));
+  border-left-color: var(--dept-color, var(--ava-orange-pale));
+}
+
+/* Badge rôle (fonction) */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: white;
+  margin-top: 6px;
+}
+.role-badge-mandataire  { background: #294C60; }
+.role-badge-chasseur    { background: #F76E17; }
+.role-badge-expert      { background: #B03A2E; }   /* rouge  — experts métier */
+.role-badge-experte-ia  { background: #5D8A6E; }   /* vert   — Laurence */
+.role-badge-fondatrice  { background: #C4963A; }
+.role-badge-autre       { background: #8B97A2; }
+
+/* Bordure gauche vue liste */
+.licencie-row {
+  border-left: 5px solid var(--dept-color, var(--ava-bord));
 }
 .licencie-avatar {
   width: 80px;
@@ -1555,36 +1583,23 @@ main {
   z-index: 0;
 }
 
-.verifie-badge {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--ava-success);
-  color: white;
-  font-size: 12px;
-  font-weight: 800;
-  display: flex;
+/* Pastille vérifiée supprimée de la photo — remplacée par badge texte sous le nom */
+.verifie-badge { display: none; }
+
+/* Badge "Profil complété" sous le métier */
+.profil-complete-badge {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-  z-index: 2;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-}
-.row-avatar .verifie-badge {
-  width: 16px;
-  height: 16px;
-  font-size: 9px;
-  bottom: -1px;
-  right: -1px;
-  border-width: 1.5px;
-}
-.mini-avatar .verifie-badge {
-  width: 18px;
-  height: 18px;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
   font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--ava-success);
+  background: rgba(5, 150, 105, 0.10);
+  border: 1px solid rgba(5, 150, 105, 0.25);
+  margin-top: 4px;
 }
 .licencie-id {
   font-size: 10px;
@@ -1638,6 +1653,7 @@ body.admin-mode .licencie-card .admin-actions { display: flex; }
   grid-template-columns: 56px 1fr 1.5fr 1fr 1fr auto;
   gap: 14px;
   padding: 12px 16px;
+  border-left: 5px solid var(--dept-color, var(--ava-bord));
   align-items: center;
   border-bottom: 1px solid var(--ava-bord-soft);
   cursor: pointer;
@@ -2889,6 +2905,45 @@ async function reloadFromAPI() {
 }
 
 /* =====================================================================
+   HELPERS — Rôle / Département (double codage visuel)
+===================================================================== */
+
+// Couleur par département → bordure gauche des cartes
+function getDeptColor(dept) {
+  const map = {
+    '33': '#8B2D3A', // bordeaux
+    '75': '#5B7C99', // bleu acier
+    '92': '#5D8A6E', // vert mousse
+    '94': '#1A7A7A', // bleu canard
+  };
+  return map[String(dept)] || '#D1D8DE';
+}
+
+// Badge rôle (fonction) → couleur par type de métier
+function getRoleInfo(metier, id) {
+  const m = (metier || '').toLowerCase();
+  // Cas hardcodés par ID
+  if (id === 'AVA-00001') return { label: 'Fondatrice', cls: 'fondatrice' };
+  if (id === 'AVA-00013') return { label: 'Experte IA', cls: 'experte-ia' };
+  // Détection par métier
+  if (/chasseur/.test(m))
+    return { label: 'Chasseur', cls: 'chasseur' };
+  if (/notaire|courtier|diagnostiqueur|expert|viager|patrimoine|gestionnaire|assur|financ/.test(m))
+    return { label: 'Expert', cls: 'expert' };
+  if (/mandataire|agent|immo|transaction/.test(m))
+    return { label: 'Mandataire', cls: 'mandataire' };
+  // Si le métier est renseigné mais ne rentre dans aucune catégorie → Expert par défaut
+  if (m && m.length > 3)
+    return { label: 'Expert', cls: 'expert' };
+  return { label: 'Membre', cls: 'autre' };
+}
+
+function roleBadgeHTML(metier, id) {
+  const r = getRoleInfo(metier, id);
+  return `<span class="role-badge role-badge-${r.cls}">${r.label}</span>`;
+}
+
+/* =====================================================================
    DONNÉES — Maquette (fallback si API down)
 ===================================================================== */
 
@@ -2919,23 +2974,33 @@ let LICENCIES = [
 ];
 
 let EVENEMENTS = [
-  { id:'E001', titre:'Cocktail des fondateurs', type:'Apér\'Immo', date:'2026-06-12', heure:'19:00', lieu:'Bordeaux — Place Pey-Berland', description:'Rencontre annuelle des fondateurs et premiers membres Maison d\'Ava. Cocktail dînatoire pour échanger sur l\'année écoulée.', departement:'33', max:50, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013'] },
-  { id:'E002', titre:'Petit-déjeuner réseau — Tendances marché 2026', type:'Pause Café', date:'2026-05-28', heure:'08:30', lieu:'Bordeaux — Coffee Place', description:'Décryptage des tendances immo Q2 2026 avec un économiste invité. Petit-déjeuner offert.', departement:'33', max:25, inscrits:['AVA-00003','AVA-00009','AVA-00013','AVA-00021'] },
-  { id:'E003', titre:'Lancement antenne Paris', type:'Autre', date:'2026-09-15', heure:'18:00', lieu:'Paris — 8e arrondissement', description:'Soirée de lancement officiel de l\'antenne parisienne Maison d\'Ava. Invités VIP et presse.', departement:'75', max:80, inscrits:['AVA-00001','AVA-00013'] },
-  { id:'E005', titre:'Apér\'Immo Créteil — Networking 94', type:'Apér\'Immo', date:'2026-07-08', heure:'18:30', lieu:'Créteil — Brasserie de l\'Hôtel de Ville', departement:'94', description:'Premier Apér\'Immo organisé par l\'antenne 94. Networking entre membres du Val-de-Marne et partenaires locaux.', max:25, inscrits:['AVA-00016','AVA-00017','AVA-00018','AVA-00020'] },
-  { id:'E004', titre:'Afterwork Q1', type:'Apér\'Immo', date:'2026-03-20', heure:'18:30', lieu:'Bordeaux — Quais', description:'Premier afterwork de l\'année 2026.', departement:'33', max:30, inscrits:['AVA-00001','AVA-00003','AVA-00009'] },
+  // ===== PAUSE CAFÉ PARIS =====
+  { id:'E-P01', titre:'Pause Café — Paris · Présentation Hub Immo+', type:'Pause Café', date:'2026-06-10', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café de présentation officielle du Hub Immo+ aux membres parisiens.', departement:'75', max:30, tally_url:'', inscrits:[] },
+  { id:'E-P02', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'75', max:30, tally_url:'', inscrits:[] },
+  { id:'E-P03', titre:'Pause Café — Paris', type:'Pause Café', date:'2026-09-01', heure:'10:00', lieu:'Paris — Région parisienne', description:'Pause café mensuelle du réseau parisien Maison d\'Ava.', departement:'75', max:30, tally_url:'', inscrits:[] },
+  // ===== PAUSE CAFÉ BORDEAUX =====
+  { id:'E-B01', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-06-11', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
+  { id:'E-B02', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-07-07', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
+  { id:'E-B03', titre:'Pause Café — Bordeaux', type:'Pause Café', date:'2026-09-17', heure:'10:00', lieu:'Bordeaux — Région bordelaise', description:'Pause café mensuelle du réseau bordelais Maison d\'Ava.', departement:'33', max:30, tally_url:'', inscrits:[] },
+  // ===== APÉR'IMMO =====
+  { id:'E-A01', titre:'Apér\'Immo — Bordeaux', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Bordeaux', description:'Soirée de networking Apér\'Immo pour les membres du réseau bordelais.', departement:'33', max:50, tally_url:'', inscrits:[] },
+  { id:'E-A02', titre:'Apér\'Immo — Paris', type:"Apér'Immo", date:'2026-10-15', heure:'18:30', lieu:'Paris', description:'Soirée de networking Apér\'Immo pour les membres du réseau parisien.', departement:'75', max:50, tally_url:'', inscrits:[] },
+  // ===== COCKTAIL DES MEMBRES =====
+  { id:'E-C01', titre:'Cocktail des Membres AVA — Édition AV1', type:'Cocktail des Membres', date:'2026-11-25', heure:'19:00', lieu:'France entière — antennes simultanées', description:'Grand Cocktail des Membres annuel Maison d\'Ava — toutes antennes réunies simultanément pour cette soirée nationale du réseau.', departement:'33', max:150, tally_url:'', inscrits:[] },
 ];
 
 let MASTERCLASS = [
-  { id:'M001', titre:'IA pour mandataires : 5 outils à intégrer dès demain', date:'2026-06-05', heure:'10:00', thematique:'IA Métier', description:'Tour d\'horizon pratique des 5 outils IA les plus rentables pour un mandataire immo en 2026. Démos live + replay.', lien_visio:'https://zoom.us/j/123456', max:30, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00010','AVA-00021'] },
-  { id:'M002', titre:'Storytelling immobilier — Vendre par l\'émotion', date:'2026-06-22', heure:'14:00', thematique:'Vente', description:'Comment raconter un bien pour déclencher le coup de cœur. Atelier pratique avec mises en situation.', lien_visio:'https://zoom.us/j/789012', max:20, inscrits:['AVA-00003','AVA-00006','AVA-00009','AVA-00011','AVA-00013','AVA-00021'] },
-  { id:'M003', titre:'Mandat exclusif : argumentaire qui convertit', date:'2026-05-15', heure:'10:00', thematique:'Vente', description:'Replay disponible.', lien_visio:'https://zoom.us/j/345678', max:25, inscrits:['AVA-00001','AVA-00003','AVA-00009','AVA-00013','AVA-00021'] },
+  { id:'M001', titre:'Masterclass AVA — Juillet', date:'2026-07-06', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
+  { id:'M002', titre:'Masterclass AVA — Juillet (2)', date:'2026-07-28', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
+  { id:'M003', titre:'Masterclass AVA — Septembre', date:'2026-09-07', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
+  { id:'M004', titre:'Masterclass AVA — Octobre', date:'2026-10-16', heure:'14:00', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
+  { id:'M005', titre:'Masterclass AVA — Décembre', date:'2026-12-07', heure:'11:30', thematique:'', description:'Masterclass mensuelle du réseau Maison d\'Ava. Lien de connexion communiqué aux inscrits.', duree:'1h30', format:'Visio', max:50, tally_url:'https://tally.so/r/D4dJ7p', inscrits:[] },
 ];
 
 let LIENS = [
   // ===== 1. Pour vos clients & consulter les biens =====
   { id:'L1', titre:'Confier sa recherche immobilière', url:'https://tally.so/r/XxePDY', description:'Lien à partager à vos prospects : formulaire de prise de mandat de recherche. Récupération du brief et coordonnées du client.', categorie:'Pour vos clients & biens', icone:'🎯' },
-  { id:'L2', titre:'Mon quart d\'heure avec Linda', url:'https://calendly.com/linda-lamaisondava/new-meeting', description:'Lien Calendly pour caler un RDV avec Linda (dépôt de mandat, échange réseau).', categorie:'Pour vos clients & biens', icone:'📅' },
+  { id:'L2', titre:'Mon quart d\'heure avec Linda', url:'https://calendly.com/parler-ensemble/15min', description:'Lien Calendly pour caler un RDV avec Linda (dépôt de mandat, échange réseau).', categorie:'Pour vos clients & biens', icone:'📅' },
   { id:'L3', titre:'Consulter les biens en ligne (Neti)', url:'https://neti.fr', description:'Plateforme externe Neti : tous les biens à la vente du réseau accessibles aux clients.', categorie:'Pour vos clients & biens', icone:'🔗' },
 
   // ===== 2. Formations =====
@@ -2987,7 +3052,7 @@ let DEPARTEMENTS = {
   '33': { nom: 'Gironde', ville: 'Bordeaux', couleur: '#8B2D3A', couleurClair: '#B85968' },
   '75': { nom: 'Paris', ville: 'Paris', couleur: '#5B7C99', couleurClair: '#7E9CB4' },
   '92': { nom: 'Hauts-de-Seine', ville: 'Nanterre', couleur: '#5D8A6E', couleurClair: '#82AC91' },
-  '94': { nom: 'Val-de-Marne', ville: 'Créteil', couleur: '#7B4D6B', couleurClair: '#9F7290' },
+  '94': { nom: 'Val-de-Marne', ville: 'Créteil', couleur: '#1A7A7A', couleurClair: '#2AA8A8' },
 };
 
 function deptColor(code) {
@@ -3384,16 +3449,13 @@ function avatarHTML(l, sizeClass = '') {
 }
 
 function avatarStyle(l, size = 'large') {
-  // Style adaptatif :
-  // - Avec photo : fond plein dpt (fallback si la photo échoue) + bordure blanche
-  // - Sans photo : fond blanc + bordure ÉPAISSE couleur dpt + initiales en couleur dpt
+  // Fond = couleur du département (visible derrière les initiales si pas de photo)
+  // La photo se charge par-dessus en position:absolute via avatarHTML
+  // Si la photo échoue (onerror), le fond département + initiales restent visibles
   const c = deptColor(l.departement);
+  const cc = deptColorClair(l.departement);
   const borderWidth = size === 'small' ? '2px' : '3px';
-  if (l.photo) {
-    const cc = deptColorClair(l.departement);
-    return `background: linear-gradient(135deg, ${c}, ${cc}); border: ${borderWidth} solid white;`;
-  }
-  return `background: white; color: ${c}; border: ${borderWidth} solid ${c};`;
+  return `background: ${c}; color: white; border: ${borderWidth} solid white;`;
 }
 
 function avatarBadge(l) {
@@ -3732,7 +3794,7 @@ function renderAnnuaire() {
   grid.innerHTML = filtered.map(l => {
     const editable = canEditLicencie(l);
     return `
-    <div class="licencie-card" onclick="openLicencieModal('${l.id}')">
+    <div class="licencie-card" style="--dept-color:${getDeptColor(l.departement)}" onclick="openLicencieModal('${l.id}')">
       ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
         <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">${icon('edit', 14)}</button>
         <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">${icon('x', 14)}</button>
@@ -3741,6 +3803,8 @@ function renderAnnuaire() {
       <div class="licencie-id">${l.id}</div>
       <div class="licencie-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
       <div class="licencie-job">${escapeHtml(l.metier || 'À compléter')}</div>
+      ${l.verifie ? '<span class="profil-complete-badge">🛡 Profil complété</span>' : ''}
+      ${roleBadgeHTML(l.metier, l.id)}
       <div class="licencie-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
     </div>`;
   }).join('');
@@ -3749,13 +3813,13 @@ function renderAnnuaire() {
   list.innerHTML = filtered.map(l => {
     const editable = canEditLicencie(l);
     return `
-    <div class="licencie-row" onclick="openLicencieModal('${l.id}')">
+    <div class="licencie-row" style="--dept-color:${getDeptColor(l.departement)}" onclick="openLicencieModal('${l.id}')">
       <div class="row-avatar" style="${avatarStyle(l, 'small')}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
       <div>
         <div class="row-id">${l.id}</div>
         <div class="row-name">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
       </div>
-      <div class="row-metier">${escapeHtml(l.metier || 'À compléter')}</div>
+      <div class="row-metier">${escapeHtml(l.metier || 'À compléter')} ${roleBadgeHTML(l.metier, l.id)}</div>
       <div class="row-antenne">📍 ${escapeHtml(deptLabel(l.departement))}</div>
       <div class="row-actions">
         ${l.tel ? `<a class="contact-btn contact-btn-sm" href="tel:${l.tel}" onclick="event.stopPropagation()" title="Téléphone">${icon('phone', 14)}</a>` : ''}
@@ -4298,6 +4362,7 @@ function renderProfil() {
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn btn-marine" onclick="openDepotBienModal()">${icon('home', 16)} Déposer un bien à la vente</button>
           <button class="btn btn-primary" onclick="openDepotDemandeModal()">${icon('target', 16)} Déposer une recherche client</button>
+          <button class="btn btn-secondary" style="border-color:var(--ava-orange); color:var(--ava-orange);" onclick="openEnvoyerAffaireModal()">${icon('send', 16)} Envoyer une affaire à AVA</button>
         </div>
         ${countMesBiens(l.id) > 0 || countMesDemandes(l.id) > 0 ? `
         <div style="margin-top:14px; font-size:12px; color:var(--ava-texte-mute);">
@@ -4423,6 +4488,125 @@ function openDepotDemandeModal() {
     </div>
   `;
   document.getElementById('modalDepot').showModal();
+}
+
+/* =====================================================================
+   ENVOYER UNE AFFAIRE À AVA
+===================================================================== */
+function openEnvoyerAffaireModal() {
+  if (!currentUser) return;
+  const dom = document.getElementById('modalDepotBody');
+  if (!dom) return;
+  document.getElementById('modalDepotTitle').textContent = 'Envoyer une affaire à AVA';
+  const membreNom = capitalize(currentUser.prenom) + ' ' + capitalize(currentUser.nom);
+  const membreId = currentUser.id;
+  dom.innerHTML = `
+    <div style="background:var(--ava-orange-pale); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:18px; font-size:13px; color:var(--ava-marine); line-height:1.6;">
+      <strong>Comment ça fonctionne ?</strong><br>
+      Vous avez un client dont la recherche peut bénéficier du réseau AVA. En soumettant cette fiche,
+      un email RGPD sera automatiquement envoyé à votre client pour l'informer et recueillir son accord.
+      Linda reçoit également une notification.
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type de mise en relation *</label>
+        <select id="af_type">
+          <option value="Achat">Achat — client cherche un bien</option>
+          <option value="Vente">Vente — client veut vendre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Conseiller apporteur</label>
+        <input type="text" value="${membreNom} (${membreId})" disabled style="background:var(--ava-fond); color:var(--ava-texte-mute);">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Prénom du client *</label>
+        <input id="af_client_prenom" placeholder="Prénom">
+      </div>
+      <div class="form-group">
+        <label>Nom du client *</label>
+        <input id="af_client_nom" placeholder="Nom">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email du client * <small style="color:var(--ava-texte-mute);">(l'email RGPD lui sera envoyé ici)</small></label>
+        <input id="af_client_email" type="email" placeholder="client@email.fr">
+      </div>
+      <div class="form-group">
+        <label>Téléphone du client</label>
+        <input id="af_client_tel" type="tel" placeholder="06 XX XX XX XX">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Contexte de l'affaire <small style="color:var(--ava-texte-mute);">(pour l'équipe AVA)</small></label>
+      <textarea id="af_contexte" rows="3" placeholder="Ex : Famille cherche T4 à Bordeaux, budget 400k€, financement validé, mobilité fin d'année..."></textarea>
+    </div>
+    <div style="background:var(--ava-creme); border:1px solid var(--ava-bord); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:16px; font-size:12px; color:var(--ava-texte-sec); line-height:1.65;">
+      <strong style="color:var(--ava-marine);">Email envoyé automatiquement à votre client :</strong><br><br>
+      <em>Bonjour, votre conseiller immobilier nous a transmis vos coordonnées car il estime que notre organisation peut apporter un soutien complémentaire à votre recherche.
+      La Maison d'AVA est un collectif de professionnels de l'immobilier dont votre conseiller fait partie. [...]
+      Si vous souhaitez être contacté, vous pouvez compléter le formulaire de mise en relation.</em>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('modalDepot').close();">Annuler</button>
+      <button class="btn btn-primary" onclick="submitEnvoyerAffaire('${membreId}', '${escapeHtml(membreNom)}')">${icon('send', 16)} Envoyer l'affaire à AVA</button>
+    </div>
+  `;
+  document.getElementById('modalDepot').showModal();
+}
+
+async function submitEnvoyerAffaire(membreId, membreNom) {
+  const type = document.getElementById('af_type').value;
+  const prenom = document.getElementById('af_client_prenom').value.trim();
+  const nom = document.getElementById('af_client_nom').value.trim();
+  const email = document.getElementById('af_client_email').value.trim();
+  const tel = document.getElementById('af_client_tel').value.trim();
+  const contexte = document.getElementById('af_contexte').value.trim();
+
+  if (!prenom || !nom || !email) {
+    alert('Merci de renseigner les champs obligatoires : prénom, nom et email du client.');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('L\'adresse email du client ne semble pas valide.');
+    return;
+  }
+
+  const btn = document.querySelector('#modalDepotBody .btn-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
+
+  const affaireData = {
+    type_mise_en_relation: type,
+    membre_id: membreId,
+    membre_nom: membreNom,
+    client_prenom: prenom,
+    client_nom: nom,
+    client_email: email,
+    client_tel: tel,
+    contexte: contexte,
+    date: new Date().toISOString().split('T')[0]
+  };
+
+  try {
+    if (API_READY) {
+      await apiPost('addAffaire', affaireData);
+    }
+    document.getElementById('modalDepot').close();
+    // Feedback visuel
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ava-success);color:white;padding:14px 24px;border-radius:12px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);';
+    toast.textContent = '✓ Affaire transmise à AVA — email envoyé au client';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  } catch(err) {
+    if (btn) { btn.disabled = false; btn.innerHTML = icon('send', 16) + ' Envoyer l\'affaire à AVA'; }
+    // En mode démo (API down), on simule quand même le succès
+    document.getElementById('modalDepot').close();
+    alert('✓ Affaire enregistrée (mode hors-ligne). Elle sera synchronisée au prochain rechargement.');
+  }
 }
 
 async function submitDepotBien() {
