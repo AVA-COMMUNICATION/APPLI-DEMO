@@ -1651,7 +1651,7 @@ body.admin-mode .licencie-card .admin-actions { display: flex; }
 }
 .licencie-row {
   display: grid;
-  grid-template-columns: 56px 1fr 1.5fr 1fr 1fr auto;
+  grid-template-columns: 56px 1fr 1.5fr 120px auto auto;
   gap: 14px;
   padding: 12px 16px;
   border-left: 5px solid var(--dept-color, var(--ava-bord));
@@ -3823,7 +3823,7 @@ function renderAnnuaire() {
   grid.innerHTML = filtered.map(l => {
     const editable = canEditLicencie(l);
     return `
-    <div class="licencie-card" style="--dept-color:${getDeptColor(l.departement)}" onclick="openLicencieModal('${l.id}')">
+    <div class="licencie-card" style="--dept-color:${getDeptColor(l.departement)}" data-lid="${l.id}">
       ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
         <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">${icon('edit', 14)}</button>
         <button class="icon-btn danger" onclick="deleteLicencie('${l.id}')" title="Supprimer">${icon('x', 14)}</button>
@@ -3842,7 +3842,7 @@ function renderAnnuaire() {
   list.innerHTML = filtered.map(l => {
     const editable = canEditLicencie(l);
     return `
-    <div class="licencie-row" style="--dept-color:${getDeptColor(l.departement)}" onclick="openLicencieModal('${l.id}')">
+    <div class="licencie-row" style="--dept-color:${getDeptColor(l.departement)}" data-lid="${l.id}">
       <div class="row-avatar" style="${avatarStyle(l, 'small')}">${avatarHTML(l)}${initialsOf(l)}${avatarBadge(l)}</div>
       <div>
         <div class="row-id">${l.id}</div>
@@ -3852,7 +3852,10 @@ function renderAnnuaire() {
       <div class="row-antenne" style="color:${getDeptColor(l.departement)}; font-weight:700;">● ${escapeHtml(l.departement)}</div>
       <div class="row-actions">
         ${l.tel ? `<a class="contact-btn contact-btn-sm" href="tel:${l.tel}" onclick="event.stopPropagation()" title="Téléphone">${icon('phone', 14)}</a>` : ''}
+        ${l.tel ? `<a class="contact-btn contact-btn-sm" href="https://wa.me/${l.tel.replace(/[^0-9]/g,'').replace(/^0/,'33')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="WhatsApp">${icon('message', 14)}</a>` : ''}
         ${l.email ? `<a class="contact-btn contact-btn-sm" href="mailto:${l.email}" onclick="event.stopPropagation()" title="Email">${icon('mail', 14)}</a>` : ''}
+        ${l.site ? `<a class="contact-btn contact-btn-sm" href="${escapeHtml(l.site)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Site web">${icon('globe', 14)}</a>` : ''}
+        ${l.linkedin ? `<a class="contact-btn contact-btn-sm" href="${escapeHtml(l.linkedin)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn" style="background:#0A66C2; color:white; font-weight:800; font-size:10px;">in</a>` : ''}
       </div>
       ${editable ? `<div class="admin-actions" onclick="event.stopPropagation()">
         <button class="icon-btn" onclick="openLicencieEdit('${l.id}')" title="Modifier">${icon('edit', 14)}</button>
@@ -4291,7 +4294,18 @@ function renderMasterclass() {
 function renderProfil() {
   if (!currentUser?.id) return;
   const l = LICENCIES.find(x => x.id === currentUser.id);
-  if (!l) return;
+  if (!l) {
+    // Membre connecté mais pas trouvé dans LICENCIES (Sheet pas encore chargé ou ID mismatch)
+    const container = document.getElementById('profilContent');
+    if (container) container.innerHTML = `
+      <div class="profil-cta" style="text-align:center; padding:40px 20px;">
+        <div style="font-size:48px; margin-bottom:16px;">⏳</div>
+        <strong>Chargement du profil…</strong>
+        <small style="display:block; margin-top:8px; color:var(--ava-texte-mute);">Si le problème persiste, déconnectez-vous et reconnectez-vous.</small>
+        <button class="btn btn-ghost" style="margin-top:16px;" onclick="logout()">Se déconnecter</button>
+      </div>`;
+    return;
+  }
 
   const container = document.getElementById('profilContent');
   const isVerifie = l.verifie;
@@ -4306,14 +4320,14 @@ function renderProfil() {
     : 'Photo, bio, coordonnées, réseaux sociaux, et option carte digitale — tout se renseigne en un seul formulaire.';
   const ctaBtn = isVerifie ? 'Modifier mes informations' : 'Compléter mon profil';
 
-  const ctaBlock = formUrl ? `
+  const ctaBlock = `
     <div class="profil-cta">
       <div class="profil-cta-content">
         <strong>${isVerifie ? '✓' : '✨'} ${escapeHtml(ctaTitle)}</strong>
         <small>${escapeHtml(ctaSub)}</small>
       </div>
-      <a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener" class="btn">${escapeHtml(ctaBtn)} ↗</a>
-    </div>` : '';
+      <button class="btn btn-primary" onclick="openEditProfilModal()">${icon('edit', 16)} ${escapeHtml(ctaBtn)}</button>
+    </div>`;
 
   // Helper pour afficher un champ
   const info = (icone, label, value, link = null) => {
@@ -4377,13 +4391,16 @@ function renderProfil() {
         </div>
       </div>
 
-      ${carteBtn ? `<div class="profil-section">
+      <div class="profil-section">
         <h4>${icon('card', 14)} Carte digitale</h4>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          ${carteBtn}
-          ${l.carte_url ? `<a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-ghost">Ouvrir la page ${icon('externalLink', 14)}</a>` : ''}
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          ${l.carte_url
+            ? `<button class="btn btn-secondary" onclick="openCarteDigitale('${l.id}')">${icon('card', 16)} Voir ma carte (QR)</button>
+               <a href="${escapeHtml(l.carte_url)}" target="_blank" rel="noopener" class="btn btn-ghost">Ouvrir la page ↗</a>`
+            : `<span style="font-size:13px; color:var(--ava-texte-mute);">Votre carte digitale sera générée après validation par l'équipe AVA.</span>`
+          }
         </div>
-      </div>` : ''}
+      </div>
 
       <div class="profil-section profil-section-hub">
         <h4>${icon('briefcase', 14)} Mon activité Hub</h4>
@@ -4399,6 +4416,150 @@ function renderProfil() {
         </div>` : ''}
       </div>
     </div>`;
+}
+
+/* =====================================================================
+   ÉDITION PROFIL — Modal interne avec upload photo
+===================================================================== */
+function openEditProfilModal() {
+  if (!currentUser) return;
+  const l = LICENCIES.find(x => x.id === currentUser.id);
+  if (!l) return;
+
+  const dom = document.getElementById('modalDepotBody');
+  if (!dom) return;
+  document.getElementById('modalDepotTitle').textContent = 'Modifier mon profil';
+
+  dom.innerHTML = `
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding:16px; background:var(--ava-creme); border-radius:var(--radius-md);">
+      <div id="editProfilAvatar" style="${avatarStyle(l)}; width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:white; flex-shrink:0; overflow:hidden; position:relative;">
+        ${l.photo ? `<img src="${escapeHtml(l.photo)}" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" onerror="this.style.display='none'">` : ''}
+        <span>${initialsOf(l)}</span>
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:700; font-size:15px; color:var(--ava-marine);">${capitalize(l.prenom)} ${capitalize(l.nom)}</div>
+        <div style="font-size:12px; color:var(--ava-texte-mute); margin-bottom:8px;">${l.id}</div>
+        <label class="btn btn-ghost" style="font-size:12px; cursor:pointer; padding:6px 12px;">
+          ${icon('upload', 14)} Changer ma photo
+          <input type="file" id="ep_photo_file" accept="image/*" style="display:none;" onchange="previewProfilPhoto(this)">
+        </label>
+      </div>
+    </div>
+    <input type="hidden" id="ep_photo_url" value="${escapeHtml(l.photo || '')}">
+
+    <div class="form-row">
+      <div class="form-group"><label>Métier / Activité *</label>
+        <input id="ep_metier" value="${escapeHtml(l.metier || '')}" placeholder="Ex : Mandataire immo">
+      </div>
+      <div class="form-group"><label>Téléphone</label>
+        <input id="ep_tel" type="tel" value="${escapeHtml(l.tel || '')}" placeholder="06 XX XX XX XX">
+      </div>
+    </div>
+    <div class="form-group"><label>Email professionnel</label>
+      <input id="ep_email" type="email" value="${escapeHtml(l.email || '')}" placeholder="prenom@domaine.fr">
+    </div>
+    <div class="form-group"><label>Site web</label>
+      <input id="ep_site" type="url" value="${escapeHtml(l.site || '')}" placeholder="https://...">
+    </div>
+    <div class="form-group"><label>Bio (présentation pour le réseau)</label>
+      <textarea id="ep_bio" rows="3" placeholder="Quelques lignes pour vous présenter à vos confrères...">${escapeHtml(l.bio || '')}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>LinkedIn</label>
+        <input id="ep_linkedin" value="${escapeHtml(l.linkedin || '')}" placeholder="https://linkedin.com/in/...">
+      </div>
+      <div class="form-group"><label>Instagram</label>
+        <input id="ep_instagram" value="${escapeHtml(l.instagram || '')}" placeholder="https://instagram.com/...">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Facebook</label>
+        <input id="ep_facebook" value="${escapeHtml(l.facebook || '')}" placeholder="https://facebook.com/...">
+      </div>
+      <div class="form-group"><label>TikTok</label>
+        <input id="ep_tiktok" value="${escapeHtml(l.tiktok || '')}" placeholder="https://tiktok.com/@...">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('modalDepot').close()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveEditProfil('${l.id}')">${icon('save', 16)} Enregistrer</button>
+    </div>
+  `;
+  document.getElementById('modalDepot').showModal();
+}
+
+function previewProfilPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    // Prévisualisation dans l'avatar
+    const avatar = document.getElementById('editProfilAvatar');
+    let img = avatar.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      img.style.cssText = 'width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;';
+      avatar.insertBefore(img, avatar.firstChild);
+    }
+    img.src = dataUrl;
+    img.style.display = 'block';
+    // Stocker en base64 pour l'envoi (dans un vrai projet : upload Drive via API)
+    document.getElementById('ep_photo_url').value = dataUrl;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveEditProfil(membreId) {
+  const metier = document.getElementById('ep_metier').value.trim();
+  if (!metier) { alert('Le métier est obligatoire.'); return; }
+
+  const updatedData = {
+    id: membreId,
+    metier,
+    tel:       document.getElementById('ep_tel').value.trim(),
+    email:     document.getElementById('ep_email').value.trim(),
+    site:      document.getElementById('ep_site').value.trim(),
+    bio:       document.getElementById('ep_bio').value.trim(),
+    linkedin:  document.getElementById('ep_linkedin').value.trim(),
+    instagram: document.getElementById('ep_instagram').value.trim(),
+    facebook:  document.getElementById('ep_facebook').value.trim(),
+    tiktok:    document.getElementById('ep_tiktok').value.trim(),
+    photo:     document.getElementById('ep_photo_url').value || undefined,
+    verifie:   true,
+  };
+
+  const btn = document.querySelector('#modalDepotBody .btn-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enregistrement…'; }
+
+  // Mise à jour locale immédiate
+  const licencie = LICENCIES.find(x => x.id === membreId);
+  if (licencie) Object.assign(licencie, updatedData);
+  if (currentUser?.id === membreId) Object.assign(currentUser, updatedData);
+
+  document.getElementById('modalDepot').close();
+  renderProfil();
+
+  // Sync API
+  if (API_READY) {
+    apiPost('updatemembre', updatedData)
+      .then(() => {
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ava-success);color:white;padding:14px 24px;border-radius:12px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);';
+        toast.textContent = '✓ Profil mis à jour';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+      })
+      .catch(() => {
+        alert('Profil mis à jour localement. La synchronisation avec le serveur a échoué — vos données seront mises à jour au prochain rechargement.');
+      });
+  } else {
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ava-success);color:white;padding:14px 24px;border-radius:12px;font-weight:600;z-index:9999;';
+    toast.textContent = '✓ Profil mis à jour (mode local)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
 }
 
 /* =====================================================================
